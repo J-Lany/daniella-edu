@@ -14,6 +14,7 @@ export class UserInfoBlock extends HTMLElement {
   }
   connectedCallback() {
     this.#authService.getCurrentUser().then((user) => {
+      console.log(user)
       this.#currentUser = user;
       this.#render(this.#currentUser);
     });

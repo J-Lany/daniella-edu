@@ -36,7 +36,12 @@ export class LoginComponent extends HTMLElement {
     ).value;
     this.#authService
       .login(login, password)
-      .then((data) => console.log(data))
+      .then((data) => {
+        console.log("Вы авторизованы", data);
+        this.dispatchEvent(
+          new CustomEvent("login-success", { bubbles: true, composed: true })
+        );
+      })
       .catch((err) => console.log(err));
   }
   render() {
