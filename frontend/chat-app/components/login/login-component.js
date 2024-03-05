@@ -26,6 +26,7 @@ export class LoginComponent extends HTMLElement {
     this.#listeners.forEach(addListeners.bind(this));
   }
 
+
   #onLoginClick(event) {
     event.preventDefault();
     const login = this.shadowRoot.querySelector(
@@ -38,9 +39,6 @@ export class LoginComponent extends HTMLElement {
       .login(login, password)
       .then((data) => {
         console.log("Вы авторизованы", data);
-        this.dispatchEvent(
-          new CustomEvent("login-success", { bubbles: true, composed: true })
-        );
       })
       .catch((err) => console.log(err));
   }
