@@ -13,14 +13,24 @@ export class UserInfoBlock extends HTMLElement {
     this.attachShadow({ mode: "open" });
   }
   connectedCallback() {
-    this.#authService.getCurrentUser().then((user) => {
-      console.log(user)
+    this.unSubscribeFromAuth = this.#authService.getCurrentUser(
+      this.hadndleUserChange.bind(this)
+    );
+  }
+
+  hadndleUserChange(currentUser) {
+    Promise.resolve(currentUser).then((user) => {
+      console.log(user);
       this.#currentUser = user;
       this.#render(this.#currentUser);
     });
   }
 
-  #render(user) {
+  disconnectedCallback() {
+    this.unSubscribeFromAuth(this.hadnleAuhtChange.bind(this));
+  }
+
+  #render() {
     const templateElm = document.createElement("template");
     templateElm.innerHTML = createUserInfoBlockTemplate(this.#currentUser);
     this.shadowRoot.appendChild(templateElm.content.cloneNode(true));

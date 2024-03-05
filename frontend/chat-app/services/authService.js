@@ -10,18 +10,19 @@ export function authService() {
   };
 
   function notifySubscribers() {
-    console.log(
-      "notifySubscribers before forEach. Coutn of subscribes:",
-      subscribers
-    );
     subscribers.forEach((subscription) => {
       subscription(currentUser);
     });
   }
+
+  function unSubscribe(subs) {
+    subscribers.filter((subscription) => subs != subscription);
+  }
+
   async function getCurrentUser(subscription) {
     subscribers.add(subscription);
-    console.log("Count of subsctibes:", subscribers);
-    return Promise.resolve(currentUser);
+
+    return () => unSubscribe(subscription);
   }
   async function login(login, password) {
     currentUser = mocUser;

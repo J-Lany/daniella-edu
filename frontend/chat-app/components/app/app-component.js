@@ -22,7 +22,9 @@ export class AppComponent extends HTMLElement {
     );
     this.#render();
   }
-
+  disconnectedCallback() {
+    this.unSubscribeFromAuth(this.hadnleAuhtChange.bind(this));
+  }
   hadnleAuhtChange() {
     this.#isLoginned = true;
     this.#render();

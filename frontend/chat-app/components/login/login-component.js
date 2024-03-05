@@ -26,7 +26,6 @@ export class LoginComponent extends HTMLElement {
     this.#listeners.forEach(addListeners.bind(this));
   }
 
-
   #onLoginClick(event) {
     event.preventDefault();
     const login = this.shadowRoot.querySelector(
