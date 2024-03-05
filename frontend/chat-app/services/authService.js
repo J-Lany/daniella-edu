@@ -16,7 +16,7 @@ export function authService() {
   }
 
   function unSubscribe(subs) {
-    subscribers.filter((subscription) => subs != subscription);
+    subscribers = subscribers.filter((subscription) => subs != subscription);
   }
 
   async function getCurrentUser(subscription) {
