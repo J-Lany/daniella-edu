@@ -4,14 +4,17 @@ import { SERVICES } from "../../di/api";
 
 export class UserInfoBlock extends HTMLElement {
   #authService = diContainer.resolve(SERVICES.auth);
+  #currentUser;
+
   static get name() {
     return "user-info-block";
   }
-  #currentUser;
+
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
   }
+
   connectedCallback() {
     this.unSubscribeFromAuth = this.#authService.getCurrentUser(
       this.hadndleUserChange.bind(this)

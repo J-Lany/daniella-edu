@@ -5,10 +5,6 @@ import { addListeners, select } from "../../utils/utils.js";
 
 export class LoginComponent extends HTMLElement {
   #authService = diContainer.resolve(SERVICES.auth);
-  static get name() {
-    return "login-component";
-  }
-
   #listeners = [
     [
       select.bind(this, ".login-form__btn"),
@@ -16,6 +12,11 @@ export class LoginComponent extends HTMLElement {
       this.#onLoginClick.bind(this),
     ],
   ];
+
+  static get name() {
+    return "login-component";
+  }
+
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
@@ -41,6 +42,7 @@ export class LoginComponent extends HTMLElement {
       })
       .catch((err) => console.log(err));
   }
+
   render() {
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createLoginTemplate();

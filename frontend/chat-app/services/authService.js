@@ -24,11 +24,13 @@ export function authService() {
 
     return () => unSubscribe(subscription);
   }
+  
   async function login(login, password) {
     currentUser = mocUser;
     notifySubscribers();
     return Promise.resolve(currentUser);
   }
+
   return {
     getCurrentUser,
     login,
