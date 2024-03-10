@@ -29,18 +29,10 @@ export class LoginComponent extends HTMLElement {
 
   #onLoginClick(event) {
     event.preventDefault();
-    const login = this.shadowRoot.querySelector(
-      ".login-form__input[type='text']"
-    ).value;
-    const password = this.shadowRoot.querySelector(
-      ".login-form__input[type='password']"
-    ).value;
-    this.#authService
-      .login(login, password)
-      .then((data) => {
-        console.log("Вы авторизованы", data);
-      })
-      .catch((err) => console.log(err));
+    const login = this.shadowRoot.querySelector("#login").value;
+    const password = this.shadowRoot.querySelector("#password").value;
+
+    this.#authService.login(login, password);
   }
 
   render() {

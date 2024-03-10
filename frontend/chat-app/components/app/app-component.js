@@ -6,7 +6,6 @@ import { LoginComponent } from "../login/login-component";
 
 export class AppComponent extends HTMLElement {
   #authService = diContainer.resolve(SERVICES.auth);
-  #isLoginned = false;
 
   static get name() {
     return "app-component";
@@ -18,24 +17,19 @@ export class AppComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    this.unSubscribeFromAuth = this.#authService.getCurrentUser(
-      this.hadnleAuhtChange.bind(this)
+    this.unSubscribeFromAuth = this.#authService.subscribeCurrentUser(
+      this.#render.bind(this)
     );
     this.#render();
   }
 
   disconnectedCallback() {
-    this.unSubscribeFromAuth(this.hadnleAuhtChange.bind(this));
+    this.unSubscribeFromAuth();
   }
 
-  hadnleAuhtChange() {
-    this.#isLoginned = true;
-    this.#render();
-  }
-
-  #render() {
+  #render(user) {
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = this.#isLoginned
+    templateElem.innerHTML = user
       ? `<header-component></header-component>`
       : `<login-component></login-component>`;
     this.shadowRoot.innerHTML = "";

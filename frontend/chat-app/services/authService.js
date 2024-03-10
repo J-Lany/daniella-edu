@@ -19,20 +19,19 @@ export function authService() {
     subscribers = subscribers.filter((subscription) => subs != subscription);
   }
 
-  async function getCurrentUser(subscription) {
+  async function subscribeCurrentUser(subscription) {
     subscribers.add(subscription);
 
     return () => unSubscribe(subscription);
   }
-  
+
   async function login(login, password) {
     currentUser = mocUser;
     notifySubscribers();
-    return Promise.resolve(currentUser);
   }
 
   return {
-    getCurrentUser,
+    subscribeCurrentUser,
     login,
   };
 }

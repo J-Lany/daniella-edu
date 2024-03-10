@@ -34,6 +34,9 @@ const getLoginComponentStyle = () => {
       display: flex;
       justify-content: space-between;
     }
+    .login-form__btn:hover {
+      background-color: var(--light-blue-background)
+    }
   </style>
   `;
 };
