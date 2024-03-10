@@ -1,8 +1,5 @@
 import { diContainer } from "../../di/di";
 import { SERVICES } from "../../di/api";
-import { ChatComponent } from "../chat/chat-component";
-import { HeaderComponent } from "../header/header-component";
-import { LoginComponent } from "../login/login-component";
 
 export class AppComponent extends HTMLElement {
   #authService = diContainer.resolve(SERVICES.auth);
@@ -36,7 +33,3 @@ export class AppComponent extends HTMLElement {
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
   }
 }
-
-[ChatComponent, HeaderComponent, LoginComponent].map((component) =>
-  customElements.define(component.name, component)
-);
