@@ -1,5 +1,6 @@
 import { diContainer } from "../../di/di";
 import { SERVICES } from "../../di/api";
+import { createAppTemplate } from "./app-component.template";
 
 export class AppComponent extends HTMLElement {
   #authService = diContainer.resolve(SERVICES.auth);
@@ -26,9 +27,7 @@ export class AppComponent extends HTMLElement {
 
   #render(user) {
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = user
-      ? `<header-component></header-component>`
-      : `<login-component></login-component>`;
+    templateElem.innerHTML = createAppTemplate(user);
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
   }

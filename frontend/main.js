@@ -8,12 +8,13 @@ import { AppComponent } from "./chat-app/components/app/app-component.js";
 import { ChatComponent } from "./chat-app/components/chat/chat-component.js";
 import { HeaderComponent } from "./chat-app/components/header/header-component.js";
 import { LoginComponent } from "./chat-app/components/login/login-component.js";
+import { UserInfoBlock } from "./chat-app/components/user-info-block/user-info-block.js";
 
 diContainer.register(SERVICES.messages, messageService);
 diContainer.register(SERVICES.http, httpService);
 diContainer.register(SERVICES.auth, authService);
 
-[ChatComponent, HeaderComponent, LoginComponent, AppComponent].map(
+[ChatComponent, UserInfoBlock, HeaderComponent, LoginComponent, AppComponent].map(
   (component) => customElements.define(component.name, component)
 );
 

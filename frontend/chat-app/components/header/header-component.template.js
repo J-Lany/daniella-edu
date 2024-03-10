@@ -1,5 +1,4 @@
 import { getHeaderComponentStyle } from "./header-component.styles";
-import { UserInfoBlock } from "../user-info-block/user-info-block";
 
 export function createHeaderTemplate() {
   return `
@@ -9,5 +8,3 @@ export function createHeaderTemplate() {
     </header>
     `;
 }
-
-customElements.define(UserInfoBlock.name, UserInfoBlock);
