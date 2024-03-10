@@ -1,4 +1,5 @@
-const subscribers = new Set();
+const userSubscribers = new Set();
+const errorSubscribers = new Set();
 
 export function authService() {
   let currentUser;
@@ -10,28 +11,45 @@ export function authService() {
   };
 
   function notifySubscribers() {
-    subscribers.forEach((subscription) => {
+    userSubscribers.forEach((subscription) => {
       subscription(currentUser);
     });
   }
 
-  function unSubscribe(subs) {
-    subscribers = subscribers.filter((subscription) => subs != subscription);
+  function notifyError(error) {
+    errorSubscribers.forEach((subscription) => {
+      subscription(error);
+      console.log(error)
+    });
   }
 
-  async function subscribeCurrentUser(subscription) {
-    subscribers.add(subscription);
+  function unSubscribe(subs) {
+    userSubscribers.delete(subs);
+  }
 
+  function subscribeCurrentUser(subscription) {
+    userSubscribers.add(subscription);
     return () => unSubscribe(subscription);
   }
 
+  function subscribeOnLoginError(subs) {
+    errorSubscribers.add(subs);
+    return () => unSubscribe(subs);
+  }
+
   async function login(login, password) {
-    currentUser = mocUser;
-    notifySubscribers();
+    if (login && password) {
+      currentUser = mocUser;
+      notifySubscribers();
+      return
+    }
+    notifyError("Неверный логин или пароль");
+    
   }
 
   return {
     subscribeCurrentUser,
+    subscribeOnLoginError,
     login,
   };
 }
