@@ -18,8 +18,7 @@ export function authService() {
 
   function notifyError(error) {
     errorSubscribers.forEach((subscription) => {
-      subscription(error);
-      console.log(error)
+      subscription();
     });
   }
 
@@ -44,7 +43,6 @@ export function authService() {
       return
     }
     notifyError("Неверный логин или пароль");
-    
   }
 
   return {

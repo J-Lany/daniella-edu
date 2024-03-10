@@ -25,6 +25,13 @@ export class LoginComponent extends HTMLElement {
 
   connectedCallback() {
     this.#listeners.forEach(addListeners.bind(this));
+    this.unSubscribeFromError = this.#authService.subscribeOnLoginError(
+      this.#handleError.bind(this)
+    );
+  }
+
+  disconnectedCallback() {
+    this.unSubscribeFromError();
   }
 
   #onLoginClick(event) {
@@ -35,9 +42,17 @@ export class LoginComponent extends HTMLElement {
     this.#authService.login(login, password);
   }
 
+  #handleError() {
+    const errorMesssge = document.createElement("div");
+    errorMesssge.textContent = "Неверный логин или пароль";
+    errorMesssge.style.color = "red"; 
+    this.shadowRoot.appendChild(errorMesssge);
+  }
+
   render() {
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createLoginTemplate();
+    this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
   }
 }

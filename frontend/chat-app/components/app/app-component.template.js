@@ -1,9 +1,9 @@
 export function createAppTemplate(user) {
-  if (user) {
-    return `
-    <div>
-      <header-component></header-component>
-    </div>`;
+  if (!user) {
+    return `<login-component></login-component>`;
   }
-  return `<login-component></login-component>`;
+  return `
+  <div>
+    <header-component></header-component>
+  </div>`;
 }
