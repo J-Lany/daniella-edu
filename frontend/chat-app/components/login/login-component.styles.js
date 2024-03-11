@@ -25,7 +25,7 @@ const getLoginComponentStyle = () => {
     }
     .login-form__btn {
       padding: 1rem;
-      width: 30%;
+      width: 50%;
       font-size: 1.5rem;
       outline: none;
       border: 1px solid var(--light-gray-background);
