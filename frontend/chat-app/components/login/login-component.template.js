@@ -3,7 +3,7 @@ import { getLoginComponentStyle } from "./login-component.styles";
 export function createLoginTemplate() {
   return `
     ${getLoginComponentStyle()}
-   <div>
+   <div class="login-page">
     <h3>Log in</h3>
     <form action="">
       <div class="login-form">

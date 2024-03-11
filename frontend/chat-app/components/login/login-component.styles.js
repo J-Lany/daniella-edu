@@ -5,6 +5,12 @@ const getLoginComponentStyle = () => {
   <style>
     @import url('../common.css');
 
+    .login-page{
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 2rem;
+      text-align: center;
+    }
     .login-form {
       display: flex;
       flex-flow: column;
