@@ -1,7 +1,7 @@
 import { createLoginTemplate } from "./login-component.template";
 import { diContainer } from "../../di/di";
 import { SERVICES } from "../../di/api";
-import { addListeners, select } from "../../utils/utils.js";
+import { addListeners, removeListeners, select } from "../../utils/utils.js";
 
 export class LoginComponent extends HTMLElement {
   #authService = diContainer.resolve(SERVICES.auth);
@@ -32,6 +32,7 @@ export class LoginComponent extends HTMLElement {
 
   disconnectedCallback() {
     this.unSubscribeFromError();
+    this.#listeners.forEach(removeListeners.bind(this));
   }
 
   #onLoginClick(event) {
@@ -45,7 +46,7 @@ export class LoginComponent extends HTMLElement {
   #handleError() {
     const errorMesssge = document.createElement("div");
     errorMesssge.textContent = "Неверный логин или пароль";
-    errorMesssge.style.color = "red"; 
+    errorMesssge.style.color = "red";
     this.shadowRoot.appendChild(errorMesssge);
   }
 
