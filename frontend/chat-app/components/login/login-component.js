@@ -46,7 +46,7 @@ export class LoginComponent extends HTMLElement {
   #handleError() {
     const errorMesssge = document.createElement("div");
     errorMesssge.textContent = "Неверный логин или пароль";
-    errorMesssge.style.color = "red";
+    errorMesssge.classList.add("error-messsge");
     this.shadowRoot.appendChild(errorMesssge);
   }
 

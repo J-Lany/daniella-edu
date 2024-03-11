@@ -45,6 +45,11 @@ const getLoginComponentStyle = () => {
     .login-form__btn:hover {
       background-color: var(--light-blue-background)
     }
+    .error-messsge{
+      color: red;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
     @media screen and (max-width: 600px) {
       .login-form__btn {
           padding: 0.75rem 3.5rem;
@@ -60,6 +65,9 @@ const getLoginComponentStyle = () => {
       .login-form__input {
         font-size: 1rem;
         padding: 1rem;
+      }
+      .error-messsge{
+        margin-top: 0.25rem;
       }
     }
   </style>
