@@ -44,16 +44,20 @@ export class LoginComponent extends HTMLElement {
   }
 
   #handleError() {
-    const errorMesssge = document.createElement("div");
-    errorMesssge.textContent = "Неверный логин или пароль";
-    errorMesssge.classList.add("error-messsge");
-    this.shadowRoot.appendChild(errorMesssge);
+    this.render("Неверный логин или пароль");
   }
 
-  render() {
+  render(err) {
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createLoginTemplate();
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
+    
+    if (err) {
+      const errorMesssge = document.createElement("div");
+      errorMesssge.textContent = err;
+      errorMesssge.classList.add("error-messsge");
+      this.shadowRoot.appendChild(errorMesssge);
+    }
   }
 }
