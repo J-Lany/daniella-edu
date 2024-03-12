@@ -18,15 +18,11 @@ export class AppComponent extends HTMLElement {
     this.unSubscribeFromAuth = this.#authService.subscribeCurrentUser(
       this.#render.bind(this)
     );
-    this.unSubscribeFromError = this.#authService.subscribeOnLoginError(
-      this.#render.bind(this)
-    );
     this.#render();
   }
 
   disconnectedCallback() {
     this.unSubscribeFromAuth();
-    this.unSubscribeFromError();
   }
 
   #render(user) {

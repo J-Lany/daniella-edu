@@ -49,15 +49,8 @@ export class LoginComponent extends HTMLElement {
 
   render(err) {
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createLoginTemplate();
+    templateElem.innerHTML = createLoginTemplate(err);
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
-    
-    if (err) {
-      const errorMesssge = document.createElement("div");
-      errorMesssge.textContent = err;
-      errorMesssge.classList.add("error-messsge");
-      this.shadowRoot.appendChild(errorMesssge);
-    }
   }
 }
