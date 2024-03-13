@@ -3,41 +3,52 @@ import { SERVICES } from "../di/api.mjs";
 
 /**
  * @swagger
- * /login:
+ * /registration:
  *   post:
  *     summary: Регистрация в месседжере
  *     parameters:
- *       - in: path
+ *       - in: body
  *         name: login
  *         required: true
  *         schema:
  *           type: string
- *      - in: path
+ *       - in: body
  *         name: email
  *         required: true
  *         schema:
  *           type: string
- *      - in: path
+ *       - in: body
  *         name: password
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Сообщение об успешной регистрации
+ *         description: Успешная регистрация
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                   author:
- *                     type: string
- *                     description: Автор сообщения
- *                   message:
- *                     type: string
- *                     description: Текст сообщения
+ *               type: object
+ *               properties:
+ *                 login:
+ *                   type: string
+ *                   description: Логин
+ *                 message:
+ *                   type: string
+ *                   description: Информация о результате
+ *       401:
+ *         description: Такой пользователь уже существует
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Сообщение об ошибке
  */
+
+
+export function registrationController(req, res) {
+
+}

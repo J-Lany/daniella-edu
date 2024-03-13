@@ -19,7 +19,7 @@ const swaggerOptions = {
     info: {
       title: "J-Lany`s messager API",
       version: "1.0.0",
-      description: "Super puper продакшн от Даниэлла",
+      description: "Super puper продакшн от Даниэллы",
     },
   },
   apis: ["./controllers/*"], // Путь к файлам, содержащим документацию JSDoc
