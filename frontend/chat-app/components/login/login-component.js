@@ -26,7 +26,7 @@ export class LoginComponent extends HTMLElement {
   connectedCallback() {
     this.#listeners.forEach(addListeners.bind(this));
     this.unSubscribeFromError = this.#authService.subscribeOnLoginError(
-      this.#handleError.bind(this)
+      this.render.bind(this)
     );
   }
 
@@ -41,10 +41,6 @@ export class LoginComponent extends HTMLElement {
     const password = this.shadowRoot.querySelector("#password").value;
 
     this.#authService.login(login, password);
-  }
-
-  #handleError() {
-    this.render("Неверный логин или пароль");
   }
 
   render(err) {
