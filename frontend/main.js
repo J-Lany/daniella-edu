@@ -4,17 +4,18 @@ import { SERVICES } from "./chat-app/di/api.js";
 import { messageService } from "./chat-app/services/messageService.js";
 import { authService } from "./chat-app/services/authService.js";
 import { httpService } from "./chat-app/services/httpService.js";
+import { AppComponent } from "./chat-app/components/app/app-component.js";
 import { ChatComponent } from "./chat-app/components/chat/chat-component.js";
 import { HeaderComponent } from "./chat-app/components/header/header-component.js";
+import { LoginComponent } from "./chat-app/components/login/login-component.js";
+import { UserInfoBlock } from "./chat-app/components/user-info-block/user-info-block.js";
 
 diContainer.register(SERVICES.messages, messageService);
 diContainer.register(SERVICES.http, httpService);
 diContainer.register(SERVICES.auth, authService);
 
-[ChatComponent, HeaderComponent].map((component) =>
-  customElements.define(component.name, component)
+[ChatComponent, UserInfoBlock, HeaderComponent, LoginComponent, AppComponent].map(
+  (component) => customElements.define(component.name, component)
 );
 
-document.querySelector("#app").innerHTML = `
-  <header-component></header-component>
-`;
+document.querySelector("#app").innerHTML = `<app-component></app-component>`;

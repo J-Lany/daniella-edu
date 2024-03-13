@@ -5,14 +5,7 @@
     --light-gray-color: #d3d3d3;
     --light-gray-background: #EEEEEE;
     --gray-text-color: #707070;
+    --light-blue-background: #cadaf6;
 }
-#app {
-    max-width: 80rem;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  }
+
+
