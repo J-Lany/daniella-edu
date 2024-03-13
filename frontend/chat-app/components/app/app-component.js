@@ -1,12 +1,12 @@
-import { createUserInfoBlockTemplate } from "./user-info-block.template";
 import { diContainer } from "../../di/di";
 import { SERVICES } from "../../di/api";
+import { createAppTemplate } from "./app-component.template";
 
-export class UserInfoBlock extends HTMLElement {
+export class AppComponent extends HTMLElement {
   #authService = diContainer.resolve(SERVICES.auth);
 
   static get name() {
-    return "user-info-block";
+    return "app-component";
   }
 
   constructor() {
@@ -18,6 +18,7 @@ export class UserInfoBlock extends HTMLElement {
     this.unSubscribeFromAuth = this.#authService.subscribeCurrentUser(
       this.#render.bind(this)
     );
+    this.#render();
   }
 
   disconnectedCallback() {
@@ -25,8 +26,9 @@ export class UserInfoBlock extends HTMLElement {
   }
 
   #render(user) {
-    const templateElm = document.createElement("template");
-    templateElm.innerHTML = createUserInfoBlockTemplate(user);
-    this.shadowRoot.appendChild(templateElm.content.cloneNode(true));
+    const templateElem = document.createElement("template");
+    templateElem.innerHTML = createAppTemplate(user);
+    this.shadowRoot.innerHTML = "";
+    this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
   }
 }
