@@ -3,14 +3,18 @@ import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import { diContainer } from "./di/di.mjs";
 import { messageService } from "./services/message-service.mjs";
+import { UserService } from "./services/user-service.mjs";
 import { SERVICES } from "./di/api.mjs";
 import { chatController } from "./controllers/chat-controller.mjs";
+import { registrationController } from "./controllers/registration-controller.mjs";
 import swaggerJSDoc from "swagger-jsdoc";
 
 const app = express();
 
 // Использование CORS middleware для разрешения кросс-доменных запросов
 app.use(cors());
+
+app.use(express.json());
 
 // Загрузка документации Swagger
 const swaggerOptions = {
@@ -30,9 +34,11 @@ const swaggerSpec = swaggerJSDoc(swaggerOptions);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 diContainer.register(SERVICES.messages, messageService);
+diContainer.register(SERVICES.users, () => new UserService());
 
 // Метод GET возвращает массив случайных сообщений для chatId
 app.get("/messages/:chatId", chatController);
+app.post("/registration", registrationController);
 
 const PORT = 3000;
 app.listen(PORT, () => {
