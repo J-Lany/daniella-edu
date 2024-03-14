@@ -48,20 +48,15 @@ import { SERVICES } from "../di/api.mjs";
 export function registrationController(req, res) {
   const userService = diContainer.resolve(SERVICES.users);
   const { login, email, password } = req.body;
-  const users = userService.getUsers();
-  if (isUserExist(users, login)) {
+
+  if (userService.isUserAlreadyExist(login)) {
     return res
       .status(401)
       .json({ message: "Такой пользователь уже существует" });
   }
   userService.setUser({ login, email, password });
-  // console.log(userService.getUsers());
+
   return res
     .status(200)
-    .json({ login, message: `${login} вы успешно зарегестрированы` });
+    .json({ message: `${login} вы успешно зарегестрированы` });
 }
-
-const isUserExist = (users, login) => {
-  let checkUsers = users.filter((user) => user.login === login);
-  return checkUsers.length > 0 ? true : false;
-};
