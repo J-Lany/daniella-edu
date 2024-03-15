@@ -18,7 +18,6 @@ import { SERVICES } from "../di/api.mjs";
  *                 type: string
  *               password:
  *                 type: string
-
  *     responses:
  *       200:
  *         description: Успешная регистрация
@@ -43,20 +42,36 @@ import { SERVICES } from "../di/api.mjs";
  *                 message:
  *                   type: string
  *                   description: Сообщение об ошибке
+ *       500:
+ *         description: Ошибка регистрации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errorMessage:
+ *                   type: string
+ *                   description: Сообщение об ошибке регистрации
  */
 
 export function registrationController(req, res) {
   const userService = diContainer.resolve(SERVICES.users);
   const { login, email, password } = req.body;
 
-  if (userService.isUserAlreadyExist(login)) {
-    return res
-      .status(401)
-      .json({ message: "Такой пользователь уже существует" });
-  }
-  userService.setUser({ login, email, password });
+  try {
+    if (userService.isUserAlreadyExist(login)) {
+      return res
+        .status(401)
+        .json({ message: "Такой пользователь уже существует" });
+    }
+    userService.setUser({ login, email, password });
 
-  return res
-    .status(200)
-    .json({ message: `${login} вы успешно зарегестрированы` });
+    return res
+      .status(200)
+      .json({ message: `${login} вы успешно зарегестрированы` });
+  } catch {
+    return res
+      .status(500)
+      .json({ message: "Ошибка регистрации, попробуйте позднее" });
+  }
 }

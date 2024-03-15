@@ -8,9 +8,7 @@ export class UserService {
     return bcrypt
       .hash(password, saltRounds)
       .then((hash) => hash)
-      .catch((err) => {
-        console.log("Ошибка хеширования пароля:", err);
-      });
+      .catch((err) => err);
   }
   getUsers() {
     return Array.from(this.#users.values);
