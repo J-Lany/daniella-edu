@@ -14,9 +14,9 @@ export class UserService {
     return Array.from(this.#users.values);
   }
   async setUser({ login, email, password }) {
-    let hashedPassword = await this.#hashPassword(password);
+    const hashedPassword = await this.#hashPassword(password);
     this.#users.set(login, { login, email, hashedPassword });
-    console.log(this.#users);
+    console.info(this.#users);
   }
 
   isUserAlreadyExist(login) {
