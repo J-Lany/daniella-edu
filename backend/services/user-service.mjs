@@ -13,7 +13,7 @@ export class UserService {
       });
   }
   getUsers() {
-    return this.#users;
+    return Array.from(this.#users.values);
   }
   async setUser({ login, email, password }) {
     let hashedPassword = await this.#hashPassword(password);
