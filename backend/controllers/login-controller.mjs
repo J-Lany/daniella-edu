@@ -73,17 +73,19 @@ export function loginController(req, res) {
   const userService = diContainer.resolve(SERVICES.users);
   const { login, password } = req.body;
   const currentUser = userService.getUser(login);
-  console.log(login, password);
   try {
-  if (!currentUser) {
-    return res
-      .status(403)
-      .json({ message: "Такой пользователь не существует" });
-  }
-  if (!bcrypt.compareSync(password, currentUser.hashedPassword)) {
-    return res.status(401).json({ message: "Неверный логин или пароль" });
-  }
-  return res.status(200).json({ message: "тут нужно вернуть пользователя" });
+    if (!currentUser) {
+      return res
+        .status(403)
+        .json({ message: "Такой пользователь не существует" });
+    }
+    if (!bcrypt.compareSync(password, currentUser.hashedPassword)) {
+      return res.status(401).json({ message: "Неверный логин или пароль" });
+    }
+    return res.status(200).json({
+      user: { login, email: currentUser.email },
+      message: "Вы успешно авторизованы",
+    });
   } catch {
     return res
       .status(500)
