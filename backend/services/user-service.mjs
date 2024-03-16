@@ -23,6 +23,6 @@ export class UserService {
     return this.#users.has(login);
   }
   getUser(login) {
-    this.#users.get(login);
+    return this.#users.get(login);
   }
 }

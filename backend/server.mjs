@@ -31,11 +31,12 @@ const swaggerOptions = {
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
+const userService = new UserService();
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 diContainer.register(SERVICES.messages, messageService);
-diContainer.register(SERVICES.users, () => new UserService());
+diContainer.register(SERVICES.users, () => userService);
 
 // Метод GET возвращает массив случайных сообщений для chatId
 app.get("/messages/:chatId", chatController);
