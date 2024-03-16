@@ -22,4 +22,7 @@ export class UserService {
   isUserAlreadyExist(login) {
     return this.#users.has(login);
   }
+  getUser(login) {
+    this.#users.get(login);
+  }
 }

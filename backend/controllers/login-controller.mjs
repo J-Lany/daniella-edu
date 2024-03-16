@@ -1,5 +1,6 @@
 import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
+import bcrypt from "bcrypt";
 
 /**
  * @swagger
@@ -71,16 +72,17 @@ import { SERVICES } from "../di/api.mjs";
 export function loginController(req, res) {
   const userService = diContainer.resolve(SERVICES.users);
   const { login, password } = req.body;
+  const currentUser = userService.getUser(login);
+  console.log(currentUser);
   try {
-    if (!userService.isUserAlreadyExist(login)) {
+    if (!currentUser) {
       return res
         .status(403)
         .json({ message: "Такой пользователь не существует" });
     }
-    if ("Пароли не совпадают") {
+    if (!bcrypt.compareSync(password, currentUser.password)) {
       return res.status(401).json({ message: "Неверный логин или пароль" });
     }
-    //Тут нужна проверка паролей и вытащить конкретного пользователя пользователя
     return res.status(200).json({ message: "тут нужно вернуть пользователя" });
   } catch {
     return res
