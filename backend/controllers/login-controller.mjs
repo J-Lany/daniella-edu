@@ -34,6 +34,9 @@ import bcrypt from "bcrypt";
  *                     email:
  *                       type: string
  *                       description: Email пользователя
+ *                 token:
+ *                   type: string
+ *                   description: Авторизационный токен
  *                 message:
  *                   type: string
  *                   description: Информация о результате
@@ -70,25 +73,24 @@ import bcrypt from "bcrypt";
  */
 
 export function loginController(req, res) {
-  const userService = diContainer.resolve(SERVICES.users);
+  const authService = diContainer.resolve(SERVICES.auth);
   const { login, password } = req.body;
-  const currentUser = userService.getUser(login);
-  try {
-    if (!currentUser) {
-      return res
-        .status(403)
-        .json({ message: "Такой пользователь не существует" });
-    }
-    if (!bcrypt.compareSync(password, currentUser.hashedPassword)) {
-      return res.status(401).json({ message: "Неверный логин или пароль" });
-    }
-    return res.status(200).json({
-      user: { login, email: currentUser.email },
-      message: "Вы успешно авторизованы",
+
+  authService
+    .login(login, password)
+    .then((result) => res.status(200).json(result))
+    .catch((err) => {
+      switch (err.message) {
+        case "403":
+          return res
+            .status(403)
+            .json({ message: "Такого пользователя не существует" });
+        case "401":
+          return res.status(401).json({ message: "Неверный логин или пароль" });
+        default:
+          return res
+            .status(500)
+            .json({ message: "Ошибка в авторизации, попробуйте позднее" });
+      }
     });
-  } catch {
-    return res
-      .status(500)
-      .json({ message: "Ошибка в авторизации, попробуйте позднее" });
-  }
 }

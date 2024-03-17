@@ -9,6 +9,7 @@ import { chatController } from "./controllers/chat-controller.mjs";
 import { registrationController } from "./controllers/registration-controller.mjs";
 import { loginController } from "./controllers/login-controller.mjs";
 import swaggerJSDoc from "swagger-jsdoc";
+import { AuthService } from "./services/auth-service.mjs";
 
 const app = express();
 
@@ -31,12 +32,12 @@ const swaggerOptions = {
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
-const userService = new UserService();
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 diContainer.register(SERVICES.messages, messageService);
-diContainer.register(SERVICES.users, () => userService);
+diContainer.register(SERVICES.users, new UserService());
+diContainer.register(SERVICES.auth, new AuthService());
 
 // Метод GET возвращает массив случайных сообщений для chatId
 app.get("/messages/:chatId", chatController);
