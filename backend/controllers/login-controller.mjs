@@ -34,12 +34,19 @@ import bcrypt from "bcrypt";
  *                     email:
  *                       type: string
  *                       description: Email пользователя
- *                 token:
- *                   type: string
+ *                     password:
+ *                       type: string
+ *                       description: Хэш пароля пользователя
+ *                 tokenData:
+ *                   type: object
+ *                   properties:
+ *                     token: 
+ *                       type: string
+ *                       description: Сам вторизационный токен
+ *                     expired:
+ *                       type: string
+ *                       description: Срок действия токена
  *                   description: Авторизационный токен
- *                 message:
- *                   type: string
- *                   description: Информация о результате
  *       401:
  *         description: Неверный логин или пароль
  *         content:

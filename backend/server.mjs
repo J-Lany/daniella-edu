@@ -10,6 +10,7 @@ import { registrationController } from "./controllers/registration-controller.mj
 import { loginController } from "./controllers/login-controller.mjs";
 import swaggerJSDoc from "swagger-jsdoc";
 import { AuthService } from "./services/auth-service.mjs";
+import { configService } from "./services/config-service.mjs";
 
 const app = express();
 
@@ -34,6 +35,8 @@ const swaggerOptions = {
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+diContainer.register(SERVICES.config, configService());
 
 diContainer.register(SERVICES.messages, messageService);
 diContainer.register(SERVICES.users, new UserService());
