@@ -14,8 +14,9 @@ export class AuthService {
   async createToken(login, email) {
     const hashData = `${login}${email}${this.#configService.secret}`;
     const saltRounds = 7;
+    const ONE_WEEK = 7;
     const expired = new Date();
-    expired.setDate(expired.getDate() + 7);
+    expired.setDate(expired.getDate() + ONE_WEEK);
 
     try {
       const hash = await bcrypt.hash(hashData, saltRounds);
