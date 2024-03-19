@@ -37,15 +37,8 @@ import bcrypt from "bcrypt";
  *                     password:
  *                       type: string
  *                       description: Хэш пароля пользователя
- *                 tokenData:
- *                   type: object
- *                   properties:
- *                     token: 
- *                       type: string
- *                       description: Сам вторизационный токен
- *                     expired:
- *                       type: string
- *                       description: Срок действия токена
+ *                 token:
+ *                   type: string
  *                   description: Авторизационный токен
  *       401:
  *         description: Неверный логин или пароль

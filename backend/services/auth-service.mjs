@@ -5,6 +5,7 @@ import { SERVICES } from "../di/api.mjs";
 export class AuthService {
   #userServise = diContainer.resolve(SERVICES.users);
   #configService = diContainer.resolve(SERVICES.config);
+  #sessionService = diContainer.resolve(SERVICES.session);
 
   #token;
   getToken() {
@@ -20,7 +21,8 @@ export class AuthService {
 
     try {
       const hash = await bcrypt.hash(hashData, saltRounds);
-      return { expired, hash };
+      this.#sessionService.setToken(hash, expired);
+      return hash;
     } catch (err) {
       throw new Error("Ошибка в создании токена");
     }
@@ -36,10 +38,10 @@ export class AuthService {
         throw new Error(401);
       }
 
-      const tokenData = await this.createToken(login, currentUser.email);
+      const token = await this.createToken(login, currentUser.email);
       return {
         user: currentUser,
-        tokenData,
+        token,
       };
     } catch (err) {
       throw err;
