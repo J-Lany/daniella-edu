@@ -17,10 +17,14 @@ export class AuthService {
     try {
       const hash = bcrypt.hash(hashData, saltRounds);
       this.#sessionService.setToken(hash, expired);
+      this.#sessionService.getExpired(hash);
       return hash;
     } catch (err) {
       throw new Error("Ошибка в создании токена");
     }
+  }
+  isAuth(token) {
+    return this.#sessionService.isTokenValid(token);
   }
 
   async login(login, password) {
@@ -41,9 +45,5 @@ export class AuthService {
     } catch (err) {
       throw err;
     }
-  }
-
-  isAuth(token) {
-    return this.#sessionService.isTokenValid(token);
   }
 }
