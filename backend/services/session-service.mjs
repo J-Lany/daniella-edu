@@ -13,9 +13,6 @@ export class SessionService {
   }
 
   isTokenValid(token) {
-    if (!this.#tokens.has(token) || this.getExpired(token) > new Date()) {
-      return false;
-    }
-    return true;
+    return !this.#tokens.has(token) || this.getExpired(token) > new Date();
   }
 }

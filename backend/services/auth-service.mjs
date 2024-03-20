@@ -32,8 +32,8 @@ export class AuthService {
       if (!bcrypt.compareSync(password, currentUser.hashedPassword)) {
         throw new Error(401);
       }
-
       const token = await this.createToken(login, currentUser.email);
+
       return {
         user: currentUser,
         token,
