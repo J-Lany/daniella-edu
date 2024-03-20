@@ -6,10 +6,11 @@ import { addListeners, removeListeners, select } from "../../utils/utils.js";
 export class LoginComponent extends HTMLElement {
   #authService = diContainer.resolve(SERVICES.auth);
   #listeners = [
+    [select.bind(this, ".login-btn"), "click", this.#onLoginClick.bind(this)],
     [
-      select.bind(this, ".login-form__btn"),
+      select.bind(this, ".registration-btn"),
       "click",
-      this.#onLoginClick.bind(this),
+      this.#onRegistrationClick.bind(this),
     ],
   ];
 
@@ -41,6 +42,14 @@ export class LoginComponent extends HTMLElement {
     const password = this.shadowRoot.querySelector("#password").value;
 
     this.#authService.login(login, password);
+  }
+  #onRegistrationClick(event) {
+    event.preventDefault();
+    const registrationComponent = document.createElement(
+      "registration-component"
+    );
+    this.shadowRoot.innerHTML = "";
+    this.shadowRoot.appendChild(registrationComponent);
   }
 
   render(err) {
