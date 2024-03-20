@@ -3,13 +3,11 @@ export class SessionService {
 
   setToken(token, expired) {
     this.#tokens.set(token, expired);
-    setTimeout(() => {
-      if (this.#tokens.get(token)) {
-        this.deleteToken(token);
-      }
-    }, expired);
   }
 
+  getToken(token) {
+    return this.#tokens.get(token);
+  }
   deleteToken(token) {
     this.#tokens.delete(token);
   }

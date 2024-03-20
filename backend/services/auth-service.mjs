@@ -7,12 +7,7 @@ export class AuthService {
   #configService = diContainer.resolve(SERVICES.config);
   #sessionService = diContainer.resolve(SERVICES.session);
 
-  #token;
-  getToken() {
-    return this.#token;
-  }
-
-  async createToken(login, email) {
+  createToken(login, email) {
     const hashData = `${login}${email}${this.#configService.secret}`;
     const saltRounds = 7;
     const ONE_WEEK = 7;
@@ -20,7 +15,7 @@ export class AuthService {
     expired.setDate(expired.getDate() + ONE_WEEK);
 
     try {
-      const hash = await bcrypt.hash(hashData, saltRounds);
+      const hash = bcrypt.hash(hashData, saltRounds);
       this.#sessionService.setToken(hash, expired);
       return hash;
     } catch (err) {
@@ -46,5 +41,9 @@ export class AuthService {
     } catch (err) {
       throw err;
     }
+  }
+
+  isAuth(token) {
+    return this.#sessionService.getToken(token) ? true : false;
   }
 }
