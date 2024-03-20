@@ -11,6 +11,7 @@ import { loginController } from "./controllers/login-controller.mjs";
 import swaggerJSDoc from "swagger-jsdoc";
 import { AuthService } from "./services/auth-service.mjs";
 import { configService } from "./services/config-service.mjs";
+import { SessionService } from "./services/session-service.mjs";
 
 const app = express();
 
@@ -40,6 +41,7 @@ diContainer.register(SERVICES.config, configService());
 
 diContainer.register(SERVICES.messages, messageService);
 diContainer.register(SERVICES.users, new UserService());
+diContainer.register(SERVICES.session, new SessionService());
 diContainer.register(SERVICES.auth, new AuthService());
 
 // Метод GET возвращает массив случайных сообщений для chatId

@@ -3,4 +3,5 @@ export const SERVICES = {
   users: "userService",
   auth: "authService",
   config: "configService",
+  session: "sessionService",
 };
