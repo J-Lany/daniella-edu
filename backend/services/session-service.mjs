@@ -5,10 +5,17 @@ export class SessionService {
     this.#tokens.set(token, expired);
   }
 
-  getToken(token) {
+  getExpired(token) {
     return this.#tokens.get(token);
   }
   deleteToken(token) {
     this.#tokens.delete(token);
+  }
+
+  isTokenValid(token) {
+    if (!this.#tokens.has(token) || this.getExpired(token) > new Date()) {
+      return false;
+    }
+    return true;
   }
 }

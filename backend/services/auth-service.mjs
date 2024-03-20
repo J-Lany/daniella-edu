@@ -44,6 +44,6 @@ export class AuthService {
   }
 
   isAuth(token) {
-    return this.#sessionService.getToken(token) ? true : false;
+    return this.#sessionService.isTokenValid(token);
   }
 }
