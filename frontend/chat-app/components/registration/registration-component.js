@@ -39,7 +39,11 @@ export class RegistrationComponent extends HTMLElement {
       return;
     }
 
-    this.#authService.registration(login, password)
+    this.#authService.registration(login, password).then((res) => {
+      const loginComponent = document.createElement("login-component");
+      this.shadowRoot.innerHTML = "";
+      this.shadowRoot.appendChild(loginComponent);
+    });
   }
   disconnectedCallback() {
     this.#listeners.forEach(removeListeners.bind(this));

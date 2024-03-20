@@ -40,19 +40,19 @@ export function authService() {
     if (login && password) {
       currentUser = mocUser;
       notifySubscribers();
-      return
+      return;
     }
     notifyError("Неверный логин или пароль");
   }
 
   async function registration(login, password) {
-
+    return { status: 200 };
   }
 
   return {
     subscribeCurrentUser,
     subscribeOnLoginError,
     login,
-    registration
+    registration,
   };
 }
