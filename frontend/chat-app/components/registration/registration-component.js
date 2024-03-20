@@ -7,7 +7,7 @@ export class RegistrationComponent extends HTMLElement {
   #authService = diContainer.resolve(SERVICES.auth);
   #listeners = [
     [
-      select.bind(this, ".registration-btn"),
+      select.bind(this, ".registration-form__btn"),
       "click",
       this.#onRegistrationClick.bind(this),
     ],
@@ -25,7 +25,21 @@ export class RegistrationComponent extends HTMLElement {
     this.#listeners.forEach(addListeners.bind(this));
   }
   #onRegistrationClick() {
-    console.log("Зарегаться");
+    const login = this.shadowRoot.querySelector("#login").value;
+    const password = this.shadowRoot.querySelector("#password").value;
+    const confirmPassword =
+      this.shadowRoot.querySelector("#confirm-password").value;
+
+    if (confirmPassword !== password) {
+      const wrongPassword = document.createElement("div");
+      wrongPassword.innerHTML = "Пароли не совпадают";
+      this.shadowRoot
+        .querySelector(".registration-form")
+        .appendChild(wrongPassword);
+      return;
+    }
+
+    this.#authService.registration(login, password)
   }
   disconnectedCallback() {
     this.#listeners.forEach(removeListeners.bind(this));

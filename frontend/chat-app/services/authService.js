@@ -45,9 +45,14 @@ export function authService() {
     notifyError("Неверный логин или пароль");
   }
 
+  async function registration(login, password) {
+
+  }
+
   return {
     subscribeCurrentUser,
     subscribeOnLoginError,
     login,
+    registration
   };
 }
