@@ -7,7 +7,6 @@ export class SessionService {
 
   getExpired(token) {
     const expired = this.#tokens.get(token);
-    console.log(expired);
     return expired;
   }
   deleteToken(token) {
