@@ -10,6 +10,7 @@ import { HeaderComponent } from "./chat-app/components/header/header-component.j
 import { LoginComponent } from "./chat-app/components/login/login-component.js";
 import { UserInfoBlock } from "./chat-app/components/user-info-block/user-info-block.js";
 import { RegistrationComponent } from "./chat-app/components/registration/registration-component.js";
+import { AuthComponent } from "./chat-app/components/auth/auth-component.js";
 
 diContainer.register(SERVICES.messages, messageService);
 diContainer.register(SERVICES.http, httpService);
@@ -21,7 +22,7 @@ diContainer.register(SERVICES.auth, authService);
   HeaderComponent,
   LoginComponent,
   RegistrationComponent,
-  AppComponent,
+  AppComponent, AuthComponent
 ].map((component) => customElements.define(component.name, component));
 
 document.querySelector("#app").innerHTML = `<app-component></app-component>`;

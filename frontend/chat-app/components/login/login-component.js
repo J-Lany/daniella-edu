@@ -45,11 +45,8 @@ export class LoginComponent extends HTMLElement {
   }
   #onRegistrationClick(event) {
     event.preventDefault();
-    const registrationComponent = document.createElement(
-      "registration-component"
-    );
-    this.shadowRoot.innerHTML = "";
-    this.shadowRoot.appendChild(registrationComponent);
+    const registrationClickEvent = new Event("registration");
+    this.dispatchEvent(registrationClickEvent);
   }
 
   render(err) {
