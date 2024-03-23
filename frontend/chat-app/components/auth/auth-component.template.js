@@ -1,10 +1,10 @@
 import { viewTypes } from "./auth-component";
 
-export function createAuthComponent(state) {
+export function createAuthComponent(viewType) {
   return `
   <div>
     ${
-      state === viewTypes.LOGIN
+      viewType === viewTypes.LOGIN
         ? "<login-component></login-component>"
         : "<registration-component></registration-component>"
     }

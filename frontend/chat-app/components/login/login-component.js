@@ -21,13 +21,13 @@ export class LoginComponent extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    this.render();
   }
 
   connectedCallback() {
     this.unSubscribeFromError = this.#authService.subscribeOnLoginError(
       this.render.bind(this)
     );
+    this.render();
   }
 
   disconnectedCallback() {
@@ -41,18 +41,19 @@ export class LoginComponent extends HTMLElement {
 
     this.#authService.login(login, password);
   }
-  #onRegistrationClick(event) {
-    event.preventDefault();
-    const registrationClickEvent = new Event("registration");
-    this.dispatchEvent(registrationClickEvent);
+  #onRegistrationClick() {
+    this.dispatchEvent(new Event("registration"));
   }
 
-  render(err) {
+  render(errorMessage) {
     this.#listeners.forEach(removeListeners.bind(this));
+
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createLoginTemplate(err);
+    templateElem.innerHTML = createLoginTemplate(errorMessage);
+
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
+
     this.#listeners.forEach(addListeners.bind(this));
   }
 }

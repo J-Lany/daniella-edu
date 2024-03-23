@@ -1,6 +1,6 @@
 import { getLoginComponentStyle } from "./login-component.styles";
 
-export function createLoginTemplate(err) {
+export function createLoginTemplate(errorMessage) {
   return `
     ${getLoginComponentStyle()}
    <div class="login-page">
@@ -13,7 +13,7 @@ export function createLoginTemplate(err) {
           <button class="login-form__btn registration-btn">Sign up</button>
         </div>
       </div>
-      ${err ? `<div class="error-messsge">${err}</div>` : ""}
+      ${errorMessage ? `<div class="error-messsge">${errorMessage}</div>` : ""}
    </div>
   `;
 }

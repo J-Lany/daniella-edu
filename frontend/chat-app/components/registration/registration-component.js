@@ -19,8 +19,12 @@ export class RegistrationComponent extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
+  }
+
+  connectedCallback() {
     this.render();
   }
+
   #onRegistrationClick() {
     const login = this.shadowRoot.querySelector("#login").value;
     const password = this.shadowRoot.querySelector("#password").value;
@@ -32,23 +36,25 @@ export class RegistrationComponent extends HTMLElement {
       return;
     }
     this.#authService.registration(login, password).then((res) => {
-      const loginClick = new Event("login");
-      this.dispatchEvent(loginClick);
+      this.dispatchEvent(new Event("login"));
     });
   }
 
   #onInput() {
     removeListeners([select.bind(this, "#password"), "input", this.#onInput]);
-    let inputs = this.shadowRoot.querySelectorAll(".registration-form__input");
+    const inputs = this.shadowRoot.querySelectorAll(".registration-form__input");
     inputs.forEach((input) => input.classList.remove("error"));
   }
 
-  render(err) {
+  render(errorMessage) {
     this.#listeners.forEach(removeListeners.bind(this));
+
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createRegistrationTemplate(err);
+    templateElem.innerHTML = createRegistrationTemplate(errorMessage);
+
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
+
     this.#listeners.forEach(addListeners.bind(this));
   }
 }

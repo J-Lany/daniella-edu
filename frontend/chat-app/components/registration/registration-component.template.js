@@ -1,7 +1,7 @@
 import { getRegistrationComponentStyle } from "./registration-component.styles";
 
-export function createRegistrationTemplate(err) {
-  const hasErr = !!err;
+export function createRegistrationTemplate(errorMessage) {
+  const hasErrorMessage = !!errorMessage;
   return `
   ${getRegistrationComponentStyle()}
   <div class="registration-page">
@@ -9,21 +9,20 @@ export function createRegistrationTemplate(err) {
     <div class="registration-form">
       <input id="login" class="registration-form__input" type="text" placeholder="login" required/>
       <input id="password" class="registration-form__input ${
-        hasErr ? "error" : ""
+        hasErrorMessage ? "error" : ""
       }" type="password" placeholder="password" required />
       <input id="confirm-password" class="registration-form__input ${
-        hasErr ? "error" : ""
+        hasErrorMessage ? "error" : ""
       } type="password" placeholder="confirm password" required />
       <button class="registration-form__btn">Sign up</button>
     </div>
     ${
-      err
+      errorMessage
         ? `<div class="error-messsge">
-      ${err}
+      ${errorMessage}
       </div>`
         : ""
     }
   </div>
   `;
 }
-

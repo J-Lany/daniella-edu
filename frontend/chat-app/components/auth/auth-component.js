@@ -33,23 +33,24 @@ export class AuthComponent extends HTMLElement {
     this.render();
   }
 
-  #onRegistrationClick(event) {
-    event.preventDefault();
+  #onRegistrationClick() {
     this.#currentViewTupe = viewTypes.REGISTRATION;
     this.render();
   }
-  #onSucsessRegistratiom(event) {
-    event.preventDefault();
+  #onSucsessRegistratiom() {
     this.#currentViewTupe = viewTypes.LOGIN;
     this.render();
   }
 
   render() {
     this.#listeners.forEach(removeListeners.bind(this));
+
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createAuthComponent(this.#currentViewTupe);
+    
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
+
     this.#listeners.forEach(addListeners.bind(this));
   }
 }
