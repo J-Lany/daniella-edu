@@ -44,12 +44,8 @@ export class AuthComponent extends HTMLElement {
     this.render();
   }
 
-  disconnectedCallback() {
-    this.#listeners.forEach(removeListeners.bind(this));
-  }
-
   render() {
-    console.log("Zareg");
+    this.#listeners.forEach(removeListeners.bind(this));
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createAuthComponent(this.#currentViewTupe);
     this.shadowRoot.innerHTML = "";

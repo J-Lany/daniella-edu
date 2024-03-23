@@ -25,7 +25,6 @@ export class LoginComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    this.#listeners.forEach(addListeners.bind(this));
     this.unSubscribeFromError = this.#authService.subscribeOnLoginError(
       this.render.bind(this)
     );
@@ -33,7 +32,6 @@ export class LoginComponent extends HTMLElement {
 
   disconnectedCallback() {
     this.unSubscribeFromError();
-    this.#listeners.forEach(removeListeners.bind(this));
   }
 
   #onLoginClick(event) {
@@ -50,9 +48,11 @@ export class LoginComponent extends HTMLElement {
   }
 
   render(err) {
+    this.#listeners.forEach(removeListeners.bind(this));
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createLoginTemplate(err);
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
+    this.#listeners.forEach(addListeners.bind(this));
   }
 }

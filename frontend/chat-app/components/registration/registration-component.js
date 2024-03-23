@@ -43,10 +43,8 @@ export class RegistrationComponent extends HTMLElement {
     inputs.forEach((input) => input.classList.remove("error"));
   }
 
-  disconnectedCallback() {
-    this.#listeners.forEach(removeListeners.bind(this));
-  }
   render(err) {
+    this.#listeners.forEach(removeListeners.bind(this));
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createRegistrationTemplate(err);
     this.shadowRoot.innerHTML = "";
