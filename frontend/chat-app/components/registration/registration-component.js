@@ -11,6 +11,7 @@ export class RegistrationComponent extends HTMLElement {
       "click",
       this.#onRegistrationClick.bind(this),
     ],
+    [select.bind(this, "#password"), "input", this.#onInput.bind(this)],
   ];
   static get name() {
     return "registration-component";
@@ -30,12 +31,18 @@ export class RegistrationComponent extends HTMLElement {
       this.render("Пароли не совпадают");
       return;
     }
-
     this.#authService.registration(login, password).then((res) => {
       const loginClick = new Event("login");
       this.dispatchEvent(loginClick);
     });
   }
+
+  #onInput() {
+    removeListeners([select.bind(this, "#password"), "input", this.#onInput]);
+    let inputs = this.shadowRoot.querySelectorAll(".registration-form__input");
+    inputs.forEach((input) => input.classList.remove("error"));
+  }
+
   disconnectedCallback() {
     this.#listeners.forEach(removeListeners.bind(this));
   }
