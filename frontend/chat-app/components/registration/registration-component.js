@@ -20,10 +20,6 @@ export class RegistrationComponent extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.render();
   }
-
-  connectedCallback() {
-    this.#listeners.forEach(addListeners.bind(this));
-  }
   #onRegistrationClick() {
     const login = this.shadowRoot.querySelector("#login").value;
     const password = this.shadowRoot.querySelector("#password").value;
@@ -48,5 +44,6 @@ export class RegistrationComponent extends HTMLElement {
     templateElem.innerHTML = createRegistrationTemplate(err);
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
+    this.#listeners.forEach(addListeners.bind(this));
   }
 }

@@ -48,8 +48,12 @@ export const getRegistrationComponentStyle = () => {
 
   .error-messsge{
     color: red;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
     text-align: center;
+  }
+
+  .error{
+    background-color: var( --red-error-background)
   }
 
   @media screen and (max-width: 600px) {
@@ -63,7 +67,7 @@ export const getRegistrationComponentStyle = () => {
       font-size: 1rem;
       padding: 1rem;
     }
-    
+
     .error-messsge{
       margin-top: 0.25rem;
     }
