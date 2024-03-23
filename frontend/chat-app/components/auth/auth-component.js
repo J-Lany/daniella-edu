@@ -1,17 +1,23 @@
 import { addListeners, removeListeners, select } from "../../utils/utils.js";
 import { createAuthComponent } from "./auth-component.template";
 
-export class AuthComponent extends HTMLElement {
-  LOGIN_STATE = {
-    REGISTRATION: "registration",
-    LOGIN: "login",
-  };
+export const viewTypes = {
+  REGISTRATION: "registration",
+  LOGIN: "login",
+};
 
+export class AuthComponent extends HTMLElement {
+  #currentViewTupe = viewTypes.LOGIN;
   #listeners = [
     [
       select.bind(this, "login-component"),
       "registration",
       this.#onRegistrationClick.bind(this),
+    ],
+    [
+      select.bind(this, "registration-component"),
+      "login",
+      this.#onSucsessRegistratiom.bind(this),
     ],
   ];
 
@@ -29,16 +35,23 @@ export class AuthComponent extends HTMLElement {
 
   #onRegistrationClick(event) {
     event.preventDefault();
-    this.render(this.LOGIN_STATE.REGISTRATION);
+    this.#currentViewTupe = viewTypes.REGISTRATION;
+    this.render();
+  }
+  #onSucsessRegistratiom(event) {
+    event.preventDefault();
+    this.#currentViewTupe = viewTypes.LOGIN;
+    this.render();
   }
 
   disconnectedCallback() {
     this.#listeners.forEach(removeListeners.bind(this));
   }
 
-  render(state = this.LOGIN_STATE.LOGIN) {
+  render() {
+    console.log("Zareg");
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createAuthComponent(state);
+    templateElem.innerHTML = createAuthComponent(this.#currentViewTupe);
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
     this.#listeners.forEach(addListeners.bind(this));

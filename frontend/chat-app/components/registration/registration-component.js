@@ -31,26 +31,22 @@ export class RegistrationComponent extends HTMLElement {
       this.shadowRoot.querySelector("#confirm-password").value;
 
     if (confirmPassword !== password) {
-      const wrongPassword = document.createElement("div");
-      wrongPassword.innerHTML = "Пароли не совпадают";
-      this.shadowRoot
-        .querySelector(".registration-form")
-        .appendChild(wrongPassword);
+      this.render("Пароли не совпадают");
       return;
     }
 
     this.#authService.registration(login, password).then((res) => {
-      const loginComponent = document.createElement("login-component");
-      this.shadowRoot.innerHTML = "";
-      this.shadowRoot.appendChild(loginComponent);
+      const loginClick = new Event("login");
+      this.dispatchEvent(loginClick);
     });
   }
   disconnectedCallback() {
     this.#listeners.forEach(removeListeners.bind(this));
   }
-  render() {
+  render(err) {
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createRegistrationTemplate();
+    templateElem.innerHTML = createRegistrationTemplate(err);
+    this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
   }
 }

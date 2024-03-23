@@ -1,6 +1,6 @@
 import { getRegistrationComponentStyle } from "./registration-component.styles";
 
-export function createRegistrationTemplate() {
+export function createRegistrationTemplate(err) {
   return `
   ${getRegistrationComponentStyle()}
   <div class="registration-page">
@@ -11,6 +11,13 @@ export function createRegistrationTemplate() {
       <input id="confirm-password" class="registration-form__input" type="password" placeholder="confirm password" required />
       <button class="registration-form__btn">Sign up</button>
     </div>
+    ${
+      err
+        ? `<div class="error-messsge">
+      ${err}
+      </div>`
+        : ""
+    }
   </div>
   `;
 }
