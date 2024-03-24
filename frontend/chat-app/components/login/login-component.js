@@ -6,10 +6,11 @@ import { addListeners, removeListeners, select } from "../../utils/utils.js";
 export class LoginComponent extends HTMLElement {
   #authService = diContainer.resolve(SERVICES.auth);
   #listeners = [
+    [select.bind(this, ".login-btn"), "click", this.#onLoginClick.bind(this)],
     [
-      select.bind(this, ".login-form__btn"),
+      select.bind(this, ".registration-btn"),
       "click",
-      this.#onLoginClick.bind(this),
+      this.#onRegistrationClick.bind(this),
     ],
   ];
 
@@ -20,14 +21,13 @@ export class LoginComponent extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    this.render();
   }
 
   connectedCallback() {
-    this.#listeners.forEach(addListeners.bind(this));
     this.unSubscribeFromError = this.#authService.subscribeOnLoginError(
       this.render.bind(this)
     );
+    this.render();
   }
 
   disconnectedCallback() {
@@ -42,11 +42,19 @@ export class LoginComponent extends HTMLElement {
 
     this.#authService.login(login, password);
   }
+  #onRegistrationClick() {
+    this.dispatchEvent(new Event("registration"));
+  }
 
-  render(err) {
+  render(errorMessage) {
+    this.#listeners.forEach(removeListeners.bind(this));
+
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createLoginTemplate(err);
+    templateElem.innerHTML = createLoginTemplate(errorMessage);
+
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
+
+    this.#listeners.forEach(addListeners.bind(this));
   }
 }
