@@ -42,7 +42,7 @@ export function authService() {
         currentUser = res.user;
         notifySubscribers();
       })
-      .catch((err) => notifyError(err));
+      .catch(notifyError);
   }
 
   async function registration(login, password) {
