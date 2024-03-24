@@ -14,7 +14,6 @@ const mocUser = {
 export function authService() {
   const httpServise = diContainer.resolve(SERVICES.http);
   let currentUser;
-  
 
   function notifySubscribers() {
     userSubscribers.forEach((subscription) => {
@@ -43,16 +42,15 @@ export function authService() {
   }
 
   async function login(login, password) {
-    if (login && password) {
-      currentUser = mocUser;
+    await httpServise.post(`login/`, { login, password }).then((res) => {
+      console.log(res);
+      currentUser = res.user;
       notifySubscribers();
-      return;
-    }
-    notifyError("Неверный логин или пароль");
+    });
   }
 
   async function registration(login, password) {
-    return await httpServise.post(`registration/`, {login, password})
+    return await httpServise.post(`registration/`, { login, password });
   }
 
   return {
