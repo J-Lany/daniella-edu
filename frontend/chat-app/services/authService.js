@@ -52,7 +52,7 @@ export function authService() {
   }
 
   async function registration(login, password) {
-    return { status: 200 };
+    return await httpServise.post(`registration/`, {login, password})
   }
 
   return {
