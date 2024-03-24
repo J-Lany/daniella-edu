@@ -42,11 +42,14 @@ export function authService() {
   }
 
   async function login(login, password) {
-    await httpServise.post(`login/`, { login, password }).then((res) => {
-      console.log(res);
-      currentUser = res.user;
-      notifySubscribers();
-    });
+    await httpServise
+      .post(`login/`, { login, password })
+      .then((res) => {
+        console.log(res);
+        currentUser = res.user;
+        notifySubscribers();
+      })
+      .catch((err) => notifyError(err));
   }
 
   async function registration(login, password) {
