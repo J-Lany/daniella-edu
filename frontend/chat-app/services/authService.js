@@ -1,58 +1,53 @@
 import { diContainer } from "../di/di";
 import { SERVICES } from "../di/api";
 
-const userSubscribers = new Set();
-const errorSubscribers = new Set();
 
-export function authService() {
-  const httpServise = diContainer.resolve(SERVICES.http);
-  let currentUser;
+export class AuthService {
+   #userSubscribers = new Set();
+   #errorSubscribers = new Set();
+   #httpServise = diContainer.resolve(SERVICES.http);
+   #currentUser;
 
-  function notifySubscribers() {
-    userSubscribers.forEach((subscription) => {
-      subscription(currentUser);
+   notifySubscribers() {
+    this.#userSubscribers.forEach((subscription) => {
+      subscription(this.#currentUser);
     });
   }
 
-  function notifyError(error) {
-    errorSubscribers.forEach((subscription) => {
+   notifyError(error) {
+    this.#errorSubscribers.forEach((subscription) => {
       subscription();
     });
   }
 
-  function unSubscribe(subs) {
-    userSubscribers.delete(subs);
+   unSubscribe(subs) {
+    this.#userSubscribers.delete(subs);
   }
 
-  function subscribeCurrentUser(subscription) {
-    userSubscribers.add(subscription);
-    return () => unSubscribe(subscription);
+   subscribeCurrentUser(subscription) {
+    this.#userSubscribers.add(subscription);
+    return () => this.unSubscribe(subscription);
   }
 
-  function subscribeOnLoginError(subs) {
-    errorSubscribers.add(subs);
-    return () => unSubscribe(subs);
+   subscribeOnLoginError(subs) {
+    this.#errorSubscribers.add(subs);
+    return () => this.unSubscribe(subs);
   }
 
-  async function login(login, password) {
-    await httpServise
+  async  login(login, password) {
+    await this.#httpServise
       .post(`login/`, { login, password })
       .then((res) => {
         console.log(res);
-        currentUser = res.user;
-        notifySubscribers();
+        this.#currentUser = res.user;
+        this.notifySubscribers();
       })
-      .catch(notifyError);
+      .catch(this.notifyError);
   }
 
-  async function registration(login, password) {
-    return await httpServise.post(`registration/`, { login, password });
+  async  registration(login, password) {
+    return await this.#httpServise.post(`registration/`, { login, password });
   }
 
-  return {
-    subscribeCurrentUser,
-    subscribeOnLoginError,
-    login,
-    registration,
-  };
+ 
 }
