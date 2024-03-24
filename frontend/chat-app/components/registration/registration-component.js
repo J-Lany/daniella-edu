@@ -39,11 +39,18 @@ export class RegistrationComponent extends HTMLElement {
       this.dispatchEvent(new Event("login"));
     });
   }
+  disconnectedCallback(){
+    this.#listeners.forEach(removeListeners.bind(this));
+  }
 
   #onInput() {
-    removeListeners([select.bind(this, "#password"), "input", this.#onInput]);
-    const inputs = this.shadowRoot.querySelectorAll(".registration-form__input");
-    inputs.forEach((input) => input.classList.remove("error"));
+    const password = this.shadowRoot.querySelector("#password");
+    if (password.classList.contains("error")) {
+      this.shadowRoot
+        .querySelectorAll(".registration-form__input")
+        .forEach((input) => input.classList.remove("error"));
+    }
+    return;
   }
 
   render(errorMessage) {

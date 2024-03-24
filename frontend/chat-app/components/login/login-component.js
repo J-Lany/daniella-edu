@@ -32,6 +32,7 @@ export class LoginComponent extends HTMLElement {
 
   disconnectedCallback() {
     this.unSubscribeFromError();
+    this.#listeners.forEach(removeListeners.bind(this));
   }
 
   #onLoginClick(event) {

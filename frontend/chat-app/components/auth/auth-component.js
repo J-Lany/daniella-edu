@@ -42,12 +42,16 @@ export class AuthComponent extends HTMLElement {
     this.render();
   }
 
+  disconnectedCallback() {
+    this.#listeners.forEach(removeListeners.bind(this));
+  }
+
   render() {
     this.#listeners.forEach(removeListeners.bind(this));
 
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createAuthComponent(this.#currentViewTupe);
-    
+
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
 

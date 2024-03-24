@@ -46,11 +46,17 @@ export const getRegistrationComponentStyle = () => {
     background-color: var(--light-blue-background)
   }
 
-  .error-messsge{
+  .error-messsge {
     color: red;
     margin-top: 1rem;
     text-align: center;
+    display: none;
   }
+
+  .show {
+    display: block;
+  }
+  
 
   .error{
     background-color: var( --red-error-background)
