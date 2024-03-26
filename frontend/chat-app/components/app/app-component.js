@@ -15,7 +15,7 @@ export class AppComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    this.unSubscribeFromAuth = this.#authService.subscribeCurrentUser(
+    this.unSubscribeFromAuth = this.#authService.subscribeToken(
       this.#render.bind(this)
     );
     this.#render();
@@ -25,9 +25,10 @@ export class AppComponent extends HTMLElement {
     this.unSubscribeFromAuth();
   }
 
-  #render(user) {
+  #render(token) {
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createAppTemplate(user);
+    templateElem.innerHTML = createAppTemplate(token);
+    
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
   }

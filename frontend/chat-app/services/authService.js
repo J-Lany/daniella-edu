@@ -2,15 +2,15 @@ import { diContainer } from "../di/di";
 import { SERVICES } from "../di/api";
 
 export class AuthService {
-  #userSubscribers = new Set();
+  #tokenSubscribers = new Set();
   #errorSubscribers = new Set();
   #httpServise = diContainer.resolve(SERVICES.http);
-  #currentUser;
-  #currentUserToken;
+  #userService = diContainer.resolve(SERVICES.user);
+  #token;
 
   notifySubscribers() {
-    this.#userSubscribers.forEach((subscription) => {
-      subscription(this.#currentUser);
+    this.#tokenSubscribers.forEach((subscription) => {
+      subscription(this.#token);
     });
   }
 
@@ -21,11 +21,11 @@ export class AuthService {
   }
 
   unSubscribe(subs) {
-    this.#userSubscribers.delete(subs);
+    this.#tokenSubscribers.delete(subs);
   }
 
-  subscribeCurrentUser(subscription) {
-    this.#userSubscribers.add(subscription);
+  subscribeToken(subscription) {
+    this.#tokenSubscribers.add(subscription);
     return () => this.unSubscribe(subscription);
   }
 
@@ -38,8 +38,8 @@ export class AuthService {
     await this.#httpServise
       .post(`login/`, { login, password })
       .then((res) => {
-        this.#currentUser = res.user;
-        this.#currentUserToken = res.token;
+        this.#userService.setCurrentUser(res.user);
+        this.#token = res.token;
         this.notifySubscribers();
       })
       .catch(this.notifyError);
