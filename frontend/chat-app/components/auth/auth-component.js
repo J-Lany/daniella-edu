@@ -37,20 +37,23 @@ export class AuthComponent extends HTMLElement {
     this.#currentViewTupe = viewTypes.REGISTRATION;
     this.render();
   }
-  #onSucsessRegistratiom() {
+  #onSucsessRegistratiom(event) {
     this.#currentViewTupe = viewTypes.LOGIN;
-    this.render();
+    this.render(event.detail.registration);
   }
 
   disconnectedCallback() {
     this.#listeners.forEach(removeListeners.bind(this));
   }
 
-  render() {
+  render(successReg) {
     this.#listeners.forEach(removeListeners.bind(this));
 
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createAuthComponent(this.#currentViewTupe);
+    templateElem.innerHTML = createAuthComponent(
+      this.#currentViewTupe,
+      successReg
+    );
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
