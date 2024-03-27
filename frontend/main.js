@@ -12,6 +12,7 @@ import { UserInfoBlock } from "./chat-app/components/user-info-block/user-info-b
 import { RegistrationComponent } from "./chat-app/components/registration/registration-component.js";
 import { AuthComponent } from "./chat-app/components/auth/auth-component.js";
 import { UserService } from "./chat-app/services/userService.js";
+import { MessagesBlock } from "./chat-app/components/messages-block/messages-block.js";
 
 diContainer.register(SERVICES.messages, messageService);
 diContainer.register(SERVICES.http, httpService);
@@ -26,6 +27,7 @@ diContainer.register(SERVICES.auth, new AuthService());
   RegistrationComponent,
   AppComponent,
   AuthComponent,
+  MessagesBlock,
 ].map((component) => customElements.define(component.name, component));
 
 document.querySelector("#app").innerHTML = `<app-component></app-component>`;
