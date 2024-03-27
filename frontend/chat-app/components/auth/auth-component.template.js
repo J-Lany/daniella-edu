@@ -1,12 +1,20 @@
 import { viewTypes } from "./auth-component";
+import { getAuthComponentStyle } from "./auth-component.styles";
 
-export function createAuthComponent(viewType) {
+export function createAuthComponent(viewType, successReg) {
+  const successItem = (successReg) => {
+    return successReg
+      ? `<div class="success-reg"> Вы успешно зарегестрированы</div>`
+      : "";
+  };
+
   return `
+  ${getAuthComponentStyle()}
   <div>
     ${
       viewType === viewTypes.LOGIN
-        ? "<login-component></login-component>"
-        : "<registration-component></registration-component>"
+        ? `<login-component></login-component> ${successItem(successReg)}`
+        : `<registration-component></registration-component>`
     }
   </div>
 `;

@@ -36,10 +36,15 @@ export class RegistrationComponent extends HTMLElement {
       return;
     }
     this.#authService.registration(login, password).then((res) => {
-      this.dispatchEvent(new Event("login"));
+      const registrationEvent = new CustomEvent("login", {
+        detail: {
+          registration: "success",
+        },
+      });
+      this.dispatchEvent(registrationEvent);
     });
   }
-  disconnectedCallback(){
+  disconnectedCallback() {
     this.#listeners.forEach(removeListeners.bind(this));
   }
 

@@ -9,6 +9,9 @@ export const diContainer = (() => {
     if (dependencies[name] === undefined) {
       throw new Error(`Dependency "${name}" not found`);
     }
+    if (typeof dependencies[name] === "object") {
+      return dependencies[name];
+    }
     return dependencies[name]();
   };
 

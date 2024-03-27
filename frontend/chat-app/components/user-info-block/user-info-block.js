@@ -4,7 +4,7 @@ import { SERVICES } from "../../di/api";
 
 export class UserInfoBlock extends HTMLElement {
   #authService = diContainer.resolve(SERVICES.auth);
-
+  #userService = diContainer.resolve(SERVICES.user);
   static get name() {
     return "user-info-block";
   }
@@ -15,7 +15,7 @@ export class UserInfoBlock extends HTMLElement {
   }
 
   connectedCallback() {
-    this.unSubscribeFromAuth = this.#authService.subscribeCurrentUser(
+    this.unSubscribeFromAuth = this.#authService.subscribeToken(
       this.#render.bind(this)
     );
   }
@@ -24,9 +24,12 @@ export class UserInfoBlock extends HTMLElement {
     this.unSubscribeFromAuth();
   }
 
-  #render(user) {
+  #render(token) {
+    const user = token ? this.#userService.getCurrentUser() : null;
+
     const templateElm = document.createElement("template");
     templateElm.innerHTML = createUserInfoBlockTemplate(user);
+
     this.shadowRoot.appendChild(templateElm.content.cloneNode(true));
   }
 }
