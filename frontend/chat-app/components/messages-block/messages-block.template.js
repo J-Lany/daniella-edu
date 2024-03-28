@@ -14,6 +14,5 @@ export function createMessagesBlockTemplate(messages) {
         </div>
       </div>`;
     })}
-  </div>
-  `;
+  </div>`;
 }

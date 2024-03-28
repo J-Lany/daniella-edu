@@ -1,7 +1,10 @@
 import { createAvatarTemplate } from "./avatar-component.template";
-import defaultAvatar from "../../accets/defaultAvatar.jpg";
+import { diContainer } from "../../di/di";
+import { SERVICES } from "../../di/api";
 
 export class AvatarComponent extends HTMLElement {
+  #userService = diContainer.resolve(SERVICES.user);
+
   static get name() {
     return "avatar-component";
   }
@@ -12,12 +15,13 @@ export class AvatarComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    this.render(defaultAvatar);
+    this.render();
   }
 
   render() {
+    const user = this.#userService.getCurrentUser()
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createAvatarTemplate(defaultAvatar);
+    templateElem.innerHTML = createAvatarTemplate(user);
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
