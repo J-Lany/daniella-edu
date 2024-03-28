@@ -5,9 +5,7 @@ export function createAppTemplate(token) {
   <div class="app">
     ${
       token
-        ? `
-        <header-component></header-component>
-        <messages-block></messages-block>`
+        ? "<chat-component></chat-component>"
         : "<auth-component></auth-component>"
     }
   </div>`;
