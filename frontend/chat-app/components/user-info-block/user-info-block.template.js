@@ -4,14 +4,14 @@ export function createUserInfoBlockTemplate(props) {
   if (!props) {
     return null;
   }
-  const { login, avatar, status } = props;
+  const { login } = props;
   return `
   ${getUserInfoBlockComponentStyle()}
   <div class="user-info">
-    <img class="user-info__img" src="${avatar}" alt='avatar'/>
+    <avatar-component></avatar-component>
     <div>
       <div class="user-info__name">${login}</div>
-      <div class="user-info__status">${status}</div>
+      <div class="user-info__status">active</div>
     </div>
   </div>
   `;
