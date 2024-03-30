@@ -9,7 +9,7 @@ export function createMessagesBlockTemplate(messages) {
       <div class="message-block">
         <avatar-component></avatar-component>
         <div class="message-block__body">
-          <div class="message-block__name">${author}</div>
+          <message-info></message-info>
           <div class="message-block__body">${message}</div>
         </div>
       </div>`;
