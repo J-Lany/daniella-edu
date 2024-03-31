@@ -14,7 +14,7 @@ export class MessagesBlock extends HTMLElement {
   }
 
   connectedCallback() {
-    this.#messagesService.getMessagesByChatId(1).then((res) => {
+    this.#messagesService.subscribeMessagesByCurrentChat(1).then((res) => {
       this.render(res);
     });
   }
