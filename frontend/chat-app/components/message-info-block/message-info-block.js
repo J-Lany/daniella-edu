@@ -16,7 +16,7 @@ export class MessageInfoBlock extends HTMLElement {
   connectedCallback() {
     const userId = this.getAttribute("user-id");
     this.time = this.getAttribute("time");
-    this.unsubscribeFromUser = this.#userService.subscribeCompanion(
+    this.unsubscribeFromUser = this.#userService.subscribeUserById(
       this.render.bind(this)
     );
     this.#userService.getUserById(userId);

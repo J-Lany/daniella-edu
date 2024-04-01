@@ -7,7 +7,7 @@ export function createMessagesBlockTemplate(messages) {
     ${messages.map(({ message, id, time }) => {
       return `
       <div class="message-block">
-        <avatar-component></avatar-component>
+        <avatar-component user-id="${id}></avatar-component>
         <div class="message-block__body">
           <message-info user-id="${id}" time="${time}"></message-info>
           <div class="message-block__body">${message}</div>

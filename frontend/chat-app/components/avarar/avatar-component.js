@@ -15,11 +15,16 @@ export class AvatarComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    this.render();
+    this.unsubscribeFromUser = this.#userService.subscribeUserById(
+      this.render.bind(this)
+    );
   }
 
-  render() {
-    const user = this.#userService.getCurrentUser()
+  disconnectedCallback() {
+    this.unsubscribeFromUser();
+  }
+
+  render(user) {
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createAvatarTemplate(user);
 

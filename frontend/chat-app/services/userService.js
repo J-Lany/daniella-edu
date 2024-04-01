@@ -8,9 +8,9 @@ const MOC_USER = {
 export class UserService {
   #companionUserSubscribers = new Set();
   #currentUser;
-  #companionUser;
+  #userById;
 
-  subscribeCompanion(subscription) {
+  subscribeUserById(subscription) {
     this.#companionUserSubscribers.add(subscription);
     return () => this.unSubscribe(subscription);
   }
@@ -22,7 +22,7 @@ export class UserService {
   }
 
   notifySubscribers() {
-    this.#companionUserSubscribers.forEach((subs) => subs(this.#companionUser));
+    this.#companionUserSubscribers.forEach((subs) => subs(this.#userById));
   }
 
   getCurrentUser() {
@@ -30,7 +30,7 @@ export class UserService {
   }
 
   getUserById(id) {
-    this.#companionUser = MOC_USER;
+    this.#userById = MOC_USER;
     this.notifySubscribers();
   }
 }
