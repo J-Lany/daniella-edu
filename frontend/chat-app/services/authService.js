@@ -6,6 +6,7 @@ export class AuthService {
   #errorSubscribers = new Set();
   #httpServise = diContainer.resolve(SERVICES.http);
   #userService = diContainer.resolve(SERVICES.user);
+  #messagesService = diContainer.resolve(SERVICES.messages);
   #token;
 
   notifySubscribers() {
@@ -39,6 +40,7 @@ export class AuthService {
       .post(`login/`, { login, password })
       .then((res) => {
         this.#userService.setCurrentUser(res.user);
+        this.#messagesService.setCurrentChatId()
         this.#token = res.token;
         this.notifySubscribers();
       })

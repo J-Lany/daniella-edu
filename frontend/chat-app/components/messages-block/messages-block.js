@@ -14,9 +14,14 @@ export class MessagesBlock extends HTMLElement {
   }
 
   connectedCallback() {
-    this.#messagesService.subscribeMessagesByCurrentChat(1).then((res) => {
-      this.render(res);
-    });
+    this.unSubscribeFromMessages =
+      this.#messagesService.subscribeMessagesByCurrentChat(
+        this.render.bind(this)
+      );
+  }
+
+  disconnectedCallback() {
+    this.unSubscribeFromMessages();
   }
   render(messages) {
     const templateElem = document.createElement("template");
