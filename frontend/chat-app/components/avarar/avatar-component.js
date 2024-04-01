@@ -15,9 +15,11 @@ export class AvatarComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    const userId = this.getAttribute("user-id");
     this.unsubscribeFromUser = this.#userService.subscribeUserById(
       this.render.bind(this)
     );
+    this.#userService.getUserById(userId);
   }
 
   disconnectedCallback() {
