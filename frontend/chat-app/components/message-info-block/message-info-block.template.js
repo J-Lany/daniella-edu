@@ -1,12 +1,12 @@
 import { getNessageInfoBlockStyle } from "./message-info-block.styles";
 
-export function createMessageInfoTemplate(info) {
-  const authorData = info ? info.autor : "Dani";
-  const timeData = info ? info.time : "11:11";
+export function createMessageInfoTemplate(user, time) {
+  const { lastName, firstName } = user;
+  const timeData = time ? time : "11:11";
   return `
     ${getNessageInfoBlockStyle()}
     <div class="message-info">
-      <div class="message-info__author">${authorData}</div>
+      <div class="message-info__author">${firstName} ${lastName}</div>
       <div class="message-info__time">${timeData}</div>
    </div>
   `;

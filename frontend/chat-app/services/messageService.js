@@ -9,7 +9,7 @@ export class MessageService {
   #messagesByCurrentChat;
   #currentChatId;
 
-  async subscribeMessagesByCurrentChat(subscribtion) {
+   subscribeMessagesByCurrentChat(subscribtion) {
     this.#messagesSubscribers.add(subscribtion);
     return () => this.unSubscribe;
   }

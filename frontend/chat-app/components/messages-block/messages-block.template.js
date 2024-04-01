@@ -4,12 +4,12 @@ export function createMessagesBlockTemplate(messages) {
   return `
   ${getMessagesBlockStyle()}
   <div class="messages">
-    ${messages.map(({ author, message }) => {
+    ${messages.map(({ message, id, time }) => {
       return `
       <div class="message-block">
         <avatar-component></avatar-component>
         <div class="message-block__body">
-          <message-info></message-info>
+          <message-info user-id="${id}" time="${time}"></message-info>
           <div class="message-block__body">${message}</div>
         </div>
       </div>`;
