@@ -4,6 +4,7 @@ import { SERVICES } from "../../di/api";
 
 export class AvatarComponent extends HTMLElement {
   #userService = diContainer.resolve(SERVICES.user);
+  userId = this.getAttribute("user-id");
 
   static get name() {
     return "avatar-component";
@@ -15,11 +16,9 @@ export class AvatarComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    const userId = this.getAttribute("user-id");
     this.unsubscribeFromUser = this.#userService.subscribeUserById(
       this.render.bind(this)
     );
-    this.#userService.getUserById(userId);
   }
 
   disconnectedCallback() {

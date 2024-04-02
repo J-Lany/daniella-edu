@@ -4,25 +4,42 @@ const MOC_USER = {
   firstName: "Daniella",
   status: "Online",
 };
+const DEFAULT_USER_ID = 1;
 
 export class UserService {
-  #companionUserSubscribers = new Set();
+  #userSubscribers = new Set();
+  #users = new Map();
   #currentUser;
   #userById;
+  #userId;
 
   subscribeUserById(subscription) {
-    this.#companionUserSubscribers.add(subscription);
+    this.#userSubscribers.add(subscription);
+    this.notifySubscribers();
     return () => this.unSubscribe(subscription);
   }
   unSubscribe(subs) {
-    this.#companionUserSubscribers.delete(subs);
+    this.#userSubscribers.delete(subs);
   }
   setCurrentUser(user) {
     this.#currentUser = user;
   }
 
-  notifySubscribers() {
-    this.#companionUserSubscribers.forEach((subs) => subs(this.#userById));
+  async notifySubscribers() {
+    this.#userId = this.#userId || DEFAULT_USER_ID;
+    const user = this.#users.has(this.#userId)
+      ? this.#users.get(this.#userId)
+      : await this.#initUsers();
+    this.#userById = user;
+    this.#userSubscribers.forEach((subs) => subs(this.#userById));
+  }
+
+  async #initUsers() {
+    const response = await Promise.resolve(MOC_USER);
+    this.#users.set(this.#userId, response);
+    this.#userById = this.#users.get(this.#userId);
+
+    return this.#userById;
   }
 
   getCurrentUser() {
@@ -30,7 +47,7 @@ export class UserService {
   }
 
   getUserById(id) {
-    this.#userById = MOC_USER;
+    this.#userId = id;
     this.notifySubscribers();
   }
 }
