@@ -63,6 +63,7 @@ export class MessageService {
 
   async #initMessages() {
     const response = await Promise.resolve(MOC_MESSAGES);
+    this.#currentChatId = response[0].id;
     this.#messages.set(this.#currentChatId, response);
 
     return this.#messages.get(this.#currentChatId);
