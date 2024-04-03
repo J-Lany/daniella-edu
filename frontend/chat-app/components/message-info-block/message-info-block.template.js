@@ -4,9 +4,9 @@ export function createMessageInfoTemplate(user, time) {
   const currentUser =
     user.lastName && user.firstName
       ? `${user.lastName} ${user.firstName}`
-      : "New user";
-  const timeData = time ? time : "unkown time";
-  
+      : user.login;
+  const timeData = time || "unkown time";
+
   return `
     ${getNessageInfoBlockStyle()}
     <div class="message-info">
