@@ -2,7 +2,8 @@ const MOC_USER = {
   id: 1,
   lastName: "Dzheylani",
   firstName: "Daniella",
-  status: "Online",
+  status: 1,
+  login: "ProffesorQ",
 };
 
 export class UserService {

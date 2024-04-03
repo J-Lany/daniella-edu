@@ -7,16 +7,31 @@ const MOC_MESSAGES = [
     id: 1,
     message: "Hello, Como estas",
     time: "11:11",
+    authorId: 1,
+    content: {
+      type: "text",
+      data: "Hello, Como estas",
+    },
   },
   {
     id: 2,
     message: "Hello, Como estas",
     time: "11:12",
+    authorId: 1,
+    content: {
+      type: "text",
+      data: "Hello, Estoy bien",
+    },
   },
   {
     id: 3,
     message: "Hello, Como estas",
     time: "11:13",
+    authorId: 1,
+    content: {
+      type: "text",
+      data: "What's uuuuuup",
+    },
   },
 ];
 
@@ -24,7 +39,6 @@ export class MessageService {
   #httpService = diContainer.resolve(SERVICES.http);
   #messagesSubscribers = new Set();
   #messages = new Map();
-  #messagesByCurrentChat;
   #currentChatId;
 
   subscribeMessagesByCurrentChat(subscribtion) {
@@ -34,22 +48,24 @@ export class MessageService {
   }
 
   async notifySubscribers() {
-    this.#currentChatId = this.#currentChatId || DEFAULT_CHAT_ID;
-    const messages = this.#messages.has(this.#currentChatId)
-      ? this.#messagesByCurrentChat.get(this.#currentChatId)
-      : await this.#initMessages();
-    this.#messagesByCurrentChat = messages;
+    const messages = null;
+
+    if (this.#currentChatId) {
+      messages = this.#messages.has(this.#currentChatId)
+        ? this.#messages.get(this.#currentChatId)
+        : await this.#initMessages();
+    }
+
     this.#messagesSubscribers.forEach((subscription) => {
-      subscription(this.#messagesByCurrentChat);
+      subscription(messages);
     });
   }
 
   async #initMessages() {
     const response = await Promise.resolve(MOC_MESSAGES);
     this.#messages.set(this.#currentChatId, response);
-    this.#messagesByCurrentChat = this.#messages.get(this.#currentChatId);
 
-    return this.#messagesByCurrentChat;
+    return this.#messages.get(this.#currentChatId);
   }
 
   unSubscribe(subs) {
@@ -62,7 +78,6 @@ export class MessageService {
   }
 
   async getMessagesByChatId(id) {
-    this.#messagesByCurrentChat = await this.#httpService.get(`messages/${id}`);
-    this.notifySubscribers();
+    return await this.#httpService.get(`messages/${id}`);
   }
 }
