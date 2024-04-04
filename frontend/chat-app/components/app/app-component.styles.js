@@ -1,3 +1,5 @@
+import "../common.css";
+
 export function getAppComponentStyles() {
   return `
   <style>

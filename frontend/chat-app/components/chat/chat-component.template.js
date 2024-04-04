@@ -1,26 +1,11 @@
-import { getChatComponentStyles } from "./chat-component.styles.js";
+import { getChatComponentStyle } from "./chat-component.styles";
 
-export function createTemplate(messages = []) {
+export function createChatTemplate() {
   return `
-    ${getChatComponentStyles()}
-    
-    <div class="chat-text"></div>
-    
-    <div class="chat">
-        hello from chat
-    
-        <ul> 
-         ${messages
-           .map(
-             ({ id, author, message }) => `<li>
-                                                                <span>ID: ${id}</span> 
-                                                                <span>Author: ${author}</span> 
-                                                                <span>Message: ${message}</span> 
-                                                           </li>`
-           )
-           .join("")}
-        </ul>
-         
-    </div>
-    `;
+  ${getChatComponentStyle()}
+  <div class="chat">
+    <header-component></header-component>
+    <messages-block></messages-block>
+  </div>
+  `;
 }

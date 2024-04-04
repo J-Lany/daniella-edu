@@ -1,12 +1,9 @@
-export function getChatComponentStyles() {
+import "../common.css";
+
+export function getChatComponentStyle() {
   return `
-   <style>
-        @import url('../common.css');
-   
-       .chat {
-            background-color: var(--light-gray-color);
-       }
-    
-    </style>
-   `;
+  <style>
+  @import url('../common.css');
+</style>
+  `;
 }
