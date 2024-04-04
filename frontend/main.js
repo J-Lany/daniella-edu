@@ -16,6 +16,7 @@ import { MessagesBlock } from "./chat-app/components/messages-block/messages-blo
 import { AvatarComponent } from "./chat-app/components/avarar/avatar-component.js";
 import { MessageInfoBlock } from "./chat-app/components/message-info-block/message-info-block.js";
 import { Message } from "./chat-app/components/message/message.js";
+import { MessagesSidebar } from "./chat-app/components/messages-sidebar/messages-sidebar.js";
 
 diContainer.register(SERVICES.http, httpService);
 diContainer.register(SERVICES.messages, new MessageService());
@@ -26,6 +27,7 @@ diContainer.register(SERVICES.auth, new AuthService());
   ChatComponent,
   UserInfoBlock,
   HeaderComponent,
+  MessagesSidebar,
   LoginComponent,
   RegistrationComponent,
   AppComponent,

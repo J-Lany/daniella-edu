@@ -1,44 +1,11 @@
 import { getMessagesBlockStyle } from "./messages-block.styles";
-const MOC_MESSAGES = [
-  {
-    id: 1,
-    message: "Hello, Como estas",
-    time: "11:11",
-    authorId: 1,
-    content: {
-      type: "text",
-      data: "Hello, Como estas",
-    },
-  },
-  {
-    id: 2,
-    message: "Hello, Como estas",
-    time: "11:12",
-    authorId: 1,
-    content: {
-      type: "text",
-      data: "Hello, Estoy bien",
-    },
-  },
-  {
-    id: 3,
-    message: "Hello, Como estas",
-    time: "11:13",
-    authorId: 1,
-    content: {
-      type: "text",
-      data: "What's uuuuuup",
-    },
-  },
-];
+
 export function createMessagesBlockTemplate(messages) {
   if (messages == null) {
-    //Проверка для сверки визуала и работоспособности проперти
-    // return `
-    // <div class="messages">
-    //   Упс... тут ничего нет. Нажмите на + и выберите с кем хотите переписываться
-    // </div>`;
-    messages = MOC_MESSAGES;
+    return `
+    <div class="messages">
+      Упс... тут ничего нет. Нажмите на + и выберите с кем хотите переписываться
+    </div>`;
   }
   return `
   ${getMessagesBlockStyle()}
