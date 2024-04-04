@@ -33,6 +33,7 @@ const MOC_MESSAGES = [
 ];
 export function createMessagesBlockTemplate(messages) {
   if (messages == null) {
+    //Проверка для сверки визуала и работоспособности проперти
     // return `
     // <div class="messages">
     //   Упс... тут ничего нет. Нажмите на + и выберите с кем хотите переписываться

@@ -13,9 +13,9 @@ export class Message extends HTMLElement {
   #message;
 
   #ATTRIBUTE_MAPPING = new Map([
-    [messageAttribute.MESSAGE_TIME, this.setTime],
-    [messageAttribute.USER_ID, this.setUserId],
-    [messageAttribute.MESSAGE, this.setMessage],
+    [messageAttribute.MESSAGE_TIME, this.setTime.bind(this)],
+    [messageAttribute.USER_ID, this.setUserId.bind(this)],
+    [messageAttribute.MESSAGE, this.setMessage.bind(this)],
   ]);
 
   static get name() {
@@ -37,17 +37,17 @@ export class Message extends HTMLElement {
     if (oldValue !== newValue) {
       const callback = this.#ATTRIBUTE_MAPPING.get(name);
       if (callback) {
-        callback(this, newValue);
+        callback(newValue);
       }
     }
   }
-  setTime(_, newTime) {
+  setTime(newTime) {
     this.#messageTime = newTime;
   }
-  setUserId(_, newId) {
+  setUserId(newId) {
     this.#userId = newId;
   }
-  setMessage(_, newMessage) {
+  setMessage(newMessage) {
     this.#message = newMessage;
   }
   render() {
