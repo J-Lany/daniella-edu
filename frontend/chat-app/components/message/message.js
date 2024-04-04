@@ -1,44 +1,38 @@
+import { createMessageTemplate } from "./message.template";
 import { diContainer } from "../../di/di";
 import { SERVICES } from "../../di/api";
-import { createMessageInfoTemplate } from "./message-info-block.template";
 
-const messagesAttribute = {
+const messageAttribute = {
   USER_ID: "user-id",
   MESSAGE_TIME: "time",
+  MESSAGE: "message",
 };
-export class MessageInfoBlock extends HTMLElement {
-  #userService = diContainer.resolve(SERVICES.user);
+export class Message extends HTMLElement {
+  #userId;
   #messageTime;
-  #userID;
+  #message;
+
   #ATTRIBUTE_MAPPING = new Map([
-    [messagesAttribute.MESSAGE_TIME, this.setTime],
-    [messagesAttribute.USER_ID, this.setUserId],
+    [messageAttribute.MESSAGE_TIME, this.setTime],
+    [messageAttribute.USER_ID, this.setUserId],
+    [messageAttribute.MESSAGE, this.setMessage],
   ]);
 
   static get name() {
-    return "message-info";
+    return "message-component";
   }
-
   static get observedAttributes() {
-    return Object.values(messagesAttribute);
+    return Object.values(messageAttribute);
   }
 
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
   }
-
   connectedCallback() {
-    this.unsubscribeFromUser = this.#userService.subscribeUserById(
-      this.#userID,
-      this.render.bind(this)
-    );
+    this.render();
   }
-
-  disconnectedCallback() {
-    this.unsubscribeFromUser();
-  }
-
+  disconnectedCallback() {}
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue !== newValue) {
       const callback = this.#ATTRIBUTE_MAPPING.get(name);
@@ -47,18 +41,22 @@ export class MessageInfoBlock extends HTMLElement {
       }
     }
   }
-
   setTime(_, newTime) {
     this.#messageTime = newTime;
   }
-
   setUserId(_, newId) {
-    this.#userID = newId;
+    this.#userId = newId;
   }
-
-  render(user) {
+  setMessage(_, newMessage) {
+    this.#message = newMessage;
+  }
+  render() {
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createMessageInfoTemplate(user, this.#messageTime);
+    templateElem.innerHTML = createMessageTemplate(
+      this.#message,
+      this.#messageTime,
+      this.#userId
+    );
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
