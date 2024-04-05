@@ -1,6 +1,6 @@
 import "../common.css";
 
-export function getMessagesSidebarStyle() {
+export function getChatSidebarStyle() {
   return `
      <style>
        @import url('../common.css');

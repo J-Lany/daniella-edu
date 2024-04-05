@@ -1,8 +1,8 @@
 import { getMessageStyle } from "./message.styles";
 
-export function createMessageTemplate(message, time, authorId) {
+export function createMessageTemplate(message, time, authorId, displayMode) {
   return `
-   ${getMessageStyle()}
+   ${getMessageStyle(displayMode)}
     <div class="message-block">
       <avatar-component user-id="${authorId}"></avatar-component>
       <div class="message-block__body">

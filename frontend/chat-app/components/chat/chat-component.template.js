@@ -5,7 +5,7 @@ export function createChatTemplate() {
   ${getChatComponentStyle()}
   <div class="chat">
     <header-component></header-component>
-    <message-sidebar></message-sidebar>
+    <chat-sidebar></chat-sidebar>
     <messages-block></messages-block>
   </div>
   `;

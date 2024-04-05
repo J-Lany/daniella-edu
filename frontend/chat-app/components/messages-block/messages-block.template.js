@@ -12,7 +12,7 @@ export function createMessagesBlockTemplate(messages) {
   <div class="messages">
     ${messages.map(({ message, authorId, time }) => {
       return `
-      <message-component user-id="${authorId}" time="${time}" message="${message}"></message-component>
+      <message-component user-id="${authorId}" time="${time}" message="${message}" display-mode="chat"></message-component>
       `;
     })}
   </div>`;
