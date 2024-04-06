@@ -24,10 +24,16 @@ export const getMessageInputStyle = () => {
     border-bottom-right-radius: 0.5rem;
     padding: 1rem;
     color: var(--light-gray-background)
+    position: relative;
+    border-left: solid 2px var(--light-gray-background);
   }
-
-  .message-input__button img {
-    margin-left: 0.75rem;
+  .message-input__button:before{
+    content: " ";
+    background: var(--light-gray-background);
+    width: 0.1rem;
+    height: 1rem;
+    left: 14.1rem;
+    position: absolute;
   }
   </style>
   `;
