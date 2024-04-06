@@ -12,13 +12,8 @@ export function createMessagesBlockTemplate(messages) {
   <div class="messages">
     ${messages.map(({ message, authorId, time }) => {
       return `
-      <div class="message-block">
-        <avatar-component user-id="${authorId}></avatar-component>
-        <div class="message-block__body">
-          <message-info user-id="${authorId}" time="${time}"></message-info>
-          <div class="message-block__body">${message}</div>
-        </div>
-      </div>`;
+      <message-component user-id="${authorId}" time="${time}" message="${message}" display-mode="chat"></message-component>
+      `;
     })}
   </div>`;
 }

@@ -7,8 +7,6 @@ const messagesAttribute = {
   MESSAGE_TIME: "time",
 };
 export class MessageInfoBlock extends HTMLElement {
-  static observedAttributes = ["user-id", "time"];
-
   #userService = diContainer.resolve(SERVICES.user);
   #messageTime;
   #userID;
