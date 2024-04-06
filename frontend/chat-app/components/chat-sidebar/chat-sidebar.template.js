@@ -5,7 +5,6 @@ export function createChatSidebarTemplate(chats) {
     ${getChatSidebarStyle()}
     <div class="chat-sidebar">
     ${chats.map((chat) => {
-      //тут будет логика по вытаскиванию самого последнего сообщения в чате и из него вытащим данные для переменных ниже
       return `
       <message-component user-id="${authorId}" time="${time}" message="${message} display-mode="sidebar"></message-component>
       `;
