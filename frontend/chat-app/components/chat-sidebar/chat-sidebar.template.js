@@ -3,7 +3,7 @@ import { getChatSidebarStyle } from "./chat-sidebar.styles";
 export function createChatSidebarTemplate(chats) {
   return `
     ${getChatSidebarStyle()}
-    <div>
+    <div class="chat-sidebar">
     ${chats.map((chat) => {
       //тут будет логика по вытаскиванию самого последнего сообщения в чате и из него вытащим данные для переменных ниже
       return `
