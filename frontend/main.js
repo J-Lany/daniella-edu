@@ -15,6 +15,7 @@ import { UserService } from "./chat-app/services/userService.js";
 import { MessagesBlock } from "./chat-app/components/messages-block/messages-block.js";
 import { AvatarComponent } from "./chat-app/components/avarar/avatar-component.js";
 import { MessageInfoBlock } from "./chat-app/components/message-info-block/message-info-block.js";
+import { MessageInput } from "./chat-app/components/message-input/message-input.js";
 
 diContainer.register(SERVICES.http, httpService);
 diContainer.register(SERVICES.messages, new MessageService());
@@ -32,6 +33,8 @@ diContainer.register(SERVICES.auth, new AuthService());
   MessagesBlock,
   AvatarComponent,
   MessageInfoBlock,
+  MessageInput,
 ].map((component) => customElements.define(component.name, component));
 
-document.querySelector("#app").innerHTML = `<app-component></app-component>`;
+// document.querySelector("#app").innerHTML = `<app-component></app-component>`;
+document.querySelector("#app").innerHTML = `<message-input></message-input>`;

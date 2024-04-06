@@ -1,0 +1,39 @@
+import { createMessageInputTemplate } from "./message-input.template";
+import { addListeners, removeListeners, select } from "../../utils/utils.js";
+
+export class MessageInput extends HTMLElement {
+  #listeners = [[select.bind(this, "#message"), "input", this.#onInputChange]];
+
+  static get name() {
+    return "message-input";
+  }
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+  }
+
+  connectedCallback() {
+    this.render();
+  }
+
+  #onInputChange(e) {
+    console.log(e.target.value);
+  }
+
+  disconnectedCallback() {
+    this.#listeners.forEach(removeListeners.bind(this));
+  }
+
+  render() {
+    this.#listeners.forEach(removeListeners.bind(this));
+
+    const templateElem = document.createElement("template");
+    templateElem.innerHTML = createMessageInputTemplate();
+
+    this.shadowRoot.innerHTML = "";
+    this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
+
+    this.#listeners.forEach(addListeners.bind(this));
+  }
+}
