@@ -1,9 +1,17 @@
+import { v4 as uuidv4 } from "uuid";
+
 export class ChatService {
   #chats = new Map();
 
-  createChat({ participants }) {
-    const chatId = new Date();
-    this.#chats.set(chatId, participants);
+  createChat(authorId, participantsId) {
+    const chatId = uuidv4();
+    const date = new Date();
+    const newChat = { chatId, participantsId, date };
+    if (this.#chats.has(authorId)) {
+      const currentChatsById = this.#chats.get(authorId);
+      this.#chats.set(authorId, [...currentChatsById, newChat]);
+    }
+    this.#chats.set(authorId, [newChat]);
   }
 
   getChat(id) {

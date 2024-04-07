@@ -11,7 +11,9 @@ import { SERVICES } from "../di/api.mjs";
  *           schema:
  *             type: object
  *             properties:
- *               participants:
+ *               authorId:
+ *                 type: string
+ *               participantsId:
  *                 type: array
  *                 items:
  *                   type: string
@@ -51,10 +53,10 @@ import { SERVICES } from "../di/api.mjs";
 
 export function createChatController(req, res) {
   const chatService = diContainer.resolve(SERVICES.chat);
-  const { participants } = req.body;
+  const { authorId, participantsId } = req.body;
 
   try {
-    chatService.createChat( participants);
+    chatService.createChat(authorId, participantsId);
     return res.status(200).json({ message: "Чат создан успешно" });
   } catch {
     return res
