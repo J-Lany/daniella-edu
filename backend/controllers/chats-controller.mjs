@@ -2,7 +2,7 @@ import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
 /**
  * @swagger
- * /chat/create-chat:
+ * /chats/create-chat:
  *   post:
  *     summary: Создание чата
  *     requestBody:
@@ -53,7 +53,7 @@ import { SERVICES } from "../di/api.mjs";
 
 /**
  * @swagger
- * /chat/delete-chat:
+ * /chats/delete-chat:
  *   post:
  *     summary: Удаление чата
  *     requestBody:
@@ -97,6 +97,57 @@ import { SERVICES } from "../di/api.mjs";
  *                   description: Сообщение об ошибке при удален и чата
  */
 
+/**
+ * @swagger
+ * /chats/{authorId}:
+ *   get:
+ *     summary: Получение массива чатов по authorId
+ *     parameters:
+ *       - in: path
+ *         name: authorId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Массив  чатов пользователя
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   chatId:
+ *                     type: string
+ *                   date:
+ *                     type: string
+ *                   participantsId:
+ *                     type: array
+ *                       items:
+ *                         type: string
+ *       401:
+ *         description: У данного пользователя нет чатов
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Сообщение об ошибке
+ *       500:
+ *         description: Ошибка при получении чатов
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errorMessage:
+ *                   type: string
+ *                   description: Сообщение об ошибке сервера
+ */
+
 export class ChatsController {
   #chatService = diContainer.resolve(SERVICES.chat);
 
@@ -124,5 +175,12 @@ export class ChatsController {
         .status(500)
         .json({ message: "Ошибка при создании чата, попробуйте позднее" });
     }
+  }
+
+  getChat(req, res) {
+    const { authorId } = req.params;
+    try {
+      this.#chatService.getChatsByAythor(authorId);
+    } catch {}
   }
 }

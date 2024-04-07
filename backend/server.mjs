@@ -53,8 +53,8 @@ const chatsController = new ChatsController();
 app.get("/messages/:chatId", chatController);
 app.post("/registration", registrationController);
 app.post("/login", loginController);
-app.post("/chat/create-chat", chatsController.createChat.bind(chatsController));
-app.post("/chat/delete-chat", chatsController.deleteChat.bind(chatsController));
+app.post("/chats/create-chat", chatsController.createChat.bind(chatsController));
+app.post("/chats/delete-chat", chatsController.deleteChat.bind(chatsController));
 
 const PORT = 3000;
 app.listen(PORT, () => {

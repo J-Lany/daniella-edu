@@ -17,8 +17,8 @@ export class ChatService {
     return chatId;
   }
 
-  getChat(id) {
-    return this.#chats.get(id);
+  getChatsByAythor(authorId) {
+    return this.#chats.get(authorId);
   }
 
   deleteParticipants(chatId, toDeleteParticipateId) {
