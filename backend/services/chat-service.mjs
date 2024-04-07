@@ -5,7 +5,7 @@ export class ChatService {
   #userService = diContainer.resolve(SERVICES.users);
   #chats = new Map();
 
-  createChat({ sessionId, participants }) {
+  createChat({ participants }) {
     const chatId = new Date();
     this.#chats.set(chatId, participants);
   }
