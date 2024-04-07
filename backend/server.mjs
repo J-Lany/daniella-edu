@@ -51,7 +51,7 @@ diContainer.register(SERVICES.chat, new ChatService());
 app.get("/messages/:chatId", chatController);
 app.post("/registration", registrationController);
 app.post("/login", loginController);
-app.post("/createNewChat", createChatController);
+app.post("/chat/createNewChat", createChatController);
 
 const PORT = 3000;
 app.listen(PORT, () => {

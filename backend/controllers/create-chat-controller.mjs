@@ -2,7 +2,7 @@ import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
 /**
  * @swagger
- * /createNewChat:
+ * /chat/createNewChat:
  *   post:
  *     summary: Создание чата
  *     requestBody:
