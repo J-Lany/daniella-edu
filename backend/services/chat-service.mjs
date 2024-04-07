@@ -7,11 +7,14 @@ export class ChatService {
     const chatId = uuidv4();
     const date = new Date();
     const newChat = { chatId, participantsId, date };
+
     if (this.#chats.has(authorId)) {
-      const currentChatsById = this.#chats.get(authorId);
-      this.#chats.set(authorId, [...currentChatsById, newChat]);
+      this.#chats.get(authorId).add(newChat);
+    } else {
+      this.#chats.set(authorId, new Set(newChat));
     }
-    this.#chats.set(authorId, [newChat]);
+
+    return chatId;
   }
 
   getChat(id) {

@@ -2,7 +2,7 @@ import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
 /**
  * @swagger
- * /chat/createNewChat:
+ * /chat/create-chat:
  *   post:
  *     summary: Создание чата
  *     requestBody:
@@ -26,9 +26,9 @@ import { SERVICES } from "../di/api.mjs";
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 chatId:
  *                   type: string
- *                   description: Чат создан успешно
+ *                   description: ID созданного чата
  *       401:
  *         description: Такой чат уже существует
  *         content:
@@ -53,7 +53,7 @@ import { SERVICES } from "../di/api.mjs";
 
 /**
  * @swagger
- * /chat/deleteChat:
+ * /chat/delete-chat:
  *   post:
  *     summary: Удаление чата
  *     requestBody:
@@ -97,32 +97,32 @@ import { SERVICES } from "../di/api.mjs";
  *                   description: Сообщение об ошибке при удален и чата
  */
 
-export function chatsController(req, res) {
-  const chatService = diContainer.resolve(SERVICES.chat);
+export class ChatsController {
+  #chatService = diContainer.resolve(SERVICES.chat);
 
-  switch (req.path) {
-    case "/chat/deleteChat":
-      const { authorId, participantsId } = req.body;
+  deleteChat(req, res) {
+    const { chatId } = req.body;
 
-      try {
-        chatService.createChat(authorId, participantsId);
-        return res.status(200).json({ message: "Чат создан успешно" });
-      } catch {
-        return res
-          .status(500)
-          .json({ message: "Ошибка при создании чата, попробуйте позднее" });
-      }
+    try {
+      this.#chatService.deleteChat(chatId);
+      return res.status(200).json({ message: "Чат удален успешно" });
+    } catch {
+      return res
+        .status(500)
+        .json({ message: "Ошибка при удалении чата, попробуйте позднее" });
+    }
+  }
 
-    case "/chat/createNewChat":
-      const { chatId } = req.body;
-
-      try {
-        chatService.deleteChat(chatId);
-        return res.status(200).json({ message: "Чат удален успешно" });
-      } catch {
-        return res
-          .status(500)
-          .json({ message: "Ошибка при удалении чата, попробуйте позднее" });
-      }
+  createChat(req, res) {
+    const { authorId, participantsId } = req.body;
+    try {
+      const chatId = this.#chatService.createChat(authorId, participantsId);
+      return res.status(200).json({ chatId });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(500)
+        .json({ message: "Ошибка при создании чата, попробуйте позднее" });
+    }
   }
 }

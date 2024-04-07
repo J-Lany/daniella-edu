@@ -13,7 +13,7 @@ import { AuthService } from "./services/auth-service.mjs";
 import { configService } from "./services/config-service.mjs";
 import { SessionService } from "./services/session-service.mjs";
 import { ChatService } from "./services/chat-service.mjs";
-import { chatsController } from "./controllers/chats-controller.mjs";
+import { ChatsController } from "./controllers/chats-controller.mjs";
 
 const app = express();
 
@@ -47,12 +47,14 @@ diContainer.register(SERVICES.session, new SessionService());
 diContainer.register(SERVICES.auth, new AuthService());
 diContainer.register(SERVICES.chat, new ChatService());
 
+const chatsController = new ChatsController();
+
 // Метод GET возвращает массив случайных сообщений для chatId
 app.get("/messages/:chatId", chatController);
 app.post("/registration", registrationController);
 app.post("/login", loginController);
-app.post("/chat/createNewChat", chatsController);
-app.post("/chat/deleteChat", chatsController);
+app.post("/chat/create-chat", chatsController.createChat.bind(chatsController));
+app.post("/chat/delete-chat", chatsController.deleteChat.bind(chatsController));
 
 const PORT = 3000;
 app.listen(PORT, () => {
