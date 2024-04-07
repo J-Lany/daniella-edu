@@ -13,4 +13,16 @@ export class ChatService {
   getChat(id) {
     return this.#chats.get(id);
   }
+
+  deleteParticipants(chatId, participateId) {
+    const currentParticipants = this.#chats.get(chatId);
+    const newParticipants = currentParticipants.filter(
+      (participate) => participate !== participateId
+    );
+    this.#chats.set(chatId, newParticipants);
+  }
+
+  deleteChat(chatId) {
+    this.#chats.delete(chatId);
+  }
 }
