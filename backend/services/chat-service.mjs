@@ -1,8 +1,4 @@
-import { diContainer } from "../di/di.mjs";
-import { SERVICES } from "../di/api.mjs";
-
 export class ChatService {
-  #userService = diContainer.resolve(SERVICES.users);
   #chats = new Map();
 
   createChat({ participants }) {
@@ -14,10 +10,10 @@ export class ChatService {
     return this.#chats.get(id);
   }
 
-  deleteParticipants(chatId, participateId) {
+  deleteParticipants(chatId, toDeleteParticipateId) {
     const currentParticipants = this.#chats.get(chatId);
     const newParticipants = currentParticipants.filter(
-      (participate) => participate !== participateId
+      (participate) => participate !== toDeleteParticipateId
     );
     this.#chats.set(chatId, newParticipants);
   }

@@ -14,6 +14,7 @@ import { configService } from "./services/config-service.mjs";
 import { SessionService } from "./services/session-service.mjs";
 import { ChatService } from "./services/chat-service.mjs";
 import { createChatController } from "./controllers/create-chat-controller.mjs";
+import { deleteChatController } from "./controllers/delete-chat-controller.mjs";
 
 const app = express();
 
@@ -52,6 +53,7 @@ app.get("/messages/:chatId", chatController);
 app.post("/registration", registrationController);
 app.post("/login", loginController);
 app.post("/chat/createNewChat", createChatController);
+app.post("/chat/deleteChat", deleteChatController);
 
 const PORT = 3000;
 app.listen(PORT, () => {
