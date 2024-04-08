@@ -14,14 +14,17 @@ export class ChatService {
     if (this.#chats.has(authorId)) {
       this.#chats.get(authorId).add(newChat);
     } else {
-      this.#chats.set(authorId, new Set(newChat));
+      this.#chats.set(authorId, new Set([newChat]));
     }
 
     return chatId;
   }
 
   getChatsByAythor(authorId) {
-    return this.#chats.get(authorId);
+    if (!this.#chats.has(authorId)) {
+      throw new Error(401);
+    }
+    return [...this.#chats.get(authorId)];
   }
 
   deleteParticipants(chatId, toDeleteParticipateId) {
@@ -32,7 +35,10 @@ export class ChatService {
     this.#chats.set(chatId, newParticipants);
   }
 
-  deleteChat(chatId) {
-    this.#chats.delete(chatId);
+  deleteChat(authorId, deleteChatId) {
+    const chats = [...this.#chats.get(authorId)].filter(
+      ({ chatId }) => chatId !== deleteChatId
+    );
+    this.#chats.set(authorId, chats);
   }
 }

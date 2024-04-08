@@ -7,7 +7,7 @@ export function createChatsController(app) {
 
   /**
    * @swagger
-   * /chats/create-chat:
+   * /chats:
    *   post:
    *     summary: Создание чата
    *     requestBody:
@@ -38,7 +38,7 @@ export function createChatsController(app) {
    *       '500':
    *         description: Ошибка при создании чата
    */
-  app.post("/chats/create-chat", (req, res) => {
+  app.post("/chats", (req, res) => {
     const { authorId, participantsIds } = req.body;
     try {
       const chatId = chatService.createChat(authorId, participantsIds);
@@ -52,17 +52,20 @@ export function createChatsController(app) {
 
   /**
    * @swagger
-   * /chats/delete-chat:
-   *   post:
+   * /chats:
+   *   delete:
    *     summary: Удаление чата
-   *     requestBody:
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             properties:
-   *               chatId:
-   *                 type: string
+   *     parameters:
+   *       - in: query
+   *         name: chatId
+   *         required: true
+   *         schema:
+   *           type: string
+   *       - in: query
+   *         name: authorId
+   *         required: true
+   *         schema:
+   *           type: string
    *     responses:
    *       200:
    *         description: Успешное удаление чата
@@ -95,12 +98,12 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке при удален и чата
    */
-  app.post("/chats/delete-chat", (req, res) => {
-    //delete
-    const { chatId } = req.body;
+  app.delete("/chats", (req, res) => {
+    const chatId = req.query.chatId;
+    const authorId = req.query.authorId;
 
     try {
-      chatService.deleteChat(chatId);
+      chatService.deleteChat(authorId, chatId);
       return res.status(200).json({ message: "Чат удален успешно" });
     } catch (err) {
       return res
@@ -111,18 +114,18 @@ export function createChatsController(app) {
 
   /**
    * @swagger
-   * /chats/{authorId}:
+   * /chats:
    *   get:
    *     summary: Получение массива чатов по authorId
    *     parameters:
-   *       - in: path
+   *       - in: query
    *         name: authorId
    *         required: true
    *         schema:
    *           type: string
    *     responses:
    *       200:
-   *         description: Массив  чатов пользователя
+   *         description: Массив чатов пользователя
    *         content:
    *           application/json:
    *             schema:
@@ -159,13 +162,10 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке сервера
    */
-
-  app.get("/chats/{authorId}", (req, res) => {
-    const { authorId } = req.params;
+  app.get("/chats", (req, res) => {
+    const authorId = req.query.authorId;
     try {
-      const { chatId, date, participantsId } =
-        chatService.getChatsByAythor(authorId);
-      return res.status(200).json({ chatId, date, participantsId });
+      return res.status(200).json(chatService.getChatsByAythor(authorId));
     } catch (err) {
       return res
         .status(parseInt(err.message))
