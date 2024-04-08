@@ -159,7 +159,7 @@ export function createChatsController(app) {
    *                   description: Сообщение об ошибке сервера
    */
 
-  app.get("/chats/{authorId}/", (req, res) => {
+  app.get("/chats/{authorId}", (req, res) => {
     const { authorId } = req.params;
     try {
       const { chatId, date, participantsId } =
