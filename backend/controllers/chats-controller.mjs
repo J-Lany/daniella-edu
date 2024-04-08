@@ -135,8 +135,8 @@ export function createChatsController(app) {
    *                     type: string
    *                   participantsId:
    *                     type: array
-   *                       items:
-   *                         type: string
+   *                     items:
+   *                       type: string
    *       401:
    *         description: У данного пользователя нет чатов
    *         content:
