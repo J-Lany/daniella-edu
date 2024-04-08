@@ -6,14 +6,14 @@ import { messageService } from "./services/message-service.mjs";
 import { UserService } from "./services/user-service.mjs";
 import { SERVICES } from "./di/api.mjs";
 import { chatController } from "./controllers/chat-controller.mjs";
-import { registrationController } from "./controllers/registration-controller.mjs";
-import { loginController } from "./controllers/login-controller.mjs";
+import { createRegistrationController } from "./controllers/registration-controller.mjs";
+import { createLoginController } from "./controllers/login-controller.mjs";
 import swaggerJSDoc from "swagger-jsdoc";
 import { AuthService } from "./services/auth-service.mjs";
 import { configService } from "./services/config-service.mjs";
 import { SessionService } from "./services/session-service.mjs";
 import { ChatService } from "./services/chat-service.mjs";
-import { ChatsController } from "./controllers/chats-controller.mjs";
+import { createChatsController } from "./controllers/chats-controller.mjs";
 
 const app = express();
 
@@ -47,14 +47,12 @@ diContainer.register(SERVICES.session, new SessionService());
 diContainer.register(SERVICES.auth, new AuthService());
 diContainer.register(SERVICES.chat, new ChatService());
 
-const chatsController = new ChatsController();
-
 // Метод GET возвращает массив случайных сообщений для chatId
 app.get("/messages/:chatId", chatController);
-app.post("/registration", registrationController);
-app.post("/login", loginController);
-app.post("/chats/create-chat", chatsController.createChat.bind(chatsController));
-app.post("/chats/delete-chat", chatsController.deleteChat.bind(chatsController));
+
+createChatsController(app);
+createRegistrationController(app);
+createLoginController(app);
 
 const PORT = 3000;
 app.listen(PORT, () => {
