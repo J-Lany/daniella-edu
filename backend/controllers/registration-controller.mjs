@@ -1,5 +1,6 @@
 import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
+import { ERRORS } from "../utils/chats-erorrs.mjs";
 
 export function createRegistrationController(app) {
   /**
@@ -59,20 +60,15 @@ export function createRegistrationController(app) {
     const { login, email, password } = req.body;
 
     try {
-      if (userService.isUserAlreadyExist(login)) {
-        return res
-          .status(401)
-          .json({ message: "Такой пользователь уже существует" });
-      }
+      userService.isUserAlreadyExist(login);
       userService.setUser({ login, email, password });
-
       return res
         .status(200)
         .json({ message: `${login} вы успешно зарегестрированы` });
-    } catch {
+    } catch (err) {
       return res
-        .status(500)
-        .json({ message: "Ошибка регистрации, попробуйте позднее" });
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.registrationErrors[err.message] });
     }
   });
 }

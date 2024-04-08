@@ -1,5 +1,6 @@
 import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
+import { ERRORS } from "../utils/chats-erorrs.mjs";
 
 export function createLoginController(app) {
   /**
@@ -80,20 +81,9 @@ export function createLoginController(app) {
       .login(login, password)
       .then((result) => res.status(200).json(result))
       .catch((err) => {
-        switch (err.message) {
-          case "403":
-            return res
-              .status(403)
-              .json({ message: "Такого пользователя не существует" });
-          case "401":
-            return res
-              .status(401)
-              .json({ message: "Неверный логин или пароль" });
-          default:
-            return res
-              .status(500)
-              .json({ message: "Ошибка в авторизации, попробуйте позднее" });
-        }
+        return res
+          .status(parseInt(err.message))
+          .json({ message: ERRORS.loginErrors[err.message] });
       });
   });
 }

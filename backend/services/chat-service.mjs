@@ -3,10 +3,13 @@ import { v4 as uuidv4 } from "uuid";
 export class ChatService {
   #chats = new Map();
 
-  createChat(authorId, participantsId) {
+  createChat(authorId, participantsIds) {
+    if (authorId === null) {
+      throw new Error(401);
+    }
     const chatId = uuidv4();
     const date = new Date();
-    const newChat = { chatId, participantsId, date };
+    const newChat = { chatId, participantsIds, date };
 
     if (this.#chats.has(authorId)) {
       this.#chats.get(authorId).add(newChat);

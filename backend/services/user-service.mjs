@@ -19,7 +19,10 @@ export class UserService {
   }
 
   isUserAlreadyExist(login) {
-    return this.#users.has(login);
+    if (this.#users.has(login)) {
+      throw new Error(401);
+    }
+    return true;
   }
   getUser(login) {
     return this.#users.get(login);
