@@ -21,7 +21,7 @@ export class UserService {
   }
 
   isUserAlreadyExist(login) {
-    if (this.#userDao.getUserByLogin(login)) {
+    if (!this.#userDao.getUserByLogin(login)) {
       throw new Error(401);
     }
     return true;

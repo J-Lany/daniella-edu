@@ -12,10 +12,19 @@ export class UsersDao {
 
   async getUserByLogin(login) {
     const users = await this.#storeServise.getData(this.#filePath);
-    return users.filter((user) => user.login === login);
+    if (!users[login]) {
+      return null;
+    }
+    return users[login];
   }
 
-  async setUser(user) {
-    await this.#storeServise.setData(this.#filePath, [user]);
+  async setUser({ login, email, hashedPassword }) {
+    const users = await this.#storeServise.getData(this.#filePath);
+    if (users[login]) {
+      return;
+    }
+    users[login] = { login, email, hashedPassword };
+
+    await this.#storeServise.setData(this.#filePath, users);
   }
 }

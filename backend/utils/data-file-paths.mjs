@@ -1,5 +1,5 @@
 export const FILE_PATHS = {
-  users: "./data/users.json",
-  chats: "./data/chats.json",
-  messages: "./data/messages.json",
+  users: "data-store/data/users.json",
+  chats: "data-store/data/chats.json",
+  messages: "data-store/data/messages.json",
 };
