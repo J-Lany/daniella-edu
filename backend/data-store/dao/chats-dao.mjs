@@ -39,21 +39,16 @@ export class ChatsDao {
   async deleteChatParticipants(authorId, chatId, toDeleteParticipantId) {
     const chats = await this.#storeServise.getData(this.#filePath);
 
-    if (!chats[authorId]) {
-      return;
-    }
+    if (!chats[authorId]) return;
 
-    const chatIndex = chats[authorId].findIndex(
-      (chat) => chat.chatId === chatId
-    );
+    chats[authorId].map((chat) => {
+      if (chat.chatId === chatId) {
+        chat.participantsIds = chat.participantsIds.filter(
+          (participantsId) => participantsId !== toDeleteParticipantId
+        );
+      }
+    });
 
-    if (chatIndex == -1) {
-      return;
-    }
-    const currentChat = chats[authorId][chatIndex];
-    currentChat.participantsIds = currentChat.participantsIds.filter(
-      (id) => id !== toDeleteParticipantId
-    );
     await this.#storeServise.setData(this.#filePath, chats);
   }
 }
