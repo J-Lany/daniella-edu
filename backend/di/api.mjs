@@ -4,4 +4,5 @@ export const SERVICES = {
   auth: "authService",
   config: "configService",
   session: "sessionService",
+  chat: "chatService",
 };
