@@ -23,4 +23,37 @@ export class ChatsDao {
 
     this.#storeServise.setData(this.#filePath, chats);
   }
+
+  async deleteChat(authorId, deleteChatId) {
+    const chats = await this.#storeServise.getData(this.#filePath);
+
+    if (chats[authorId]) {
+      const updateChats = chats[authorId].filter(
+        ({ chatId }) => chatId !== deleteChatId
+      );
+      chats[authorId] = updateChats;
+      this.#storeServise.setData(this.#filePath, chats);
+    }
+  }
+
+  async deleteChatParticipants(authorId, chatId, toDeleteParticipantId) {
+    const chats = await this.#storeServise.getData(this.#filePath);
+
+    if (!chats[authorId]) {
+      return;
+    }
+
+    const chatIndex = chats[authorId].findIndex(
+      (chat) => chat.chatId === chatId
+    );
+
+    if (chatIndex == -1) {
+      return;
+    }
+    const currentChat = chats[authorId][chatIndex];
+    currentChat.participantsIds = currentChat.participantsIds.filter(
+      (id) => id !== toDeleteParticipantId
+    );
+    await this.#storeServise.setData(this.#filePath, chats);
+  }
 }
