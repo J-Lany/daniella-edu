@@ -2,7 +2,7 @@ import { createMessageInputTemplate } from "./message-input.template";
 import { addListeners, removeListeners, select } from "../../utils/utils.js";
 
 export class MessageInput extends HTMLElement {
-  #listeners = [[select.bind(this, "#message"), "input", this.#onInputChange]];
+  #listeners = [[select.bind(this, "#message"), "keyup", this.#onInputChange]];
 
   static get name() {
     return "message-input";
@@ -18,7 +18,9 @@ export class MessageInput extends HTMLElement {
   }
 
   #onInputChange(e) {
-    console.log(e.target.value);
+    if (e.key === "Enter") {
+      console.log(e.target);
+    }
   }
 
   disconnectedCallback() {

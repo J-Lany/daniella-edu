@@ -40,4 +40,7 @@ diContainer.register(SERVICES.auth, new AuthService());
   MessageInput,
 ].map((component) => customElements.define(component.name, component));
 
-document.querySelector("#app").innerHTML = `<app-component></app-component>`;
+// document.querySelector("#app").innerHTML = `<app-component></app-component>`;
+
+document.querySelector("#app").innerHTML = `<message-input></message-input>`;
+
