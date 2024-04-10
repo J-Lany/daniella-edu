@@ -5,4 +5,5 @@ export const SERVICES = {
   config: "configService",
   session: "sessionService",
   chat: "chatService",
+  store: "storeService",
 };

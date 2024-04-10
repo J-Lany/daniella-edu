@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
+import { UsersDao } from "../data-store/dao/users-dao.mjs";
 
 export class UserService {
+  #userDao = new UsersDao();
   #users = new Map();
 
   #hashPassword(password) {
@@ -10,21 +12,23 @@ export class UserService {
       .then((hash) => hash)
       .catch((err) => err);
   }
-  getUsers() {
-    return Array.from(this.#users.values);
+  async getUsers() {
+    return await this.#userDao.getUsers();
   }
   async setUser({ login, email, password }) {
     const hashedPassword = await this.#hashPassword(password);
-    this.#users.set(login, { login, email, hashedPassword });
+    this.#userDao.setUser({ login, email, hashedPassword });
   }
 
   isUserAlreadyExist(login) {
+    //Пока что на старых рельсах - не смотри
     if (this.#users.has(login)) {
       throw new Error(401);
     }
     return true;
   }
-  getUser(login) {
-    return this.#users.get(login);
+  async getUser(login) {
+    const users = await this.#userDao.getUsers();
+    return users.filter((user) => user.login === login);
   }
 }

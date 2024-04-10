@@ -56,12 +56,12 @@ export function createRegistrationController(app) {
    *                   description: Сообщение об ошибке регистрации
    */
   const userService = diContainer.resolve(SERVICES.users);
-  app.post("/registration", (req, res) => {
+  app.post("/registration", async (req, res) => {
     const { login, email, password } = req.body;
 
     try {
       userService.isUserAlreadyExist(login);
-      userService.setUser({ login, email, password });
+      await userService.setUser({ login, email, password });
       return res
         .status(200)
         .json({ message: `${login} вы успешно зарегестрированы` });
