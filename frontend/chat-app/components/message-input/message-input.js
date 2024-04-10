@@ -1,6 +1,10 @@
 import { createMessageInputTemplate } from "./message-input.template";
 import { addListeners, removeListeners, select } from "../../utils/utils.js";
 
+const KEYS = {
+  ENTER: "Enter",
+};
+
 export class MessageInput extends HTMLElement {
   #listeners = [[select.bind(this, "#message"), "keyup", this.#onInputChange]];
 
@@ -18,7 +22,7 @@ export class MessageInput extends HTMLElement {
   }
 
   #onInputChange(e) {
-    if (e.key === "Enter") {
+    if (e.key === KEYS.ENTER) {
       console.log(e.target);
     }
   }
