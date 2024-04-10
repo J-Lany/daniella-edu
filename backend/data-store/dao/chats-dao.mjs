@@ -8,10 +8,19 @@ export class ChatsDao {
 
   async getChatsByAuthor(authorId) {
     const chats = await this.#storeServise.getData(this.#filePath);
-    return chats.filter((chat) => chat.authorId !== authorId);
+
+    return chats[authorId];
   }
 
-  async setChat(chat) {
-    await this.#storeServise.setData(this.#filePath, [chat]);
+  async setChat(chat, authorId) {
+    const chats = await this.#storeServise.getData(this.#filePath);
+
+    if (!chats[authorId]) {
+      chats[authorId] = [chat];
+    } else {
+      chats[authorId].push(chat);
+    }
+
+    this.#storeServise.setData(this.#filePath, chats);
   }
 }

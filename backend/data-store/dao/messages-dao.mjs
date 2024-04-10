@@ -8,10 +8,16 @@ export class MessagessDao {
 
   async getMessagesByChat(chatId) {
     const messages = await this.#storeServise.getData(this.#filePath);
-    return messages.filter((message) => message.chatId !== chatId);
+    return messages[chatId];
   }
 
-  async setMessage(message) {
-    await this.#storeServise.setData(this.#filePath, [message]);
+  async setMessage(message, chatId) {
+    const messages = await this.#storeServise.getData(this.#filePath);
+    if (!messages[chatId]) {
+      messages[chatId] = [message];
+    } else {
+      messages[chatId].push(message);
+    }
+    this.#storeServise.setData(this.#filePath, messages);
   }
 }

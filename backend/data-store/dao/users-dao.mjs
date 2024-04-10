@@ -10,6 +10,11 @@ export class UsersDao {
     return await this.#storeServise.getData(this.#filePath);
   }
 
+  async getUserByLogin(login) {
+    const users = await this.#storeServise.getData(this.#filePath);
+    return users.filter((user) => user.login === login);
+  }
+
   async setUser(user) {
     await this.#storeServise.setData(this.#filePath, [user]);
   }

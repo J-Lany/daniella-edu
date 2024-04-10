@@ -4,7 +4,6 @@ import { diContainer } from "../../di/di.mjs";
 
 export class UserService {
   #userDao = diContainer.resolve(SERVICES.usersDao);
-  #users = new Map();
 
   #hashPassword(password) {
     const saltRounds = 7;
@@ -22,14 +21,13 @@ export class UserService {
   }
 
   isUserAlreadyExist(login) {
-    //Пока что на старых рельсах - не смотри
-    if (this.#users.has(login)) {
+    if (this.#userDao.getUserByLogin(login)) {
       throw new Error(401);
     }
     return true;
   }
+
   async getUser(login) {
-    const users = await this.#userDao.getUsers();
-    return users.filter((user) => user.login === login);
+    return await this.#userDao.getUserByLogin(login);
   }
 }
