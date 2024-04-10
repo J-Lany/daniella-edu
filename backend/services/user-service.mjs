@@ -1,8 +1,9 @@
 import bcrypt from "bcrypt";
-import { UsersDao } from "../data-store/dao/users-dao.mjs";
+import { SERVICES } from "../../di/api.mjs";
+import { diContainer } from "../../di/di.mjs";
 
 export class UserService {
-  #userDao = new UsersDao();
+  #userDao = diContainer.resolve(SERVICES.usersDao);
   #users = new Map();
 
   #hashPassword(password) {

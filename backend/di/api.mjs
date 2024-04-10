@@ -6,4 +6,7 @@ export const SERVICES = {
   session: "sessionService",
   chat: "chatService",
   store: "storeService",
+  usersDao: "usersDao",
+  messagesDao: "messagesDao",
+  chatsDao: "chatsDao",
 };
