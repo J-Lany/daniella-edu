@@ -29,7 +29,7 @@ export class AuthService {
 
   async login(login, password) {
     try {
-      const currentUser = this.#userServise.getUser(login);
+      const currentUser = await this.#userServise.getUser(login);
       if (!currentUser) {
         throw new Error(403);
       }

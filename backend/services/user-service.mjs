@@ -1,7 +1,9 @@
 import bcrypt from "bcrypt";
+import { SERVICES } from "../di/api.mjs";
+import { diContainer } from "../di/di.mjs";
 
 export class UserService {
-  #users = new Map();
+  #userDao = diContainer.resolve(SERVICES.usersDao);
 
   #hashPassword(password) {
     const saltRounds = 7;
@@ -10,21 +12,22 @@ export class UserService {
       .then((hash) => hash)
       .catch((err) => err);
   }
-  getUsers() {
-    return Array.from(this.#users.values);
+  async getUsers() {
+    return await this.#userDao.getUsers();
   }
   async setUser({ login, email, password }) {
     const hashedPassword = await this.#hashPassword(password);
-    this.#users.set(login, { login, email, hashedPassword });
+    this.#userDao.setUser({ login, email, hashedPassword });
   }
 
   isUserAlreadyExist(login) {
-    if (this.#users.has(login)) {
+    if (!this.#userDao.getUserByLogin(login)) {
       throw new Error(401);
     }
     return true;
   }
-  getUser(login) {
-    return this.#users.get(login);
+
+  async getUser(login) {
+    return await this.#userDao.getUserByLogin(login);
   }
 }

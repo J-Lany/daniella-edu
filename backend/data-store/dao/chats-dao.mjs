@@ -1,0 +1,54 @@
+import { SERVICES } from "../../di/api.mjs";
+import { diContainer } from "../../di/di.mjs";
+import { FILE_PATHS } from "../../utils/data-file-paths.mjs";
+
+export class ChatsDao {
+  #filePath = FILE_PATHS.chats;
+  #storeServise = diContainer.resolve(SERVICES.store);
+
+  async getChatsByAuthor(authorId) {
+    const chats = await this.#storeServise.getData(this.#filePath);
+
+    return chats[authorId];
+  }
+
+  async setChat(chat, authorId) {
+    const chats = await this.#storeServise.getData(this.#filePath);
+
+    if (!chats[authorId]) {
+      chats[authorId] = [chat];
+    } else {
+      chats[authorId].push(chat);
+    }
+
+    this.#storeServise.setData(this.#filePath, chats);
+  }
+
+  async deleteChat(authorId, deleteChatId) {
+    const chats = await this.#storeServise.getData(this.#filePath);
+
+    if (chats[authorId]) {
+      const updateChats = chats[authorId].filter(
+        ({ chatId }) => chatId !== deleteChatId
+      );
+      chats[authorId] = updateChats;
+      this.#storeServise.setData(this.#filePath, chats);
+    }
+  }
+
+  async deleteChatParticipants(authorId, chatId, toDeleteParticipantId) {
+    const chats = await this.#storeServise.getData(this.#filePath);
+
+    if (!chats[authorId]) return;
+
+    chats[authorId].map((chat) => {
+      if (chat.chatId === chatId) {
+        chat.participantsIds = chat.participantsIds.filter(
+          (participantsId) => participantsId !== toDeleteParticipantId
+        );
+      }
+    });
+
+    await this.#storeServise.setData(this.#filePath, chats);
+  }
+}

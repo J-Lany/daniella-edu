@@ -1,44 +1,35 @@
 import { v4 as uuidv4 } from "uuid";
+import { SERVICES } from "../di/api.mjs";
+import { diContainer } from "../di/di.mjs";
 
 export class ChatService {
-  #chats = new Map();
+  #chatsDao = diContainer.resolve(SERVICES.chatsDao);
 
-  createChat(authorId, participantsIds) {
+  async createChat(authorId, participantsIds) {
     if (authorId === null) {
       throw new Error(401);
     }
     const chatId = uuidv4();
     const date = new Date();
     const newChat = { chatId, participantsIds, date };
-
-    if (this.#chats.has(authorId)) {
-      this.#chats.get(authorId).add(newChat);
-    } else {
-      this.#chats.set(authorId, new Set([newChat]));
-    }
+    await this.#chatsDao.setChat(newChat, authorId);
 
     return chatId;
   }
 
-  getChatsByAythor(authorId) {
-    if (!this.#chats.has(authorId)) {
-      throw new Error(401);
-    }
-    return [...this.#chats.get(authorId)];
+  async getChatsByAythor(authorId) {
+    return await this.#chatsDao.getChatsByAuthor(authorId);
   }
 
-  deleteParticipants(chatId, toDeleteParticipateId) {
-    const currentParticipants = this.#chats.get(chatId);
-    const newParticipants = currentParticipants.filter(
-      (participate) => participate !== toDeleteParticipateId
+  deleteParticipants(authorId, chatId, toDeleteParticipateId) {
+    this.#chatsDao.deleteChatParticipants(
+      authorId,
+      chatId,
+      toDeleteParticipateId
     );
-    this.#chats.set(chatId, newParticipants);
   }
 
-  deleteChat(authorId, deleteChatId) {
-    const chats = [...this.#chats.get(authorId)].filter(
-      ({ chatId }) => chatId !== deleteChatId
-    );
-    this.#chats.set(authorId, chats);
+  async deleteChat(authorId, deleteChatId) {
+    await this.#chatsDao.deleteChat(authorId, deleteChatId);
   }
 }
