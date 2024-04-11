@@ -7,6 +7,7 @@ export function createChatTemplate() {
     <header-component></header-component>
     <chat-sidebar></chat-sidebar>
     <messages-block></messages-block>
+    <message-input></message-input>
   </div>
   `;
 }

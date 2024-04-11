@@ -17,6 +17,7 @@ import { AvatarComponent } from "./chat-app/components/avarar/avatar-component.j
 import { MessageInfoBlock } from "./chat-app/components/message-info-block/message-info-block.js";
 import { Message } from "./chat-app/components/message/message.js";
 import { ChatSidebar } from "./chat-app/components/chat-sidebar/chat-sidebar.js";
+import { MessageInput } from "./chat-app/components/message-input/message-input.js";
 
 diContainer.register(SERVICES.http, httpService);
 diContainer.register(SERVICES.messages, new MessageService());
@@ -36,6 +37,7 @@ diContainer.register(SERVICES.auth, new AuthService());
   AvatarComponent,
   MessageInfoBlock,
   Message,
+  MessageInput,
 ].map((component) => customElements.define(component.name, component));
 
 document.querySelector("#app").innerHTML = `<app-component></app-component>`;
