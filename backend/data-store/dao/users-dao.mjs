@@ -40,14 +40,13 @@ export class UsersDao {
 
   async getUserByName(firstName) {
     const users = await this.#storeServise.getData(this.#filePath);
-    for (const user of Object.values(users)) {
-      if (user.firstName === firstName) {
-        return user;
-      }
-    }
-    return null;
+    const user = Object.values(users).find(
+      (user) => user.firstName === firstName
+    );
+
+    return user;
   }
-  
+
   async updateUser(userId, updates) {
     const users = await this.#storeServise.getData(this.#filePath);
     const user = await this.getUserById(userId);

@@ -34,8 +34,6 @@ export class UserService {
     if (!user) {
       throw new Error(401);
     }
-    user.firstName = user.firstName || null;
-    user.lastName = user.lastName || null;
     return user;
   }
   async getUserByName(firstName) {
@@ -43,13 +41,11 @@ export class UserService {
     if (!user) {
       throw new Error(401);
     }
-    user.lastName = user.lastName || null;
 
     return user;
   }
   async updateUser(userId, updates) {
-    const updateUser = await this.#userDao.updateUser(userId, updates);
-    return updateUser;
+    return await this.#userDao.updateUser(userId, updates);
   }
 
   async deleteUser(userId) {

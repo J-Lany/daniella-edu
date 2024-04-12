@@ -59,7 +59,6 @@ export function createUserController(app) {
 
     try {
       const user = await userService.getUser(userId);
-      console.log(user);
       return res.status(200).json(user);
     } catch (err) {
       return res
