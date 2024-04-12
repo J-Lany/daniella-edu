@@ -30,7 +30,7 @@ export class UsersDao {
 
   async getUserById(userId) {
     const users = await this.#storeServise.getData(this.#filePath);
-    for (const user in users) {
+    for (const user of Object.values(users)) {
       if (user.userId === userId) {
         return user;
       }
@@ -38,24 +38,21 @@ export class UsersDao {
     return null;
   }
   async updateUser(userId, updates) {
-    let users = await this.#storeServise.getData(this.#filePath);
-    let userLogin = -1;
+    const users = await this.#storeServise.getData(this.#filePath);
+    const user = await this.getUserById(userId);
 
-    for (const key in users) {
-      if (users[key].userId === userId) {
-        userLogin = key;
-        break;
-      }
-    }
-
-    if (userLogin === -1) {
-      throw new Error(401);
-    }
-
-    users[userLogin] = { ...users[userLogin], ...updates };
+    users[user.login] = { ...users[user.login], ...updates };
 
     await this.#storeServise.setData(this.#filePath, users);
 
-    return users[userLogin];
+    return users[user.login];
+  }
+
+  async deleteUser(userId) {
+    const users = await this.#storeServise.getData(this.#filePath);
+    const user = await this.getUserById(userId);
+    delete users[user.login];
+
+    await this.#storeServise.setData(this.#filePath, users);
   }
 }

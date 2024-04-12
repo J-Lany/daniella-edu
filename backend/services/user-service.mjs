@@ -43,4 +43,12 @@ export class UserService {
     const updateUser = await this.#userDao.updateUser(userId, updates);
     return updateUser;
   }
+
+  async deleteUser(userId) {
+    const user = await this.#userDao.getUserById(userId);
+    if (!user) {
+      throw new Error(401);
+    }
+    await this.#userDao.deleteUser(userId);
+  }
 }
