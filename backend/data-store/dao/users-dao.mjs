@@ -18,13 +18,44 @@ export class UsersDao {
     return users[login];
   }
 
-  async setUser({ login, email, hashedPassword }) {
+  async setUser(user) {
     const users = await this.#storeServise.getData(this.#filePath);
-    if (users[login]) {
+    if (users[user.login]) {
       return;
     }
-    users[login] = { login, email, hashedPassword };
+    users[user.login] = user;
 
     await this.#storeServise.setData(this.#filePath, users);
+  }
+
+  async getUserById(userId) {
+    const users = await this.#storeServise.getData(this.#filePath);
+    for (const user in users) {
+      if (user.userId === userId) {
+        return user;
+      }
+    }
+    return null;
+  }
+  async updateUser(userId, updates) {
+    let users = await this.#storeServise.getData(this.#filePath);
+    let userLogin = -1;
+
+    for (const key in users) {
+      if (users[key].userId === userId) {
+        userLogin = key;
+        break;
+      }
+    }
+
+    if (userLogin === -1) {
+      throw new Error(401);
+    }
+
+    users[userLogin] = { ...users[userLogin], ...updates };
+
+    await this.#storeServise.setData(this.#filePath, users);
+
+    return users[userLogin];
   }
 }

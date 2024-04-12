@@ -29,13 +29,18 @@ export class UserService {
     return true;
   }
 
-  async getUser(login) {
-    const user = await this.#userDao.getUserByLogin(login);
+  async getUser(userId) {
+    const user = await this.#userDao.getUserById(userId);
     if (!user) {
       throw new Error(401);
     }
     user.firstName = user.firstName || null;
     user.lastName = user.lastName || null;
     return user;
+  }
+
+  async updateUser(userId, updates) {
+    const updateUser = await this.#userDao.updateUser(userId, updates);
+    return updateUser;
   }
 }

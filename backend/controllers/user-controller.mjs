@@ -6,18 +6,18 @@ export function createUserController(app) {
   const userService = diContainer.resolve(SERVICES.users);
   /**
    * @swagger
-   * /users/{login}:
+   * /users/{userId}:
    *   get:
-   *     summary: Получение пользователя по login
+   *     summary: Получение пользователя по userId
    *     parameters:
    *       - in: path
-   *         name: login
+   *         name: userId
    *         required: true
    *         schema:
    *           type: string
    *     responses:
    *       200:
-   *         description: Пользователь по login
+   *         description: Пользователь по userId
    *         content:
    *           application/json:
    *             schema:
@@ -55,16 +55,86 @@ export function createUserController(app) {
    *                   description: Сообщение об ошибке сервера
    */
   app.get("/users/:userId", async (req, res) => {
-    const login = req.params.userId;
+    const userId = req.params.userId;
 
     try {
-      const user = await userService.getUser(login);
+      const user = await userService.getUser(userId);
       console.log(user);
       return res.status(200).json(user);
     } catch (err) {
       return res
         .status(parseInt(err.message))
         .json({ message: ERRORS.getChatErrors[err.message] });
+    }
+  });
+  /**
+   * @swagger
+   * /users/{userId}:
+   *   patch:
+   *     summary: Обновление пользователя
+   *     parameters:
+   *       - in: path
+   *         name: userId
+   *         required: true
+   *         schema:
+   *           type: string
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *     responses:
+   *       200:
+   *         description: Успешное обновление пользователя
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 id:
+   *                   type: string
+   *                   description: ID обновленного пользователя
+   *                 firstName:
+   *                   type: string
+   *                   description: Обновленное имя пользователя
+   *                 lastName:
+   *                   type: string
+   *                   description: Обновленная фамилия пользователя
+   *                 email:
+   *                   type: string
+   *                   description: Обновленный email пользователя
+   *       401:
+   *         description: Пользователь не найден
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   *       500:
+   *         description: Ошибка на сервере
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   */
+  app.patch("/users/:userId", async (req, res) => {
+    const userId = req.params.userId;
+    const updates = req.body;
+    try {
+      const updatedUser = await userService.updateUser(userId, updates);
+      return res.status(200).json(updatedUser);
+    } catch (err) {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.updateUserErrors[err.message] });
     }
   });
 }
