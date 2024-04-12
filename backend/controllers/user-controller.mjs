@@ -64,7 +64,7 @@ export function createUserController(app) {
     } catch (err) {
       return res
         .status(parseInt(err.message))
-        .json({ message: ERRORS.getChatErrors[err.message] });
+        .json({ message: ERRORS.userErrors[err.message] });
     }
   });
   /**
@@ -190,6 +190,68 @@ export function createUserController(app) {
       return res
         .status(parseInt(err.message))
         .json({ message: ERRORS.updateUserErrors[err.message] });
+    }
+  });
+  /**
+   * @swagger
+   * /user/{firstName}:
+   *   get:
+   *     summary: Получение пользователя по firstName
+   *     parameters:
+   *       - in: path
+   *         name: firstName
+   *         required: true
+   *         schema:
+   *           type: string
+   *     responses:
+   *       200:
+   *         description: Пользователь по firstName
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 userId:
+   *                   type: string
+   *                 login:
+   *                   type: string
+   *                 firstName:
+   *                   type: string
+   *                 lastName:
+   *                   type: string
+   *                 email:
+   *                   type: string
+   *       401:
+   *         description: Такого пользователя не существует
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   *       500:
+   *         description: Ошибка при получении пользователя
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 errorMessage:
+   *                   type: string
+   *                   description: Сообщение об ошибке сервера
+   */
+  app.get("/user/:firstName", async (req, res) => {
+    const firstName = req.params.firstName;
+
+    try {
+      const user = await userService.getUserByName(firstName);
+      return res.status(200).json(user);
+    } catch (err) {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.userErrors[err.message] });
     }
   });
 }

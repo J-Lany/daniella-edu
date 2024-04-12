@@ -38,7 +38,15 @@ export class UserService {
     user.lastName = user.lastName || null;
     return user;
   }
+  async getUserByName(firstName) {
+    const user = await this.#userDao.getUserByName(firstName);
+    if (!user) {
+      throw new Error(401);
+    }
+    user.lastName = user.lastName || null;
 
+    return user;
+  }
   async updateUser(userId, updates) {
     const updateUser = await this.#userDao.updateUser(userId, updates);
     return updateUser;
