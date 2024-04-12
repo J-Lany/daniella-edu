@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { SERVICES } from "../di/api.mjs";
 import { diContainer } from "../di/di.mjs";
+import { v4 as uuidv4 } from "uuid";
 
 export class UserService {
   #userDao = diContainer.resolve(SERVICES.usersDao);
@@ -17,7 +18,8 @@ export class UserService {
   }
   async setUser({ login, email, password }) {
     const hashedPassword = await this.#hashPassword(password);
-    this.#userDao.setUser({ login, email, hashedPassword });
+    const userId = uuidv4();
+    this.#userDao.setUser({ login, email, hashedPassword, userId });
   }
 
   isUserAlreadyExist(login) {
@@ -28,6 +30,12 @@ export class UserService {
   }
 
   async getUser(login) {
-    return await this.#userDao.getUserByLogin(login);
+    const user = await this.#userDao.getUserByLogin(login);
+    if (!user) {
+      throw new Error(401);
+    }
+    user.firstName = user.firstName || null;
+    user.lastName = user.lastName || null;
+    return user;
   }
 }

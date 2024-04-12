@@ -18,6 +18,7 @@ import { StoreService } from "./data-store/store-service.mjs";
 import { ChatsDao } from "./data-store/dao/chats-dao.mjs";
 import { UsersDao } from "./data-store/dao/users-dao.mjs";
 import { MessagessDao } from "./data-store/dao/messages-dao.mjs";
+import { createUserController } from "./controllers/user-controller.mjs";
 
 const app = express();
 
@@ -61,6 +62,7 @@ app.get("/messages/:chatId", chatController);
 createChatsController(app);
 createRegistrationController(app);
 createLoginController(app);
+createUserController(app);
 
 const PORT = 3000;
 app.listen(PORT, () => {
