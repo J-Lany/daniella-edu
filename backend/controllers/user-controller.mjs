@@ -227,7 +227,7 @@ export function createUserController(app) {
    *         description: Ошибка валидации запроса
    */
 
-  app.search("search-user", async (req, res) => {
+  app["search"]("search-user", async (req, res) => {
     const search = req.query.search;
 
     try {
