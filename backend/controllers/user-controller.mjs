@@ -193,60 +193,49 @@ export function createUserController(app) {
   });
   /**
    * @swagger
-   * /user/{firstName}:
-   *   get:
-   *     summary: Получение пользователя по firstName
+   * /search-user:
+   *   search:
+   *     summary: Поиск пользователя по строке
+   *     description: Ищет пользователя по указанной строке в имени, фамилии или логине
    *     parameters:
-   *       - in: path
-   *         name: firstName
+   *       - in: query
+   *         name: search
    *         required: true
    *         schema:
    *           type: string
    *     responses:
    *       200:
-   *         description: Пользователь по firstName
+   *         description: Успешный запрос
    *         content:
    *           application/json:
    *             schema:
-   *               type: object
-   *               properties:
-   *                 userId:
-   *                   type: string
-   *                 login:
-   *                   type: string
-   *                 firstName:
-   *                   type: string
-   *                 lastName:
-   *                   type: string
-   *                 email:
-   *                   type: string
-   *       401:
-   *         description: Такого пользователя не существует
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   description: Сообщение об ошибке
-   *       500:
-   *         description: Ошибка при получении пользователя
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 errorMessage:
-   *                   type: string
-   *                   description: Сообщение об ошибке сервера
+   *               type: array
+   *               items:
+   *                 type: object
+   *                 properties:
+   *                   userId:
+   *                     type: string
+   *                   login:
+   *                     type: string
+   *                   email:
+   *                     type: string
+   *                   firstName:
+   *                     type: string
+   *                   lastName:
+   *                     type: string
+   *       400:
+   *         description: Ошибка валидации запроса
    */
-  app.get("/user/:firstName", async (req, res) => {
-    const firstName = req.params.firstName;
+
+  app.search("search-user", async (req, res) => {
+    const search = req.query.search;
 
     try {
-      const user = await userService.getUserByName(firstName);
-      return res.status(200).json(user);
+      const { userId, login, email, firstName, lastName } =
+        await userService.searchUser(search);
+      return res
+        .status(200)
+        .json({ userId, login, email, firstName, lastName });
     } catch (err) {
       return res
         .status(parseInt(err.message))

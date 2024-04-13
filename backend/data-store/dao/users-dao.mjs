@@ -10,58 +10,58 @@ export class UsersDao {
     return await this.#storeServise.getData(this.#filePath);
   }
 
-  async getUserByLogin(login) {
+  async getUserById(userId) {
     const users = await this.#storeServise.getData(this.#filePath);
-    if (!users[login]) {
+    if (!users[userId]) {
       return null;
     }
-    return users[login];
+    return users[userId];
   }
 
   async setUser(user) {
     const users = await this.#storeServise.getData(this.#filePath);
-    if (users[user.login]) {
+    if (users[user.userId]) {
       return;
     }
-    users[user.login] = user;
+    users[user.userId] = user;
 
     await this.#storeServise.setData(this.#filePath, users);
   }
 
-  async getUserById(userId) {
+  async getUserByLogin(login) {
     const users = await this.#storeServise.getData(this.#filePath);
     for (const user of Object.values(users)) {
-      if (user.userId === userId) {
+      if (user.login === login) {
         return user;
       }
     }
     return null;
   }
 
-  async getUserByName(firstName) {
+  async searchUser(search) {
     const users = await this.#storeServise.getData(this.#filePath);
-    const user = Object.values(users).find(
-      (user) => user.firstName === firstName
-    );
 
-    return user;
+    return Object.values(users).filter(
+      (user) =>
+        user.firstName.includes(search) ||
+        user.lastName.includes(search) ||
+        user.login.includes(search)
+    );
   }
 
   async updateUser(userId, updates) {
     const users = await this.#storeServise.getData(this.#filePath);
-    const user = await this.getUserById(userId);
 
-    users[user.login] = { ...users[user.login], ...updates };
+    users[userId] = { ...users[userId], ...updates };
 
     await this.#storeServise.setData(this.#filePath, users);
 
-    return users[user.login];
+    return users[userId];
   }
 
   async deleteUser(userId) {
     const users = await this.#storeServise.getData(this.#filePath);
-    const user = await this.getUserById(userId);
-    delete users[user.login];
+    delete users[userId];
 
     await this.#storeServise.setData(this.#filePath, users);
   }

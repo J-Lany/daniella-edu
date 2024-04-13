@@ -36,15 +36,15 @@ export class UserService {
     }
     return user;
   }
-  async getUserByName(firstName) {
-    const user = await this.#userDao.getUserByName(firstName);
+  async searchUser(search) {
+    return await this.#userDao.searchUser(search);
+  }
+  
+  async updateUser(userId, updates) {
+    const user = await this.#userDao.getUserById(userId);
     if (!user) {
       throw new Error(401);
     }
-
-    return user;
-  }
-  async updateUser(userId, updates) {
     return await this.#userDao.updateUser(userId, updates);
   }
 
