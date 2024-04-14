@@ -193,8 +193,8 @@ export function createUserController(app) {
   });
   /**
    * @swagger
-   * /search-user:
-   *   search:
+   * /users/search:
+   *   get:
    *     summary: Поиск пользователя по строке
    *     description: Ищет пользователя по указанной строке в имени, фамилии или логине
    *     parameters:
@@ -227,7 +227,7 @@ export function createUserController(app) {
    *         description: Ошибка валидации запроса
    */
 
-  app["search"]("search-user", async (req, res) => {
+  app.get("/users/search", async (req, res) => {
     const search = req.query.search;
 
     try {
