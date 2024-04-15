@@ -28,16 +28,6 @@ export class UsersDao {
     await this.#storeServise.setData(this.#filePath, users);
   }
 
-  async getUserByLogin(login) {
-    const users = await this.#storeServise.getData(this.#filePath);
-    for (const user of Object.values(users)) {
-      if (user.login === login) {
-        return user;
-      }
-    }
-    return null;
-  }
-
   async searchUser(search) {
     const users = await this.#storeServise.getData(this.#filePath);
     search = search.toUpperCase();

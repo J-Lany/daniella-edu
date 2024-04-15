@@ -19,6 +19,8 @@ import { ChatsDao } from "./data-store/dao/chats-dao.mjs";
 import { UsersDao } from "./data-store/dao/users-dao.mjs";
 import { MessagessDao } from "./data-store/dao/messages-dao.mjs";
 import { createUserController } from "./controllers/user-controller.mjs";
+import { EmailService } from "./services/email-service.mjs";
+import { EmailsDao } from "./data-store/dao/emails-dao.mjs";
 
 const app = express();
 
@@ -47,10 +49,12 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 diContainer.register(SERVICES.config, configService());
 diContainer.register(SERVICES.store, new StoreService());
 diContainer.register(SERVICES.chatsDao, new ChatsDao());
+diContainer.register(SERVICES.emailsDao, new EmailsDao());
 diContainer.register(SERVICES.usersDao, new UsersDao());
 diContainer.register(SERVICES.messagesDao, new MessagessDao());
 
 diContainer.register(SERVICES.messages, messageService);
+diContainer.register(SERVICES.email, new EmailService());
 diContainer.register(SERVICES.users, new UserService());
 diContainer.register(SERVICES.session, new SessionService());
 diContainer.register(SERVICES.auth, new AuthService());

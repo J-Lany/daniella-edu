@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export class UserService {
   #userDao = diContainer.resolve(SERVICES.usersDao);
+  #emailService = diContainer.resolve(SERVICES.email);
 
   #hashPassword(password) {
     const saltRounds = 7;
@@ -19,11 +20,13 @@ export class UserService {
   async setUser({ login, email, password }) {
     const hashedPassword = await this.#hashPassword(password);
     const userId = uuidv4();
+    this.#emailService.setEmail(email);
     this.#userDao.setUser({ login, email, hashedPassword, userId });
   }
 
-  isUserAlreadyExist(login) {
-    if (!this.#userDao.getUserByLogin(login)) {
+  async isUserAlreadyExist(email) {
+    const isEmailExist = await this.#emailService.isEmailExist(email);
+    if (isEmailExist) {
       throw new Error(401);
     }
     return true;
@@ -39,7 +42,7 @@ export class UserService {
   async searchUser(search) {
     return await this.#userDao.searchUser(search);
   }
-  
+
   async updateUser(userId, updates) {
     const user = await this.#userDao.getUserById(userId);
     if (!user) {
