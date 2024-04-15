@@ -30,7 +30,7 @@ export class UsersDao {
 
   async searchUser(search) {
     const users = await this.#storeServise.getData(this.#filePath);
-    const check = new RegExp(search, "g", "i");
+    const check = new RegExp(search, "gi");
 
     return Object.values(users).find(
       (user) =>
