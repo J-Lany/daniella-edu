@@ -30,12 +30,13 @@ export class UsersDao {
 
   async searchUser(search) {
     const users = await this.#storeServise.getData(this.#filePath);
-    search = search.toUpperCase();
-    return Object.values(users).filter(
+    const check = new RegExp(search, "g", "i");
+
+    return Object.values(users).find(
       (user) =>
-        user.firstName.toUpperCase().includes(search) ||
-        user.lastName.toUpperCase().includes(search) ||
-        user.login.toUpperCase().includes(search)
+        check.test(user.firstName) ||
+        check.test(user.lastName) ||
+        check.test(user.login)
     );
   }
 
