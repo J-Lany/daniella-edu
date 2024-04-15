@@ -6,6 +6,58 @@ export function createUserController(app) {
   const userService = diContainer.resolve(SERVICES.users);
   /**
    * @swagger
+   * /users/search:
+   *   get:
+   *     summary: Поиск пользователя по строке
+   *     description: Ищет пользователя по указанной строке в имени, фамилии или логине
+   *     parameters:
+   *       - in: query
+   *         name: search
+   *         required: true
+   *         schema:
+   *           type: string
+   *     responses:
+   *       200:
+   *         description: Успешный запрос
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 type: object
+   *                 properties:
+   *                   userId:
+   *                     type: string
+   *                   login:
+   *                     type: string
+   *                   email:
+   *                     type: string
+   *                   firstName:
+   *                     type: string
+   *                   lastName:
+   *                     type: string
+   *       400:
+   *         description: Ошибка валидации запроса
+   */
+
+  app.get("/users/search", async (req, res) => {
+    const search = req.query.search;
+
+    try {
+      const { userId, login, email, firstName, lastName } =
+        await userService.searchUser(search);
+      return res
+        .status(200)
+        .json({ userId, login, email, firstName, lastName });
+    } catch (err) {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.userErrors[err.message] });
+    }
+  });
+  
+  /**
+   * @swagger
    * /users/{userId}:
    *   get:
    *     summary: Получение пользователя по userId
@@ -189,57 +241,6 @@ export function createUserController(app) {
       return res
         .status(parseInt(err.message))
         .json({ message: ERRORS.updateUserErrors[err.message] });
-    }
-  });
-  /**
-   * @swagger
-   * /users/search:
-   *   get:
-   *     summary: Поиск пользователя по строке
-   *     description: Ищет пользователя по указанной строке в имени, фамилии или логине
-   *     parameters:
-   *       - in: query
-   *         name: search
-   *         required: true
-   *         schema:
-   *           type: string
-   *     responses:
-   *       200:
-   *         description: Успешный запрос
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: array
-   *               items:
-   *                 type: object
-   *                 properties:
-   *                   userId:
-   *                     type: string
-   *                   login:
-   *                     type: string
-   *                   email:
-   *                     type: string
-   *                   firstName:
-   *                     type: string
-   *                   lastName:
-   *                     type: string
-   *       400:
-   *         description: Ошибка валидации запроса
-   */
-
-  app.get("/users/search", async (req, res) => {
-    const search = req.query.search;
-
-    try {
-      const { userId, login, email, firstName, lastName } =
-        await userService.searchUser(search);
-      return res
-        .status(200)
-        .json({ userId, login, email, firstName, lastName });
-    } catch (err) {
-      return res
-        .status(parseInt(err.message))
-        .json({ message: ERRORS.userErrors[err.message] });
     }
   });
 }
