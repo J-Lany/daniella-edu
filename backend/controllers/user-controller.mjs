@@ -6,6 +6,49 @@ export function createUserController(app) {
   const userService = diContainer.resolve(SERVICES.users);
   /**
    * @swagger
+   * /users:
+   *   get:
+   *     summary: Получить всех пользователей с пагинацией
+   *     parameters:
+   *       - name: userPerPage
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
+   *       - name: pageNumber
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
+   *     responses:
+   *       200:
+   *         description: OK
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 users:
+   *                   type: array
+   *                   items:
+   *                     type: object
+   *                     properties:
+   *                       id:
+   *                         type: string
+   *                       name:
+   *                         login: string
+   */
+
+  app.get("/users", async (req, res) => {
+    const userPerPage = req.query.userPerPage;
+    const pageNumber = req.query.pageNumber;
+    const users = await userService.getUsers(userPerPage, pageNumber);
+
+    return res.status(200).json(users);
+  });
+
+  /**
+   * @swagger
    * /users/search:
    *   get:
    *     summary: Поиск пользователя по строке
@@ -39,7 +82,6 @@ export function createUserController(app) {
    *       400:
    *         description: Ошибка валидации запроса
    */
-
   app.get("/users/search", async (req, res) => {
     const search = req.query.search;
 
@@ -55,7 +97,7 @@ export function createUserController(app) {
         .json({ message: ERRORS.userErrors[err.message] });
     }
   });
-  
+
   /**
    * @swagger
    * /users/{userId}:
