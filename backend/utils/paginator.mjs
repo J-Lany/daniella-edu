@@ -10,7 +10,6 @@ export function paginator(itemPerPage, pageNumber, list) {
     result,
     pageAmount,
     itemPerPage,
-    pageNumber,
     hasNext,
     hasPrev,
   };

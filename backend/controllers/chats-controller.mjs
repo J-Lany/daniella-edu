@@ -123,6 +123,16 @@ export function createChatsController(app) {
    *         required: true
    *         schema:
    *           type: string
+   *       - name: chatsPerPage
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
+   *       - name: pageNumber
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
    *     responses:
    *       200:
    *         description: Массив чатов пользователя
@@ -162,10 +172,17 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке сервера
    */
-  app.get("/chats", (req, res) => {
+  app.get("/chats", async (req, res) => {
     const authorId = req.query.authorId;
+    const chatsPerPage = req.query.userPerPage;
+    const pageNumber = req.query.pageNumber;
     try {
-      return res.status(200).json(chatService.getChatsByAythor(authorId));
+      const result = await chatService.getChatsByAythor(
+        authorId,
+        chatsPerPage,
+        pageNumber
+      );
+      return res.status(200).json(result);
     } catch (err) {
       return res
         .status(parseInt(err.message))
