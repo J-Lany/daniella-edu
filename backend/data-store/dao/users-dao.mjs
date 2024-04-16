@@ -10,20 +10,49 @@ export class UsersDao {
     return await this.#storeServise.getData(this.#filePath);
   }
 
-  async getUserByLogin(login) {
+  async getUserById(userId) {
     const users = await this.#storeServise.getData(this.#filePath);
-    if (!users[login]) {
+    if (!users[userId]) {
       return null;
     }
-    return users[login];
+    return users[userId];
   }
 
-  async setUser({ login, email, hashedPassword }) {
+  async setUser(user) {
     const users = await this.#storeServise.getData(this.#filePath);
-    if (users[login]) {
+    if (users[user.userId]) {
       return;
     }
-    users[login] = { login, email, hashedPassword };
+    users[user.userId] = user;
+
+    await this.#storeServise.setData(this.#filePath, users);
+  }
+
+  async searchUser(search) {
+    const users = await this.#storeServise.getData(this.#filePath);
+    const check = new RegExp(search, "gi");
+
+    return Object.values(users).find(
+      (user) =>
+        check.test(user.firstName) ||
+        check.test(user.lastName) ||
+        check.test(user.login)
+    );
+  }
+
+  async updateUser(userId, updates) {
+    const users = await this.#storeServise.getData(this.#filePath);
+
+    users[userId] = { ...users[userId], ...updates };
+
+    await this.#storeServise.setData(this.#filePath, users);
+
+    return users[userId];
+  }
+
+  async deleteUser(userId) {
+    const users = await this.#storeServise.getData(this.#filePath);
+    delete users[userId];
 
     await this.#storeServise.setData(this.#filePath, users);
   }

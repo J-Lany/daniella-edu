@@ -22,7 +22,7 @@ import {SERVICES} from '../di/api.mjs';
  *               items:
  *                 type: object
  *                 properties:
- *                   id:
+ *                   chatId:
  *                     type: string
  *                   author:
  *                     type: string
