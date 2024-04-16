@@ -20,6 +20,11 @@ export class UserService {
   async setUser({ login, email, password }) {
     const hashedPassword = await this.#hashPassword(password);
     const userId = uuidv4();
+    if (!this.#emailService.isEmailCorrect(email)) {
+      throw new Error(403);
+    }
+    this.isUserAlreadyExist(email);
+    
     this.#emailService.setEmail(email);
     this.#userDao.setUser({ login, email, hashedPassword, userId });
   }

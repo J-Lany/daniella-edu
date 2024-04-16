@@ -10,5 +10,9 @@ export class EmailService {
   async setEmail(email) {
     await this.#emailsDao.setEmail(email);
   }
-  
+
+  isEmailCorrect(email) {
+    const check = /^\w+@\w+\.\w+$/;
+    return check.test(email);
+  }
 }

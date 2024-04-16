@@ -44,6 +44,16 @@ export function createRegistrationController(app) {
    *                 message:
    *                   type: string
    *                   description: Сообщение об ошибке
+   *       403:
+   *         description: Некорректный email
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
    *       500:
    *         description: Ошибка регистрации
    *         content:
@@ -60,7 +70,6 @@ export function createRegistrationController(app) {
     const { login, email, password } = req.body;
 
     try {
-      userService.isUserAlreadyExist(login);
       await userService.setUser({ login, email, password });
       return res
         .status(200)
