@@ -32,7 +32,7 @@ export class UsersDao {
     const users = await this.#storeServise.getData(this.#filePath);
     const check = new RegExp(search, "gi");
 
-    return Object.values(users).find(
+    return Object.values(users).filter(
       (user) =>
         check.test(user.firstName) ||
         check.test(user.lastName) ||

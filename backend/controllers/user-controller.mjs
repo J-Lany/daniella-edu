@@ -52,13 +52,22 @@ export function createUserController(app) {
    * /users/search:
    *   get:
    *     summary: Поиск пользователя по строке
-   *     description: Ищет пользователя по указанной строке в имени, фамилии или логине
    *     parameters:
    *       - in: query
    *         name: search
    *         required: true
    *         schema:
    *           type: string
+   *       - name: userPerPage
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
+   *       - name: pageNumber
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
    *     responses:
    *       200:
    *         description: Успешный запрос
@@ -84,13 +93,16 @@ export function createUserController(app) {
    */
   app.get("/users/search", async (req, res) => {
     const search = req.query.search;
+    const userPerPage = req.query.userPerPage;
+    const pageNumber = req.query.pageNumber;
 
     try {
-      const { userId, login, email, firstName, lastName } =
-        await userService.searchUser(search);
-      return res
-        .status(200)
-        .json({ userId, login, email, firstName, lastName });
+      const result = await userService.searchUser(
+        search,
+        userPerPage,
+        pageNumber
+      );
+      return res.status(200).json(result);
     } catch (err) {
       return res
         .status(parseInt(err.message))

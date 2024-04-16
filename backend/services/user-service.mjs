@@ -49,8 +49,12 @@ export class UserService {
     }
     return user;
   }
-  async searchUser(search) {
-    return await this.#userDao.searchUser(search);
+  async searchUser(search, userPerPage, pageNumber) {
+    const result = await this.#userDao.searchUser(search);
+    if (!result) {
+      throw new Error(401);
+    }
+    return paginator(userPerPage, pageNumber, result);
   }
 
   async updateUser(userId, updates) {
