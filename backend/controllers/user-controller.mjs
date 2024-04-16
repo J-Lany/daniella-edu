@@ -42,9 +42,9 @@ export function createUserController(app) {
   app.get("/users", async (req, res) => {
     const userPerPage = req.query.userPerPage;
     const pageNumber = req.query.pageNumber;
-    const users = await userService.getUsers(userPerPage, pageNumber);
+    const result = await userService.getUsers(userPerPage, pageNumber);
 
-    return res.status(200).json(users);
+    return res.status(200).json(result);
   });
 
   /**
