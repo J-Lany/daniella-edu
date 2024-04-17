@@ -38,10 +38,10 @@ export function createChatsController(app) {
    *       '500':
    *         description: Ошибка при создании чата
    */
-  app.post("/chats", (req, res) => {
+  app.post("/chats", async (req, res) => {
     const { authorId, participantsIds } = req.body;
     try {
-      const chatId = chatService.createChat(authorId, participantsIds);
+      const chatId = await chatService.createChat(authorId, participantsIds);
       return res.status(200).json({ chatId });
     } catch (err) {
       return res
@@ -162,10 +162,11 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке сервера
    */
-  app.get("/chats", (req, res) => {
+  app.get("/chats", async (req, res) => {
     const authorId = req.query.authorId;
     try {
-      return res.status(200).json(chatService.getChatsByAythor(authorId));
+      const result = await chatService.getChatsByAythor(authorId);
+      return res.status(200).json(result);
     } catch (err) {
       return res
         .status(parseInt(err.message))

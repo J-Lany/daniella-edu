@@ -11,7 +11,7 @@ export class MessagessDao {
     return messages[chatId];
   }
 
-  async setMessage(message, chatId) {
+  async setMessage(chatId, message) {
     const messages = await this.#storeServise.getData(this.#filePath);
     if (!messages[chatId]) {
       messages[chatId] = [message];
@@ -19,5 +19,20 @@ export class MessagessDao {
       messages[chatId].push(message);
     }
     this.#storeServise.setData(this.#filePath, messages);
+  }
+
+  async updateMessage(chatId, messageId, updates) {
+    const messages = await this.#storeServise.getData(this.#filePath);
+    const currentMessageIndex = messages[chatId].findIndex(
+      (message) => message.messageId === messageId
+    );
+    if (currentMessageIndex === -1) {
+      return null;
+    }
+    messages[chatId][currentMessageIndex].messageBody = updates;
+
+    this.#storeServise.setData(this.#filePath, messages);
+
+    return { messageId, updates };
   }
 }

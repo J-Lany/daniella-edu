@@ -1,18 +1,36 @@
-export function messageService() {
-    function generateMockMessages(chatId, numMessages = 5) {
-        const messages = [];
-        for (let i = 0; i < numMessages; i++) {
-            messages.push({
-                id: `${chatId}-${i}`,
-                author: `Author ${Math.floor(Math.random() * 10)}`,
-                message: `Message ${Math.random().toString(36).substring(7)}`,
-            });
-        }
-        return messages;
-    }
+import { SERVICES } from "../di/api.mjs";
+import { diContainer } from "../di/di.mjs";
+import { v4 as uuidv4 } from "uuid";
 
+export class MessageService {
+  #messagesDao = diContainer.resolve(SERVICES.messagesDao);
 
-    return {
-        getMessages: generateMockMessages
+  async getMessagesByChat(chatId) {
+    //Добавить пагинацию после мерджа задачи
+    return await this.#messagesDao.getMessagesByChat(chatId);
+  }
+
+  async setMessage(authorId, chatId, messageBody) {
+    const messageId = uuidv4();
+    const createDate = new Date();
+    await this.#messagesDao.setMessage(chatId, {
+      authorId,
+      messageId,
+      createDate,
+      messageBody,
+    });
+    return messageId;
+  }
+
+  async updateMessage(chatId, messageId, updates) {
+    const result = await this.#messagesDao.updateMessage(
+      chatId,
+      messageId,
+      updates
+    );
+    if (!result) {
+      throw new Error(401);
     }
+    return result;
+  }
 }
