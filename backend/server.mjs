@@ -61,7 +61,6 @@ diContainer.register(SERVICES.email, new EmailService());
 diContainer.register(SERVICES.users, new UserService());
 diContainer.register(SERVICES.session, new SessionService());
 diContainer.register(SERVICES.auth, new AuthService());
-diContainer.register(SERVICES.authorization, authorization);
 diContainer.register(SERVICES.chat, new ChatService());
 
 // Метод GET возвращает массив случайных сообщений для chatId
