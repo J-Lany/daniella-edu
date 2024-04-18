@@ -173,7 +173,7 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке сервера
    */
-  app.get("/chats", async (req, res) => {
+  app.get("/chats", authorization, async (req, res) => {
     const authorId = req.query.authorId;
     const chatsPerPage = req.query.chatsPerPage;
     const pageNumber = req.query.pageNumber;
