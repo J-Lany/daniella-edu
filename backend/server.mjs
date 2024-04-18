@@ -22,6 +22,7 @@ import { createUserController } from "./controllers/user-controller.mjs";
 import { EmailService } from "./services/email-service.mjs";
 import { EmailsDao } from "./data-store/dao/emails-dao.mjs";
 import { SessionDao } from "./data-store/dao/session-dao.mjs";
+import { authorization } from "./utils/authorization.mjs";
 
 const app = express();
 
@@ -60,6 +61,7 @@ diContainer.register(SERVICES.email, new EmailService());
 diContainer.register(SERVICES.users, new UserService());
 diContainer.register(SERVICES.session, new SessionService());
 diContainer.register(SERVICES.auth, new AuthService());
+diContainer.register(SERVICES.authorization, authorization);
 diContainer.register(SERVICES.chat, new ChatService());
 
 // Метод GET возвращает массив случайных сообщений для chatId

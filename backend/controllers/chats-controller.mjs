@@ -4,6 +4,7 @@ import { ERRORS } from "../utils/chats-erorrs.mjs";
 
 export function createChatsController(app) {
   const chatService = diContainer.resolve(SERVICES.chat);
+  const authorization = diContainer.resolve(SERVICES.authorization);
 
   /**
    * @swagger
