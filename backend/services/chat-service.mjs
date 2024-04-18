@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { SERVICES } from "../di/api.mjs";
 import { diContainer } from "../di/di.mjs";
+import { paginator } from "../utils/paginator.mjs";
 
 export class ChatService {
   #chatsDao = diContainer.resolve(SERVICES.chatsDao);
@@ -17,12 +18,13 @@ export class ChatService {
     return chatId;
   }
 
-  async getChatsByAythor(authorId) {
-    return await this.#chatsDao.getChatsByAuthor(authorId);
+  async getChatsByAythor(authorId, chatsPerPage, pageNumber) {
+    const chatsList = await this.#chatsDao.getChatsByAuthor(authorId);
+    return paginator(chatsPerPage, pageNumber, chatsList);
   }
 
-  deleteParticipants(authorId, chatId, toDeleteParticipateId) {
-    this.#chatsDao.deleteChatParticipants(
+  async deleteParticipants(authorId, chatId, toDeleteParticipateId) {
+    await this.#chatsDao.deleteChatParticipants(
       authorId,
       chatId,
       toDeleteParticipateId

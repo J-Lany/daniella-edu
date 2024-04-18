@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import { SERVICES } from "../di/api.mjs";
 import { diContainer } from "../di/di.mjs";
 import { v4 as uuidv4 } from "uuid";
+import { paginator } from "../utils/paginator.mjs";
 
 export class UserService {
   #userDao = diContainer.resolve(SERVICES.usersDao);
@@ -14,9 +15,13 @@ export class UserService {
       .then((hash) => hash)
       .catch((err) => err);
   }
-  async getUsers() {
-    return await this.#userDao.getUsers();
+
+  async getUsers(userPerPage, pageNumber) {
+    const userList = Object.values(await this.#userDao.getUsers());
+
+    return paginator(userPerPage, pageNumber, userList);
   }
+
   async setUser({ login, email, password }) {
     const hashedPassword = await this.#hashPassword(password);
     const userId = uuidv4();
@@ -24,7 +29,7 @@ export class UserService {
       throw new Error(403);
     }
     this.isUserAlreadyExist(email);
-    
+
     this.#emailService.setEmail(email);
     this.#userDao.setUser({ login, email, hashedPassword, userId });
   }
@@ -44,8 +49,12 @@ export class UserService {
     }
     return user;
   }
-  async searchUser(search) {
-    return await this.#userDao.searchUser(search);
+  async searchUser(search, userPerPage, pageNumber) {
+    const result = await this.#userDao.searchUser(search);
+    if (!result) {
+      throw new Error(401);
+    }
+    return paginator(userPerPage, pageNumber, result);
   }
 
   async updateUser(userId, updates) {

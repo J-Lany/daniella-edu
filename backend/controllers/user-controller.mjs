@@ -6,16 +6,68 @@ export function createUserController(app) {
   const userService = diContainer.resolve(SERVICES.users);
   /**
    * @swagger
+   * /users:
+   *   get:
+   *     summary: Получить всех пользователей с пагинацией
+   *     parameters:
+   *       - name: userPerPage
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
+   *       - name: pageNumber
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
+   *     responses:
+   *       200:
+   *         description: OK
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 users:
+   *                   type: array
+   *                   items:
+   *                     type: object
+   *                     properties:
+   *                       id:
+   *                         type: string
+   *                       name:
+   *                         login: string
+   */
+
+  app.get("/users", async (req, res) => {
+    const userPerPage = req.query.userPerPage;
+    const pageNumber = req.query.pageNumber;
+    const result = await userService.getUsers(userPerPage, pageNumber);
+
+    return res.status(200).json(result);
+  });
+
+  /**
+   * @swagger
    * /users/search:
    *   get:
    *     summary: Поиск пользователя по строке
-   *     description: Ищет пользователя по указанной строке в имени, фамилии или логине
    *     parameters:
    *       - in: query
    *         name: search
    *         required: true
    *         schema:
    *           type: string
+   *       - name: userPerPage
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
+   *       - name: pageNumber
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
    *     responses:
    *       200:
    *         description: Успешный запрос
@@ -39,23 +91,25 @@ export function createUserController(app) {
    *       400:
    *         description: Ошибка валидации запроса
    */
-
   app.get("/users/search", async (req, res) => {
     const search = req.query.search;
+    const userPerPage = req.query.userPerPage;
+    const pageNumber = req.query.pageNumber;
 
     try {
-      const { userId, login, email, firstName, lastName } =
-        await userService.searchUser(search);
-      return res
-        .status(200)
-        .json({ userId, login, email, firstName, lastName });
+      const result = await userService.searchUser(
+        search,
+        userPerPage,
+        pageNumber
+      );
+      return res.status(200).json(result);
     } catch (err) {
       return res
         .status(parseInt(err.message))
         .json({ message: ERRORS.userErrors[err.message] });
     }
   });
-  
+
   /**
    * @swagger
    * /users/{userId}:

@@ -38,10 +38,10 @@ export function createChatsController(app) {
    *       '500':
    *         description: Ошибка при создании чата
    */
-  app.post("/chats", (req, res) => {
+  app.post("/chats", async (req, res) => {
     const { authorId, participantsIds } = req.body;
     try {
-      const chatId = chatService.createChat(authorId, participantsIds);
+      const chatId = await chatService.createChat(authorId, participantsIds);
       return res.status(200).json({ chatId });
     } catch (err) {
       return res
@@ -98,12 +98,12 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке при удален и чата
    */
-  app.delete("/chats", (req, res) => {
+  app.delete("/chats", async (req, res) => {
     const chatId = req.query.chatId;
     const authorId = req.query.authorId;
 
     try {
-      chatService.deleteChat(authorId, chatId);
+      await chatService.deleteChat(authorId, chatId);
       return res.status(200).json({ message: "Чат удален успешно" });
     } catch (err) {
       return res
@@ -123,6 +123,16 @@ export function createChatsController(app) {
    *         required: true
    *         schema:
    *           type: string
+   *       - name: chatsPerPage
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
+   *       - name: pageNumber
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
    *     responses:
    *       200:
    *         description: Массив чатов пользователя
@@ -162,10 +172,17 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке сервера
    */
-  app.get("/chats", (req, res) => {
+  app.get("/chats", async (req, res) => {
     const authorId = req.query.authorId;
+    const chatsPerPage = req.query.chatsPerPage;
+    const pageNumber = req.query.pageNumber;
     try {
-      return res.status(200).json(chatService.getChatsByAythor(authorId));
+      const result = await chatService.getChatsByAythor(
+        authorId,
+        chatsPerPage,
+        pageNumber
+      );
+      return res.status(200).json(result);
     } catch (err) {
       return res
         .status(parseInt(err.message))
