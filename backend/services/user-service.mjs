@@ -49,6 +49,11 @@ export class UserService {
     }
     return user;
   }
+
+  async getUserByEmail(email) {
+    return await this.#userDao.getUserByEmail(email);
+  }
+
   async searchUser(search, userPerPage, pageNumber) {
     const result = await this.#userDao.searchUser(search);
     if (!result) {

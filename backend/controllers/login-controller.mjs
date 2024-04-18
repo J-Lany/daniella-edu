@@ -14,7 +14,7 @@ export function createLoginController(app) {
    *           schema:
    *             type: object
    *             properties:
-   *               login:
+   *               email:
    *                 type: string
    *               password:
    *                 type: string
@@ -74,11 +74,11 @@ export function createLoginController(app) {
    */
   const authService = diContainer.resolve(SERVICES.auth);
 
-  app.post("/login", (req, res) => {
-    const { login, password } = req.body;
+  app.post("/login", async (req, res) => {
+    const { email, password } = req.body;
 
     authService
-      .login(login, password)
+      .login(email, password)
       .then((result) => res.status(200).json(result))
       .catch((err) => {
         return res

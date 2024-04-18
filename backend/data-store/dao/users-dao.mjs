@@ -18,6 +18,11 @@ export class UsersDao {
     return users[userId];
   }
 
+  async getUserByEmail(email) {
+    const users = await this.#storeServise.getData(this.#filePath);
+    return Object.values(users).find((user) => user.email === email);
+  }
+
   async setUser(user) {
     const users = await this.#storeServise.getData(this.#filePath);
     if (users[user.userId]) {

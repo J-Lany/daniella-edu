@@ -1,19 +1,22 @@
+import { diContainer } from "../di/di.mjs";
+import { SERVICES } from "../di/api.mjs";
+
 export class SessionService {
-  #tokens = new Map();
+  #sessionDao = diContainer.resolve(SERVICES.sessionDao);
 
-  setToken(token, expired) {
-    this.#tokens.set(token, expired);
+  async setToken(token, expired) {
+    await this.#sessionDao.setToken(token, expired);
   }
 
-  getExpired(token) {
-    const expired = this.#tokens.get(token);
-    return expired;
-  }
-  deleteToken(token) {
-    this.#tokens.delete(token);
+  async getExpired(token) {
+    return await this.#sessionDao.getExpired(token);
   }
 
-  isTokenValid(token) {
-    return !this.#tokens.has(token) || this.getExpired(token) > new Date();
+  async deleteToken(token) {
+    await this.#sessionDao.deleteToken(token);
+  }
+
+  async isTokenValid(token) {
+    return await this.#sessionDao.isTokenValid(token);
   }
 }

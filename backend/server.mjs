@@ -21,6 +21,7 @@ import { MessagessDao } from "./data-store/dao/messages-dao.mjs";
 import { createUserController } from "./controllers/user-controller.mjs";
 import { EmailService } from "./services/email-service.mjs";
 import { EmailsDao } from "./data-store/dao/emails-dao.mjs";
+import { SessionDao } from "./data-store/dao/session-dao.mjs";
 
 const app = express();
 
@@ -52,6 +53,7 @@ diContainer.register(SERVICES.chatsDao, new ChatsDao());
 diContainer.register(SERVICES.emailsDao, new EmailsDao());
 diContainer.register(SERVICES.usersDao, new UsersDao());
 diContainer.register(SERVICES.messagesDao, new MessagessDao());
+diContainer.register(SERVICES.sessionDao, new SessionDao());
 
 diContainer.register(SERVICES.messages, messageService);
 diContainer.register(SERVICES.email, new EmailService());
