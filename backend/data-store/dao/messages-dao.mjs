@@ -11,7 +11,7 @@ export class MessagessDao {
     return messages[chatId];
   }
 
-  async setMessage(chatId, message) {
+  async addMessage(chatId, message) {
     const messages = await this.#storeServise.getData(this.#filePath);
     if (!messages[chatId]) {
       messages[chatId] = [message];
@@ -23,13 +23,13 @@ export class MessagessDao {
 
   async updateMessage(chatId, messageId, updates) {
     const messages = await this.#storeServise.getData(this.#filePath);
-    const currentMessageIndex = messages[chatId].findIndex(
+    let currentMessage = messages[chatId].find(
       (message) => message.messageId === messageId
     );
-    if (currentMessageIndex === -1) {
+    if (currentMessage === undefined) {
       return null;
     }
-    messages[chatId][currentMessageIndex].messageBody = updates;
+    currentMessage = { ...currentMessage, ...updates };
 
     this.#storeServise.setData(this.#filePath, messages);
 

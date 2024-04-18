@@ -10,10 +10,10 @@ export class MessageService {
     return await this.#messagesDao.getMessagesByChat(chatId);
   }
 
-  async setMessage(authorId, chatId, messageBody) {
+  async addMessage(authorId, chatId, messageBody) {
     const messageId = uuidv4();
     const createDate = new Date();
-    await this.#messagesDao.setMessage(chatId, {
+    await this.#messagesDao.addMessage(chatId, {
       authorId,
       messageId,
       createDate,
@@ -29,8 +29,8 @@ export class MessageService {
       updates
     );
     if (!result) {
-      throw new Error(401);
+      throw new Error(500);
     }
-    return result;
+    return;
   }
 }

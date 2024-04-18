@@ -41,7 +41,7 @@ export function createMessageController(app) {
     const { authorId, messageBody, chatId } = req.body;
 
     try {
-      const messageId = await messageService.setMessage(
+      const messageId = await messageService.addMessage(
         authorId,
         chatId,
         messageBody
@@ -174,12 +174,8 @@ export function createMessageController(app) {
     const messageId = req.params.messageId;
     const { chatId, updates } = req.body;
     try {
-      const result = await messageService.updateMessage(
-        chatId,
-        messageId,
-        updates
-      );
-      return res.status(200).json(result);
+      await messageService.updateMessage(chatId, messageId, updates);
+      return res.status(200).json();
     } catch (err) {
       return res
         .status(parseInt(err.message))
