@@ -23,8 +23,8 @@ export class ChatService {
     return paginator(chatsPerPage, pageNumber, chatsList);
   }
 
-  deleteParticipants(authorId, chatId, toDeleteParticipateId) {
-    this.#chatsDao.deleteChatParticipants(
+  async deleteParticipants(authorId, chatId, toDeleteParticipateId) {
+    await this.#chatsDao.deleteChatParticipants(
       authorId,
       chatId,
       toDeleteParticipateId

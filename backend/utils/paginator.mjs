@@ -1,15 +1,18 @@
 export function paginator(itemPerPage, pageNumber, list) {
-  const startIndex = (pageNumber - 1) * itemPerPage;
-  const lastIndex = startIndex + itemPerPage;
-  const pageAmount = Math.ceil(list.length / itemPerPage);
-  const hasNext = pageNumber < pageAmount;
-  const hasPrev = pageNumber > 1;
+  const itemPerPageInt = parseInt(itemPerPage);
+  const pageNumberInt = parseInt(pageNumber);
+
+  const startIndex = (pageNumberInt - 1) * itemPerPageInt;
+  const lastIndex = startIndex + itemPerPageInt;
+  const pageAmount = Math.ceil(list.length / itemPerPageInt);
+  const hasNext = pageNumberInt < pageAmount;
+  const hasPrev = pageNumberInt > 1;
 
   const result = list.slice(startIndex, lastIndex);
   return {
     result,
     pageAmount,
-    itemPerPage,
+    itemPerPageInt,
     hasNext,
     hasPrev,
   };
