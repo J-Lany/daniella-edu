@@ -1,13 +1,14 @@
 import { SERVICES } from "../di/api.mjs";
 import { diContainer } from "../di/di.mjs";
 import { v4 as uuidv4 } from "uuid";
+import { paginator } from "../utils/paginator.mjs";
 
 export class MessageService {
   #messagesDao = diContainer.resolve(SERVICES.messagesDao);
 
-  async getMessagesByChat(chatId) {
-    //Добавить пагинацию после мерджа задачи
-    return await this.#messagesDao.getMessagesByChat(chatId);
+  async getMessagesByChat(chatId, messagesPerPage, pageNumber) {
+    const messagesList = await this.#messagesDao.getMessagesByChat(chatId);
+    return paginator(messagesPerPage, pageNumber, messagesList);
   }
 
   async addMessage(authorId, chatId, messageBody) {

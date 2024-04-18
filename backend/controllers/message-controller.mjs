@@ -65,6 +65,16 @@ export function createMessageController(app) {
    *         required: true
    *         schema:
    *           type: string
+   *       - name: messagesPerPage
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
+   *       - name: pageNumber
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
    *     responses:
    *       200:
    *         description: Массив сообщений чата
@@ -107,8 +117,15 @@ export function createMessageController(app) {
 
   app.get("/messages", async (req, res) => {
     const chatId = req.query.chatId;
+    const messagesPerPage = req.query.messagesPerPage;
+    const pageNumber = req.query.pageNumber;
+
     try {
-      const result = await messageService.getMessagesByChat(chatId);
+      const result = await messageService.getMessagesByChat(
+        chatId,
+        messagesPerPage,
+        pageNumber
+      );
       return res.status(200).json(result);
     } catch (err) {
       return res
