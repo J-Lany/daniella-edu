@@ -21,18 +21,18 @@ export class MessagessDao {
     this.#storeServise.setData(this.#filePath, messages);
   }
 
-  async updateMessage(chatId, messageId, updates) {
+  async updateMessage(chatId, messageId, messageBody) {
     const messages = await this.#storeServise.getData(this.#filePath);
-    
+
     messages[chatId] = messages[chatId].map((message) => {
       if (message.messageId === messageId) {
-        return { ...message, ...updates };
+        message.messageBody = messageBody;
       }
       return message;
     });
 
     this.#storeServise.setData(this.#filePath, messages);
 
-    return { messageId, updates };
+    return { messageId, messageBody };
   }
 }

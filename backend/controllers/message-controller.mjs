@@ -152,6 +152,11 @@ export function createMessageController(app) {
    *         application/json:
    *           schema:
    *             type: object
+   *             properties:
+   *               chatId:
+   *                 type: string
+   *               messageBody:
+   *                 type: string
    *     responses:
    *       200:
    *         description: Успешное обновление сообщения
@@ -190,9 +195,9 @@ export function createMessageController(app) {
 
   app.patch("/messages/:messageId", authorization, async (req, res) => {
     const messageId = req.params.messageId;
-    const { chatId, updates } = req.body;
+    const { chatId, messageBody } = req.body;
     try {
-      await messageService.updateMessage(chatId, messageId, updates);
+      await messageService.updateMessage(chatId, messageId, messageBody);
       return res.status(200).json();
     } catch (err) {
       return res

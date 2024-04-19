@@ -23,11 +23,11 @@ export class MessageService {
     return messageId;
   }
 
-  async updateMessage(chatId, messageId, updates) {
+  async updateMessage(chatId, messageId, messageBody) {
     const result = await this.#messagesDao.updateMessage(
       chatId,
       messageId,
-      updates
+      messageBody
     );
     if (!result) {
       throw new Error(500);
