@@ -1,6 +1,7 @@
 import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
 import { ERRORS } from "../utils/chats-erorrs.mjs";
+import { authorization } from "../utils/authorization.mjs";
 
 export function createMessageController(app) {
   const messageService = diContainer.resolve(SERVICES.messages);
@@ -37,7 +38,7 @@ export function createMessageController(app) {
    *         description: Ошибка при создании чата
    */
 
-  app.post("/messages", async (req, res) => {
+  app.post("/messages", authorization, async (req, res) => {
     const { authorId, messageBody, chatId } = req.body;
 
     try {
@@ -115,7 +116,7 @@ export function createMessageController(app) {
    *                   description: Сообщение об ошибке сервера
    */
 
-  app.get("/messages", async (req, res) => {
+  app.get("/messages", authorization, async (req, res) => {
     const chatId = req.query.chatId;
     const messagesPerPage = req.query.messagesPerPage;
     const pageNumber = req.query.pageNumber;
@@ -187,7 +188,7 @@ export function createMessageController(app) {
    *                   description: Сообщение об ошибке
    */
 
-  app.patch("/messages/:messageId", async (req, res) => {
+  app.patch("/messages/:messageId", authorization, async (req, res) => {
     const messageId = req.params.messageId;
     const { chatId, updates } = req.body;
     try {
