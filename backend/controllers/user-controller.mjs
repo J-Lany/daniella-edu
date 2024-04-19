@@ -1,6 +1,7 @@
 import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
 import { ERRORS } from "../utils/chats-erorrs.mjs";
+import { authorization } from "../utils/authorization.mjs";
 
 export function createUserController(app) {
   const userService = diContainer.resolve(SERVICES.users);
@@ -39,7 +40,7 @@ export function createUserController(app) {
    *                         login: string
    */
 
-  app.get("/users", async (req, res) => {
+  app.get("/users", authorization, async (req, res) => {
     const userPerPage = req.query.userPerPage;
     const pageNumber = req.query.pageNumber;
     const result = await userService.getUsers(userPerPage, pageNumber);
@@ -91,7 +92,7 @@ export function createUserController(app) {
    *       400:
    *         description: Ошибка валидации запроса
    */
-  app.get("/users/search", async (req, res) => {
+  app.get("/users/search", authorization, async (req, res) => {
     const search = req.query.search;
     const userPerPage = req.query.userPerPage;
     const pageNumber = req.query.pageNumber;
@@ -160,7 +161,7 @@ export function createUserController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке сервера
    */
-  app.get("/users/:userId", async (req, res) => {
+  app.get("/users/:userId", authorization, async (req, res) => {
     const userId = req.params.userId;
 
     try {
@@ -230,7 +231,7 @@ export function createUserController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке
    */
-  app.patch("/users/:userId", async (req, res) => {
+  app.patch("/users/:userId", authorization, async (req, res) => {
     const userId = req.params.userId;
     const updates = req.body;
     try {
@@ -286,7 +287,7 @@ export function createUserController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке сервера
    */
-  app.delete("/users/:userId", async (req, res) => {
+  app.delete("/users/:userId", authorization, async (req, res) => {
     const userId = req.params.userId;
     try {
       await userService.deleteUser(userId);

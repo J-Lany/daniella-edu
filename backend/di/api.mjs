@@ -11,4 +11,5 @@ export const SERVICES = {
   messagesDao: "messagesDao",
   chatsDao: "chatsDao",
   emailsDao: "emailsDao",
+  sessionDao: "sessionDao",
 };
