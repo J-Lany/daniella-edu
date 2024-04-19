@@ -17,6 +17,7 @@ export class SessionService {
   }
 
   async isTokenValid(token) {
-    return await this.#sessionDao.isTokenValid(token);
+    const expired = await this.#sessionDao.getExpired(token);
+    return !expired || expired > new Date();
   }
 }

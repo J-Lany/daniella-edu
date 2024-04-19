@@ -16,12 +16,6 @@ export class SessionDao {
     return tokens[token];
   }
 
-  async isTokenValid(token) {
-    const tokens = await this.#storeServise.getData(this.#filePath);
-    expired = await this.getExpired(token);
-    return !tokens[token] || expired > new Date();
-  }
-
   async deleteToken(token) {
     const tokens = await this.#storeServise.getData(this.#filePath);
     delete tokens[token];
