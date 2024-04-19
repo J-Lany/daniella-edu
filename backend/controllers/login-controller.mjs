@@ -76,14 +76,13 @@ export function createLoginController(app) {
 
   app.post("/login", async (req, res) => {
     const { email, password } = req.body;
-
-    authService
-      .login(email, password)
-      .then((result) => res.status(200).json(result))
-      .catch((err) => {
-        return res
-          .status(parseInt(err.message))
-          .json({ message: ERRORS.loginErrors[err.message] });
-      });
+    try {
+      const result = await authService.login(email, password);
+      return res.status(200).json(result);
+    } catch (err) {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.loginErrors[err.message] });
+    }
   });
 }
