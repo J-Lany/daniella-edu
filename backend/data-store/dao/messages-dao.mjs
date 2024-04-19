@@ -23,13 +23,13 @@ export class MessagessDao {
 
   async updateMessage(chatId, messageId, updates) {
     const messages = await this.#storeServise.getData(this.#filePath);
-    let currentMessage = messages[chatId].find(
-      (message) => message.messageId === messageId
-    );
-    if (currentMessage === undefined) {
-      return null;
-    }
-    currentMessage = { ...currentMessage, ...updates };
+    
+    messages[chatId] = messages[chatId].map((message) => {
+      if (message.messageId === messageId) {
+        return { ...message, ...updates };
+      }
+      return message;
+    });
 
     this.#storeServise.setData(this.#filePath, messages);
 
