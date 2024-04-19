@@ -7,7 +7,7 @@ export class AuthService {
   #configService = diContainer.resolve(SERVICES.config);
   #sessionService = diContainer.resolve(SERVICES.session);
 
-  createToken(login, email) {
+  async createToken(login, email) {
     const hashData = `${login}${email}${this.#configService.secret}`;
     const saltRounds = 7;
     const ONE_WEEK = 7;
@@ -16,27 +16,27 @@ export class AuthService {
 
     try {
       const hash = bcrypt.hash(hashData, saltRounds);
-      this.#sessionService.setToken(hash, expired);
-      this.#sessionService.getExpired(hash);
+      await this.#sessionService.setToken(hash, expired);
+      await this.#sessionService.getExpired(hash);
       return hash;
     } catch (err) {
       throw new Error("Ошибка в создании токена");
     }
   }
-  isAuth(token) {
-    return this.#sessionService.isTokenValid(token);
+  async isAuth(token) {
+    return await this.#sessionService.isTokenValid(token);
   }
 
-  async login(login, password) {
+  async login(email, password) {
     try {
-      const currentUser = await this.#userServise.getUser(login);
+      const currentUser = await this.#userServise.getUserByEmail(email);
       if (!currentUser) {
         throw new Error(403);
       }
       if (!bcrypt.compareSync(password, currentUser.hashedPassword)) {
         throw new Error(401);
       }
-      const token = await this.createToken(login, currentUser.email);
+      const token = await this.createToken(email, currentUser.login);
 
       return {
         user: currentUser,
