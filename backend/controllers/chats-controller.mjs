@@ -245,7 +245,7 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке
    */
-  app.patch("/chats/:chatId", async (req, res) => {
+  app.patch("/chats/:chatId", authorization, async (req, res) => {
     const chatId = req.params.chatId;
     const { authorId, toDeleteParticipateId } = req.body;
     try {
