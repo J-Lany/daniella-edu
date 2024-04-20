@@ -27,13 +27,13 @@ export class ChatsDao {
   async deleteChat(authorId, deleteChatId) {
     const chats = await this.#storeServise.getData(this.#filePath);
 
-    if (chats[authorId]) {
-      const updateChats = chats[authorId].filter(
-        ({ chatId }) => chatId !== deleteChatId
-      );
-      chats[authorId] = updateChats;
-      this.#storeServise.setData(this.#filePath, chats);
-    }
+    if (!chats[authorId]) return null;
+
+    chats[authorId] = chats[authorId].filter(
+      ({ chatId }) => chatId !== deleteChatId
+    );
+
+    this.#storeServise.setData(this.#filePath, chats);
   }
 
   async deleteChatParticipants(authorId, chatId, toDeleteParticipantId) {
@@ -41,7 +41,7 @@ export class ChatsDao {
 
     if (!chats[authorId]) return;
 
-    chats[authorId].map((chat) => {
+    chats[authorId].forEach((chat) => {
       if (chat.chatId === chatId) {
         chat.participantsIds = chat.participantsIds.filter(
           (participantsId) => participantsId !== toDeleteParticipantId
