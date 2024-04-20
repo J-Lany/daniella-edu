@@ -260,7 +260,7 @@ export function createMessageController(app) {
     try {
       await messageService.deleteMessage(chatId, messageId);
       return res.status(200).json({ message: "Чат удален успешно" });
-    } catch {
+    } catch (err) {
       return res
         .status(parseInt(err.message))
         .json({ message: ERRORS.messageErrors[err.message] });

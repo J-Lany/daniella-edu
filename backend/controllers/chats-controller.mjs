@@ -190,4 +190,70 @@ export function createChatsController(app) {
         .json({ message: ERRORS.getChatErrors[err.message] });
     }
   });
+
+  /**
+   * @swagger
+   * /chats/{chatId}:
+   *   patch:
+   *     summary: Удаление участника чата
+   *     parameters:
+   *       - in: path
+   *         name: chatId
+   *         required: true
+   *         schema:
+   *           type: string
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               authorId:
+   *                 type: string
+   *               toDeleteParticipateId:
+   *                 type: string
+   *     responses:
+   *       200:
+   *         description: Успешное удаление участника чата
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 id:
+   *                   type: string
+   *                   description: ID обновленного чата
+   *       401:
+   *         description: Чат не найден
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   *       500:
+   *         description: Ошибка на сервере
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   */
+  app.patch("/chats/:chatId", async (req, res) => {
+    const chatId = req.params.chatId;
+    const { authorId, toDeleteParticipateId } = req.body;
+    try {
+      chatService.deleteParticipants(authorId, chatId, toDeleteParticipateId);
+    } catch (err) {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.deleteChatErrors[err.message] });
+    }
+  });
 }
