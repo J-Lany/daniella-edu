@@ -35,4 +35,12 @@ export class MessagessDao {
 
     return { messageId, messageBody };
   }
+
+  async deleteMessage(chatId, messageId) {
+    const messages = await this.#storeServise.getData(this.#filePath);
+    messages[chatId] = messages[chatId].filter(
+      (message) => message.messageId !== messageId
+    );
+    this.#storeServise.setData(this.#filePath, messages);
+  }
 }

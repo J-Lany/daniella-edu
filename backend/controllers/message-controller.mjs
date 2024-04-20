@@ -205,4 +205,65 @@ export function createMessageController(app) {
         .json({ message: ERRORS.messageErrors[err.message] });
     }
   });
+
+  /**
+   * @swagger
+   * /messages:
+   *   delete:
+   *     summary: Удаление сообщения
+   *     parameters:
+   *       - in: query
+   *         name: chatId
+   *         required: true
+   *         schema:
+   *           type: string
+   *       - in: query
+   *         name: messageId
+   *         required: true
+   *         schema:
+   *           type: string
+   *     responses:
+   *       200:
+   *         description: Успешное удаление сообщения
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Чат удален успешно
+   *       401:
+   *         description: Такой чат не существует
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   *       500:
+   *         description: Ошибка при удалении чата
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 errorMessage:
+   *                   type: string
+   *                   description: Сообщение об ошибке при удален и чата
+   */
+  app.delete("/messages", authorization, async (req, res) => {
+    const chatId = req.query.chatId;
+    const messageId = req.query.messageId;
+    try {
+      await messageService.deleteMessage(chatId, messageId);
+      return res.status(200).json({ message: "Чат удален успешно" });
+    } catch {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.messageErrors[err.message] });
+    }
+  });
 }

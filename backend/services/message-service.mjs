@@ -34,4 +34,12 @@ export class MessageService {
     }
     return;
   }
+
+  async deleteMessage(chatId, messageId) {
+    try {
+      await this.#messagesDao.deleteMessage(chatId, messageId);
+    } catch {
+      throw new Error(500);
+    }
+  }
 }
