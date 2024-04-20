@@ -51,4 +51,19 @@ export class ChatsDao {
 
     await this.#storeServise.setData(this.#filePath, chats);
   }
+
+  async setParticipants(authorId, chatId, participantsId) {
+    const chats = await this.#storeServise.getData(this.#filePath);
+
+    if (!chats[authorId]) return null;
+
+    chats[authorId].forEach((chat) => {
+      if (chat.chatId === chatId) {
+        chat.participantsIds = [...chat.participantsIds, ...participantsId];
+      }
+    });
+
+    await this.#storeServise.setData(this.#filePath, chats);
+    return true;
+  }
 }

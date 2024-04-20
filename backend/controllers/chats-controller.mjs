@@ -249,7 +249,81 @@ export function createChatsController(app) {
     const chatId = req.params.chatId;
     const { authorId, toDeleteParticipateId } = req.body;
     try {
-      chatService.deleteParticipants(authorId, chatId, toDeleteParticipateId);
+      await chatService.deleteParticipants(
+        authorId,
+        chatId,
+        toDeleteParticipateId
+      );
+      return res.status(200).json({ message: "Участник удален успешно" });
+    } catch (err) {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.deleteChatErrors[err.message] });
+    }
+  });
+
+  /**
+   * @swagger
+   * /chat/{chatId}:
+   *   patch:
+   *     summary: Добавление участника чата
+   *     parameters:
+   *       - in: path
+   *         name: chatId
+   *         required: true
+   *         schema:
+   *           type: string
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               authorId:
+   *                 type: string
+   *               participantsId:
+   *                 type: array
+   *                 items:
+   *                   type: string
+   *     responses:
+   *       200:
+   *         description: Успешное добавление участника чата
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 id:
+   *                   type: string
+   *                   description: ID обновленного чата
+   *       401:
+   *         description: Чат не найден
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   *       500:
+   *         description: Ошибка на сервере
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   */
+  app.patch("/chat/:chatId", authorization, async (req, res) => {
+    const chatId = req.params.chatId;
+    const { authorId, participantsId } = req.body;
+    try {
+      await chatService.setParticipants(authorId, chatId, participantsId);
+      return res.status(200).json({ message: "Участник добавлен успешно" });
     } catch (err) {
       return res
         .status(parseInt(err.message))

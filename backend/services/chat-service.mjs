@@ -34,4 +34,15 @@ export class ChatService {
   async deleteChat(authorId, deleteChatId) {
     await this.#chatsDao.deleteChat(authorId, deleteChatId);
   }
+
+  async setParticipants(authorId, chatId, participantsId) {
+    const result = await this.#chatsDao.setParticipants(
+      authorId,
+      chatId,
+      participantsId
+    );
+    if (!result) {
+      throw new Error(500);
+    }
+  }
 }
