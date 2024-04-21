@@ -11,13 +11,37 @@ export class MessagessDao {
     return messages[chatId];
   }
 
-  async setMessage(message, chatId) {
+  async addMessage(chatId, message) {
     const messages = await this.#storeServise.getData(this.#filePath);
     if (!messages[chatId]) {
       messages[chatId] = [message];
     } else {
       messages[chatId].push(message);
     }
+    this.#storeServise.setData(this.#filePath, messages);
+  }
+
+  async updateMessage(chatId, messageId, messageBody) {
+    const messages = await this.#storeServise.getData(this.#filePath);
+
+    if (!messages[chatId]) return null;
+
+    messages[chatId].forEach((message) => {
+      if (message.messageId === messageId) {
+        message.messageBody = messageBody;
+      }
+    });
+
+    this.#storeServise.setData(this.#filePath, messages);
+
+    return { messageId, messageBody };
+  }
+
+  async deleteMessage(chatId, messageId) {
+    const messages = await this.#storeServise.getData(this.#filePath);
+    messages[chatId] = messages[chatId].filter(
+      (message) => message.messageId !== messageId
+    );
     this.#storeServise.setData(this.#filePath, messages);
   }
 }

@@ -1,18 +1,45 @@
-export function messageService() {
-    function generateMockMessages(chatId, numMessages = 5) {
-        const messages = [];
-        for (let i = 0; i < numMessages; i++) {
-            messages.push({
-                id: `${chatId}-${i}`,
-                author: `Author ${Math.floor(Math.random() * 10)}`,
-                message: `Message ${Math.random().toString(36).substring(7)}`,
-            });
-        }
-        return messages;
-    }
+import { SERVICES } from "../di/api.mjs";
+import { diContainer } from "../di/di.mjs";
+import { v4 as uuidv4 } from "uuid";
+import { paginator } from "../utils/paginator.mjs";
 
+export class MessageService {
+  #messagesDao = diContainer.resolve(SERVICES.messagesDao);
 
-    return {
-        getMessages: generateMockMessages
+  async getMessagesByChat(chatId, messagesPerPage, pageNumber) {
+    const messagesList = await this.#messagesDao.getMessagesByChat(chatId);
+    return paginator(messagesPerPage, pageNumber, messagesList);
+  }
+
+  async addMessage(authorId, chatId, messageBody) {
+    const messageId = uuidv4();
+    const createDate = new Date();
+    await this.#messagesDao.addMessage(chatId, {
+      authorId,
+      messageId,
+      createDate,
+      messageBody,
+    });
+    return messageId;
+  }
+
+  async updateMessage(chatId, messageId, messageBody) {
+    const result = await this.#messagesDao.updateMessage(
+      chatId,
+      messageId,
+      messageBody
+    );
+    if (!result) {
+      throw new Error(500);
     }
+    return;
+  }
+
+  async deleteMessage(chatId, messageId) {
+    try {
+      await this.#messagesDao.deleteMessage(chatId, messageId);
+    } catch {
+      throw new Error(500);
+    }
+  }
 }

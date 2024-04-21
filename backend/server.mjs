@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import { diContainer } from "./di/di.mjs";
-import { messageService } from "./services/message-service.mjs";
+import { MessageService } from "./services/message-service.mjs";
 import { UserService } from "./services/user-service.mjs";
 import { SERVICES } from "./di/api.mjs";
 import { chatController } from "./controllers/chat-controller.mjs";
@@ -21,6 +21,7 @@ import { MessagessDao } from "./data-store/dao/messages-dao.mjs";
 import { createUserController } from "./controllers/user-controller.mjs";
 import { EmailService } from "./services/email-service.mjs";
 import { EmailsDao } from "./data-store/dao/emails-dao.mjs";
+import { createMessageController } from "./controllers/message-controller.mjs";
 import { SessionDao } from "./data-store/dao/session-dao.mjs";
 import { authorization } from "./utils/authorization.mjs";
 
@@ -56,7 +57,7 @@ diContainer.register(SERVICES.usersDao, new UsersDao());
 diContainer.register(SERVICES.messagesDao, new MessagessDao());
 diContainer.register(SERVICES.sessionDao, new SessionDao());
 
-diContainer.register(SERVICES.messages, messageService);
+diContainer.register(SERVICES.messages, new MessageService());
 diContainer.register(SERVICES.email, new EmailService());
 diContainer.register(SERVICES.users, new UserService());
 diContainer.register(SERVICES.session, new SessionService());
@@ -70,6 +71,7 @@ createChatsController(app);
 createRegistrationController(app);
 createLoginController(app);
 createUserController(app);
+createMessageController(app);
 
 const PORT = 3000;
 app.listen(PORT, () => {
