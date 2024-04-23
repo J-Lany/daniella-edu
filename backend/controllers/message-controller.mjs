@@ -38,7 +38,7 @@ export function createMessageController(app) {
    *         description: Ошибка при создании чата
    */
 
-  app.post("/messages", authorization, async (req, res) => {
+  app.post("/messages", async (req, res) => {
     const { authorId, messageBody, chatId } = req.body;
 
     try {
