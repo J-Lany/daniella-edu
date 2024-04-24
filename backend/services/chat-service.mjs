@@ -50,11 +50,18 @@ export class ChatService {
     );
     if (!result) throw new Error(500);
   }
-  
+
   async getParticipants(chatId, authorId) {
     const result = await this.#chatsDao.getParticipants(chatId, authorId);
     if (!result) throw new Error(403);
 
     return result;
+  }
+
+  async isAdmin(chatId, authorId){
+
+  }
+  async isModerator(chatId,authorId){
+
   }
 }

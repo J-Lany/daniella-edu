@@ -75,4 +75,16 @@ export class ChatsDao {
 
     return currentChat.participantsIds;
   }
+
+  async isAdmin(chatId, authorId) {
+    const chats = await this.#storeServise.getData(this.#filePath);
+    if (!chats[authorId]) return false;
+
+    const currentChat = chats[authorId].find((chat) => chat.chatId === chatId);
+
+    return currentChat.moderatorsId.find(
+      (moderatorId) => moderatorId === authorId
+    );
+  }
+  async isModerator(chatId, authorId) {}
 }
