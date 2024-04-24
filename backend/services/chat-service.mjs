@@ -6,13 +6,20 @@ import { paginator } from "../utils/paginator.mjs";
 export class ChatService {
   #chatsDao = diContainer.resolve(SERVICES.chatsDao);
 
-  async createChat(authorId, participantsIds) {
+  async createChat(authorId, participantsIds, adminsId = [authorId]) {
     if (authorId === null) {
       throw new Error(401);
     }
     const chatId = uuidv4();
     const date = new Date();
-    const newChat = { chatId, participantsIds, date };
+    const newChat = {
+      chatId,
+      participantsIds,
+      date,
+      adminsId,
+      moderatorsId: [],
+      bannedId: [],
+    };
     await this.#chatsDao.setChat(newChat, authorId);
 
     return chatId;
@@ -41,8 +48,13 @@ export class ChatService {
       chatId,
       participantsId
     );
-    if (!result) {
-      throw new Error(500);
-    }
+    if (!result) throw new Error(500);
+  }
+  
+  async getParticipants(chatId, authorId) {
+    const result = await this.#chatsDao.getParticipants(chatId, authorId);
+    if (!result) throw new Error(403);
+
+    return result;
   }
 }

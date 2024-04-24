@@ -66,4 +66,13 @@ export class ChatsDao {
     await this.#storeServise.setData(this.#filePath, chats);
     return true;
   }
+
+  async getParticipants(chatId, authorId) {
+    const chats = await this.#storeServise.getData(this.#filePath);
+    if (!chats[authorId]) return null;
+
+    const currentChat = chats[authorId].find((chat) => chat.chatId === chatId);
+
+    return currentChat.participantsIds;
+  }
 }

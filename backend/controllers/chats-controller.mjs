@@ -194,6 +194,74 @@ export function createChatsController(app) {
   /**
    * @swagger
    * /chats/{chatId}:
+   *   get:
+   *     summary: Получение массива участников чата
+   *     parameters:
+   *       - in: query
+   *         name: authorId
+   *         required: true
+   *         schema:
+   *           type: string
+   *       - name: chatId
+   *         in: path
+   *         required: true
+   *         schema:
+   *           type: string
+   *     responses:
+   *       200:
+   *         description: Массив участников чата
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 type: object
+   *                 properties:
+   *                   chatId:
+   *                     type: string
+   *                   date:
+   *                     type: string
+   *                   participantsId:
+   *                     type: array
+   *                     items:
+   *                       type: string
+   *       403:
+   *         description: У данного пользователя нет чатов
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   *       500:
+   *         description: Ошибка при получении пользователей
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 errorMessage:
+   *                   type: string
+   *                   description: Сообщение об ошибке сервера
+   */
+  app.get("/chats/:chatId", authorization, async (req, res) => {
+    const authorId = req.query.authorId;
+    const chatId = req.params.chatId;
+    try {
+      const result = await chatService.getParticipants(chatId, authorId);
+      return res.status(200).json(result);
+    } catch (err) {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.getChatErrors[err.message] });
+    }
+  });
+
+  /**
+   * @swagger
+   * /chats/delete-participants/{chatId}:
    *   patch:
    *     summary: Удаление участника чата
    *     parameters:
@@ -245,26 +313,30 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке
    */
-  app.patch("/chats/:chatId", authorization, async (req, res) => {
-    const chatId = req.params.chatId;
-    const { authorId, toDeleteParticipateId } = req.body;
-    try {
-      await chatService.deleteParticipants(
-        authorId,
-        chatId,
-        toDeleteParticipateId
-      );
-      return res.status(200).json({ message: "Участник удален успешно" });
-    } catch (err) {
-      return res
-        .status(parseInt(err.message))
-        .json({ message: ERRORS.deleteChatErrors[err.message] });
+  app.patch(
+    "/chats/delete-participants/:chatId",
+    authorization,
+    async (req, res) => {
+      const chatId = req.params.chatId;
+      const { authorId, toDeleteParticipateId } = req.body;
+      try {
+        await chatService.deleteParticipants(
+          authorId,
+          chatId,
+          toDeleteParticipateId
+        );
+        return res.status(200).json({ message: "Участник удален успешно" });
+      } catch (err) {
+        return res
+          .status(parseInt(err.message))
+          .json({ message: ERRORS.deleteChatErrors[err.message] });
+      }
     }
-  });
+  );
 
   /**
    * @swagger
-   * /chat/{chatId}:
+   * /chat/add-participants/{chatId}:
    *   patch:
    *     summary: Добавление участника чата
    *     parameters:
@@ -318,16 +390,20 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке
    */
-  app.patch("/chat/:chatId", authorization, async (req, res) => {
-    const chatId = req.params.chatId;
-    const { authorId, participantsId } = req.body;
-    try {
-      await chatService.setParticipants(authorId, chatId, participantsId);
-      return res.status(200).json({ message: "Участник добавлен успешно" });
-    } catch (err) {
-      return res
-        .status(parseInt(err.message))
-        .json({ message: ERRORS.deleteChatErrors[err.message] });
+  app.patch(
+    "/chat/add-participants/:chatId",
+    authorization,
+    async (req, res) => {
+      const chatId = req.params.chatId;
+      const { authorId, participantsId } = req.body;
+      try {
+        await chatService.setParticipants(authorId, chatId, participantsId);
+        return res.status(200).json({ message: "Участник добавлен успешно" });
+      } catch (err) {
+        return res
+          .status(parseInt(err.message))
+          .json({ message: ERRORS.deleteChatErrors[err.message] });
+      }
     }
-  });
+  );
 }
