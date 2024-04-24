@@ -50,6 +50,7 @@ export class MessageService {
     try {
       const isPatrtisipant = await this.isPatrtisipant(authorId);
       if (!isPatrtisipant) throw new Error(403);
+
       await this.#messagesDao.deleteMessage(chatId, messageId);
     } catch {
       throw new Error(500);
