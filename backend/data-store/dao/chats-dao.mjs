@@ -26,7 +26,7 @@ export class ChatsDao {
       this.#chatsByUserFilePath
     );
 
-    chats[chatId] = chat;
+    chats[chat.chatId] = chat;
 
     chat.participantsIds.forEach((participantId) => {
       if (!chatsByUser[participantId]) {
@@ -75,7 +75,7 @@ export class ChatsDao {
     if (
       !chats[chatId] ||
       !chats[chatId].adminsId.includes(authorId) ||
-      !chatsByUser[toDeleteParticipantId].includes[chatId]
+      !chatsByUser[toDeleteParticipantId].includes(chatId)
     ) {
       return null;
     }
@@ -89,6 +89,8 @@ export class ChatsDao {
 
     await this.#storeServise.setData(this.#chatsFilePath, chats);
     await this.#storeServise.setData(this.#chatsByUserFilePath, chatsByUser);
+
+    return true;
   }
 
   async setParticipants(authorId, chatId, participantsId) {
@@ -98,9 +100,9 @@ export class ChatsDao {
     );
 
     if (
-      !chats[deleteChatId] ||
-      chats[deleteChatId].chatType === CHAT_TYPES.p2p ||
-      !chats[deleteChatId].adminsId.includes(authorId)
+      !chats[chatId] ||
+      chats[chatId].chatType === CHAT_TYPES.p2p ||
+      !chats[chatId].adminsId.includes(authorId)
     ) {
       return null;
     }

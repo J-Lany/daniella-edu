@@ -32,11 +32,12 @@ export class ChatService {
   }
 
   async deleteParticipants(authorId, chatId, toDeleteParticipateId) {
-    await this.#chatsDao.deleteChatParticipants(
+    const result = await this.#chatsDao.deleteChatParticipants(
       authorId,
       chatId,
       toDeleteParticipateId
     );
+    if (!result) throw new Error(401);
   }
 
   async deleteChat(authorId, deleteChatId) {

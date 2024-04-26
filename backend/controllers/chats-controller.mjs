@@ -41,7 +41,7 @@ export function createChatsController(app) {
    *       '500':
    *         description: Ошибка при создании чата
    */
-  app.post("/chats", authorization, async (req, res) => {
+  app.post("/chats", async (req, res) => {
     const { authorId, participantsIds, chatType } = req.body;
     try {
       const chatId = await chatService.createChat(
@@ -105,7 +105,7 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке при удален и чата
    */
-  app.delete("/chats", authorization, async (req, res) => {
+  app.delete("/chats", async (req, res) => {
     const chatId = req.query.chatId;
     const authorId = req.query.authorId;
 
@@ -179,7 +179,7 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке сервера
    */
-  app.get("/chats", authorization, async (req, res) => {
+  app.get("/chats", async (req, res) => {
     const authorId = req.query.authorId;
     const chatsPerPage = req.query.chatsPerPage;
     const pageNumber = req.query.pageNumber;
@@ -252,7 +252,7 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке сервера
    */
-  app.get("/chats/:chatId", authorization, async (req, res) => {
+  app.get("/chats/:chatId", async (req, res) => {
     const authorId = req.query.authorId;
     const chatId = req.params.chatId;
     try {
@@ -319,26 +319,22 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке
    */
-  app.patch(
-    "/chats/delete-participants/:chatId",
-    authorization,
-    async (req, res) => {
-      const chatId = req.params.chatId;
-      const { authorId, toDeleteParticipateId } = req.body;
-      try {
-        await chatService.deleteParticipants(
-          authorId,
-          chatId,
-          toDeleteParticipateId
-        );
-        return res.status(200).json({ message: "Участник удален успешно" });
-      } catch (err) {
-        return res
-          .status(parseInt(err.message))
-          .json({ message: ERRORS.deleteChatErrors[err.message] });
-      }
+  app.patch("/chats/delete-participants/:chatId", async (req, res) => {
+    const chatId = req.params.chatId;
+    const { authorId, toDeleteParticipateId } = req.body;
+    try {
+      await chatService.deleteParticipants(
+        authorId,
+        chatId,
+        toDeleteParticipateId
+      );
+      return res.status(200).json({ message: "Участник удален успешно" });
+    } catch (err) {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.deleteChatErrors[err.message] });
     }
-  );
+  });
 
   /**
    * @swagger
@@ -396,20 +392,16 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке
    */
-  app.patch(
-    "/chat/add-participants/:chatId",
-    authorization,
-    async (req, res) => {
-      const chatId = req.params.chatId;
-      const { authorId, participantsId } = req.body;
-      try {
-        await chatService.setParticipants(authorId, chatId, participantsId);
-        return res.status(200).json({ message: "Участник добавлен успешно" });
-      } catch (err) {
-        return res
-          .status(parseInt(err.message))
-          .json({ message: ERRORS.deleteChatErrors[err.message] });
-      }
+  app.patch("/chat/add-participants/:chatId", async (req, res) => {
+    const chatId = req.params.chatId;
+    const { authorId, participantsId } = req.body;
+    try {
+      await chatService.setParticipants(authorId, chatId, participantsId);
+      return res.status(200).json({ message: "Участник добавлен успешно" });
+    } catch (err) {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.deleteChatErrors[err.message] });
     }
-  );
+  });
 }
