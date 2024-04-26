@@ -19,6 +19,8 @@ export function createChatsController(app) {
    *             properties:
    *               authorId:
    *                 type: string
+   *               chatType:
+   *                 type: string
    *               participantsIds:
    *                 type: array
    *                 items:
@@ -40,9 +42,13 @@ export function createChatsController(app) {
    *         description: Ошибка при создании чата
    */
   app.post("/chats", authorization, async (req, res) => {
-    const { authorId, participantsIds } = req.body;
+    const { authorId, participantsIds, chatType } = req.body;
     try {
-      const chatId = await chatService.createChat(authorId, participantsIds);
+      const chatId = await chatService.createChat(
+        authorId,
+        participantsIds,
+        chatType
+      );
       return res.status(200).json({ chatId });
     } catch (err) {
       return res
@@ -178,7 +184,7 @@ export function createChatsController(app) {
     const chatsPerPage = req.query.chatsPerPage;
     const pageNumber = req.query.pageNumber;
     try {
-      const result = await chatService.getChatsByAythor(
+      const result = await chatService.getChatsByUser(
         authorId,
         chatsPerPage,
         pageNumber

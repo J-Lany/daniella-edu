@@ -6,7 +6,7 @@ import { paginator } from "../utils/paginator.mjs";
 export class ChatService {
   #chatsDao = diContainer.resolve(SERVICES.chatsDao);
 
-  async createChat(authorId, participantsIds, adminsId = [authorId]) {
+  async createChat(authorId, participantsIds, chatType) {
     if (authorId === null) {
       throw new Error(401);
     }
@@ -16,17 +16,18 @@ export class ChatService {
       chatId,
       participantsIds,
       date,
-      adminsId,
+      adminsId: [authorId],
       moderatorsId: [],
       bannedId: [],
+      chatType,
     };
-    await this.#chatsDao.setChat(newChat, authorId);
+    await this.#chatsDao.setChat(newChat);
 
     return chatId;
   }
 
-  async getChatsByAythor(authorId, chatsPerPage, pageNumber) {
-    const chatsList = await this.#chatsDao.getChatsByAuthor(authorId);
+  async getChatsByUser(authorId, chatsPerPage, pageNumber) {
+    const chatsList = await this.#chatsDao.getChatsByUser(authorId);
     return paginator(chatsPerPage, pageNumber, chatsList);
   }
 
@@ -56,12 +57,5 @@ export class ChatService {
     if (!result) throw new Error(403);
 
     return result;
-  }
-
-  async isAdmin(chatId, authorId){
-
-  }
-  async isModerator(chatId,authorId){
-
   }
 }

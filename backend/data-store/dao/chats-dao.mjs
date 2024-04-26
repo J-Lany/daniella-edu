@@ -2,89 +2,129 @@ import { SERVICES } from "../../di/api.mjs";
 import { diContainer } from "../../di/di.mjs";
 import { FILE_PATHS } from "../../utils/data-file-paths.mjs";
 
+const CHAT_TYPES = {
+  p2p: "p2p",
+  group: "group",
+};
+
 export class ChatsDao {
-  #filePath = FILE_PATHS.chats;
+  #chatsFilePath = FILE_PATHS.chats;
+  #chatsByUserFilePath = FILE_PATHS.chatsByUser;
   #storeServise = diContainer.resolve(SERVICES.store);
 
-  async getChatsByAuthor(authorId) {
-    const chats = await this.#storeServise.getData(this.#filePath);
+  async getChatsByUser(authorId) {
+    const chatsByUser = await this.#storeServise.getData(
+      this.#chatsByUserFilePath
+    );
 
-    return chats[authorId];
+    return chatsByUser[authorId];
   }
 
-  async setChat(chat, authorId) {
-    const chats = await this.#storeServise.getData(this.#filePath);
+  async setChat(chat) {
+    const chats = await this.#storeServise.getData(this.#chatsFilePath);
+    const chatsByUser = await this.#storeServise.getData(
+      this.#chatsByUserFilePath
+    );
 
-    if (!chats[authorId]) {
-      chats[authorId] = [chat];
-    } else {
-      chats[authorId].push(chat);
-    }
+    chats[chatId] = chat;
 
-    this.#storeServise.setData(this.#filePath, chats);
+    chat.participantsIds.forEach((participantId) => {
+      if (!chatsByUser[participantId]) {
+        chatsByUser[participantId] = [chat.chatId];
+      } else {
+        chatsByUser[participantId].push(chat.chatId);
+      }
+    });
+
+    await this.#storeServise.setData(this.#chatsFilePath, chats);
+    await this.#storeServise.setData(this.#chatsByUserFilePath, chatsByUser);
   }
 
   async deleteChat(authorId, deleteChatId) {
-    const chats = await this.#storeServise.getData(this.#filePath);
-
-    if (!chats[authorId]) return null;
-
-    chats[authorId] = chats[authorId].filter(
-      ({ chatId }) => chatId !== deleteChatId
+    const chats = await this.#storeServise.getData(this.#chatsFilePath);
+    const chatsByUser = await this.#storeServise.getData(
+      this.#chatsByUserFilePath
     );
 
-    this.#storeServise.setData(this.#filePath, chats);
+    if (!chats[deleteChatId]) return null;
+
+    if (
+      chats[deleteChatId].chatType === CHAT_TYPES.p2p ||
+      chats[deleteChatId].adminsId.includes(authorId)
+    ) {
+      chats[deleteChatId].participantsIds.forEach((participantsId) => {
+        chatsByUser[participantsId] = chatsByUser[participantsId].filter(
+          (chatId) => chatId !== deleteChatId
+        );
+      });
+      delete chats[deleteChatId];
+
+      await this.#storeServise.setData(this.#chatsFilePath, chats);
+      await this.#storeServise.setData(this.#chatsByUserFilePath, chatsByUser);
+
+      return true;
+    }
   }
 
   async deleteChatParticipants(authorId, chatId, toDeleteParticipantId) {
-    const chats = await this.#storeServise.getData(this.#filePath);
+    const chats = await this.#storeServise.getData(this.#chatsFilePath);
+    const chatsByUser = await this.#storeServise.getData(
+      this.#chatsByUserFilePath
+    );
 
-    if (!chats[authorId]) return;
+    if (
+      !chats[chatId] ||
+      !chats[chatId].adminsId.includes(authorId) ||
+      !chatsByUser[toDeleteParticipantId].includes[chatId]
+    ) {
+      return null;
+    }
 
-    chats[authorId].forEach((chat) => {
-      if (chat.chatId === chatId) {
-        chat.participantsIds = chat.participantsIds.filter(
-          (participantsId) => participantsId !== toDeleteParticipantId
-        );
-      }
-    });
+    chats[chatId].participantsIds = chats[chatId].participantsIds.filter(
+      (participantsId) => participantsId !== toDeleteParticipantId
+    );
+    chatsByUser[toDeleteParticipantId] = chatsByUser[
+      toDeleteParticipantId
+    ].filter((chat) => chat !== chatId);
 
-    await this.#storeServise.setData(this.#filePath, chats);
+    await this.#storeServise.setData(this.#chatsFilePath, chats);
+    await this.#storeServise.setData(this.#chatsByUserFilePath, chatsByUser);
   }
 
   async setParticipants(authorId, chatId, participantsId) {
-    const chats = await this.#storeServise.getData(this.#filePath);
+    const chats = await this.#storeServise.getData(this.#chatsFilePath);
+    const chatsByUser = await this.#storeServise.getData(
+      this.#chatsByUserFilePath
+    );
 
-    if (!chats[authorId]) return null;
+    if (
+      !chats[deleteChatId] ||
+      chats[deleteChatId].chatType === CHAT_TYPES.p2p ||
+      !chats[deleteChatId].adminsId.includes(authorId)
+    ) {
+      return null;
+    }
 
-    chats[authorId].forEach((chat) => {
-      if (chat.chatId === chatId) {
-        chat.participantsIds = [...chat.participantsIds, ...participantsId];
+    chats[chatId].participantsIds.push(...participantsId);
+    participantsId.forEach((participantId) => {
+      if (!chatsByUser[participantId]) {
+        chatsByUser[participantId] = [chatId];
+      } else {
+        chatsByUser[participantId].push(chatId);
       }
     });
 
-    await this.#storeServise.setData(this.#filePath, chats);
+    await this.#storeServise.setData(this.#chatsFilePath, chats);
+    await this.#storeServise.setData(this.#chatsByUserFilePath, chatsByUser);
+
     return true;
   }
 
   async getParticipants(chatId, authorId) {
-    const chats = await this.#storeServise.getData(this.#filePath);
-    if (!chats[authorId]) return null;
+    const chats = await this.#storeServise.getData(this.#chatsFilePath);
+    if (!chats[chatId] || !chats[chatId].participantsIds.includes(authorId))
+      return null;
 
-    const currentChat = chats[authorId].find((chat) => chat.chatId === chatId);
-
-    return currentChat.participantsIds;
+    return chats[chatId].participantsIds;
   }
-
-  async isAdmin(chatId, authorId) {
-    const chats = await this.#storeServise.getData(this.#filePath);
-    if (!chats[authorId]) return false;
-
-    const currentChat = chats[authorId].find((chat) => chat.chatId === chatId);
-
-    return currentChat.moderatorsId.find(
-      (moderatorId) => moderatorId === authorId
-    );
-  }
-  async isModerator(chatId, authorId) {}
 }
