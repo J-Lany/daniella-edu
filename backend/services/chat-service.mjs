@@ -59,4 +59,14 @@ export class ChatService {
 
     return result;
   }
+
+  async setSpesialRole(authorId, participantId, chatId, role) {
+    const result = await this.#chatsDao.setSpesialRole(
+      authorId,
+      participantId,
+      chatId,
+      role
+    );
+    if (!result) throw new Error(403);
+  }
 }

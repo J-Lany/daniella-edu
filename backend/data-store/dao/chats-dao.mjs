@@ -6,6 +6,10 @@ const CHAT_TYPES = {
   p2p: "p2p",
   group: "group",
 };
+const SPECIAL_ROLES = {
+  admin: "admin",
+  moderator: "moderator",
+};
 
 export class ChatsDao {
   #chatsFilePath = FILE_PATHS.chats;
@@ -128,5 +132,26 @@ export class ChatsDao {
       return null;
 
     return chats[chatId].participantsIds;
+  }
+
+  async setSpesialRole(authorId, participantId, chatId, role) {
+    const chats = await this.#storeServise.getData(this.#chatsFilePath);
+
+    if (
+      !chats[chatId] ||
+      chats[chatId].chatType === CHAT_TYPES.p2p ||
+      !chats[chatId].adminsId.includes(authorId)
+    ) {
+      return null;
+    }
+
+    if (role === SPECIAL_ROLES.admin) {
+      chats[chatId].adminsId.push(participantId);
+    } else if (role === SPECIAL_ROLES.moderator) {
+      chats[chatId].moderatorsId.push(participantId);
+    }
+
+    await this.#storeServise.setData(this.#chatsFilePath, chats);
+    return true;
   }
 }

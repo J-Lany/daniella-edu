@@ -404,4 +404,73 @@ export function createChatsController(app) {
         .json({ message: ERRORS.deleteChatErrors[err.message] });
     }
   });
+
+  /**
+   * @swagger
+   * /chat/set-role/{chatId}:
+   *   patch:
+   *     summary: Добавление роли участнику чата
+   *     parameters:
+   *       - in: path
+   *         name: chatId
+   *         required: true
+   *         schema:
+   *           type: string
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               authorId:
+   *                 type: string
+   *               participantId:
+   *                 type: string
+   *               role:
+   *                 type: string
+   *     responses:
+   *       200:
+   *         description: Успешное добавление роли
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 id:
+   *                   type: string
+   *                   description: ID обновленного чата
+   *       401:
+   *         description: Чат не найден / недостаточно прав
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   *       500:
+   *         description: Ошибка на сервере
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   */
+  app.patch("/chat/set-role/:chatId", async (req, res) => {
+    const chatId = req.params.chatId;
+    const { authorId, participantId, role } = req.body;
+    try {
+      await chatService.setSpesialRole(authorId, participantId, chatId, role);
+      return res.status(200).json({ message: "Роль добавлена успешно" });
+    } catch (err) {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.deleteChatErrors[err.message] });
+    }
+  });
 }
