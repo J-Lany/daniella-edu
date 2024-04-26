@@ -154,4 +154,21 @@ export class ChatsDao {
     await this.#storeServise.setData(this.#chatsFilePath, chats);
     return true;
   }
+
+  async setBan(authorId, participantId, chatId) {
+    const chats = await this.#storeServise.getData(this.#chatsFilePath);
+
+    if (
+      !chats[chatId] ||
+      chats[chatId].chatType === CHAT_TYPES.p2p ||
+      (!chats[chatId].adminsId.includes(authorId) &&
+        !chats[chatId].moderatorsId.includes(authorId))
+    ) {
+      return null;
+    }
+
+    chats[chatId].bannedId.push(participantId);
+    await this.#storeServise.setData(this.#chatsFilePath, chats);
+    return true;
+  }
 }

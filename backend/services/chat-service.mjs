@@ -55,7 +55,7 @@ export class ChatService {
 
   async getParticipants(chatId, authorId) {
     const result = await this.#chatsDao.getParticipants(chatId, authorId);
-    if (!result) throw new Error(403);
+    if (!result) throw new Error(401);
 
     return result;
   }
@@ -67,6 +67,11 @@ export class ChatService {
       chatId,
       role
     );
-    if (!result) throw new Error(403);
+    if (!result) throw new Error(401);
+  }
+
+  async setBan(authorId, participantId, chatId) {
+    const result = await this.#chatsDao.setBan(authorId, participantId, chatId);
+    if (!result) throw new Error(401);
   }
 }
