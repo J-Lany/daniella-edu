@@ -6,29 +6,43 @@ import { paginator } from "../utils/paginator.mjs";
 export class ChatService {
   #chatsDao = diContainer.resolve(SERVICES.chatsDao);
 
-  async createChat(authorId, participantsIds) {
+  async createChat(authorId, participantsIds, chatType) {
     if (authorId === null) {
       throw new Error(401);
     }
+
     const chatId = uuidv4();
     const date = new Date();
-    const newChat = { chatId, participantsIds, date };
-    await this.#chatsDao.setChat(newChat, authorId);
+    const newChat = {
+      chatId,
+      participantsIds,
+      date,
+      adminsId: [authorId],
+      moderatorsId: [],
+      bannedId: [],
+      chatType,
+    };
+    await this.#chatsDao.setChat(newChat);
 
     return chatId;
   }
 
-  async getChatsByAythor(authorId, chatsPerPage, pageNumber) {
-    const chatsList = await this.#chatsDao.getChatsByAuthor(authorId);
+  async getChatsByUser(authorId, chatsPerPage, pageNumber) {
+    const chatsList = await this.#chatsDao.getChatsByUser(authorId);
+
     return paginator(chatsPerPage, pageNumber, chatsList);
   }
 
   async deleteParticipants(authorId, chatId, toDeleteParticipateId) {
-    await this.#chatsDao.deleteChatParticipants(
+    const result = await this.#chatsDao.deleteChatParticipants(
       authorId,
       chatId,
       toDeleteParticipateId
     );
+
+    if (!result) {
+      throw new Error(401);
+    }
   }
 
   async deleteChat(authorId, deleteChatId) {
@@ -41,8 +55,40 @@ export class ChatService {
       chatId,
       participantsId
     );
+
     if (!result) {
       throw new Error(500);
+    }
+  }
+
+  async getParticipants(chatId, authorId) {
+    const result = await this.#chatsDao.getParticipants(chatId, authorId);
+
+    if (!result) {
+      throw new Error(401);
+    }
+
+    return result;
+  }
+
+  async setSpesialRole(authorId, participantId, chatId, role) {
+    const result = await this.#chatsDao.setSpesialRole(
+      authorId,
+      participantId,
+      chatId,
+      role
+    );
+
+    if (!result) {
+      throw new Error(401);
+    }
+  }
+
+  async setBan(authorId, participantId, chatId) {
+    const result = await this.#chatsDao.setBan(authorId, participantId, chatId);
+
+    if (!result) {
+      throw new Error(401);
     }
   }
 }
