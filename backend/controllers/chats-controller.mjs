@@ -115,7 +115,7 @@ export function createChatsController(app) {
     } catch (err) {
       return res
         .status(parseInt(err.message))
-        .json({ message: ERRORS.defaultChatErrors[err.message] });
+        .json({ message: ERRORS.chatErrors[err.message] });
     }
   });
 
@@ -335,7 +335,7 @@ export function createChatsController(app) {
       } catch (err) {
         return res
           .status(parseInt(err.message))
-          .json({ message: ERRORS.defaultChatErrors[err.message] });
+          .json({ message: ERRORS.chatErrors[err.message] });
       }
     }
   );
@@ -478,7 +478,7 @@ export function createChatsController(app) {
     } catch (err) {
       return res
         .status(parseInt(err.message))
-        .json({ message: ERRORS.defaultChatErrors[err.message] });
+        .json({ message: ERRORS.chatErrors[err.message] });
     }
   });
 
@@ -545,7 +545,7 @@ export function createChatsController(app) {
     } catch (err) {
       return res
         .status(parseInt(err.message))
-        .json({ message: ERRORS.defaultChatErrors[err.message] });
+        .json({ message: ERRORS.chatErrors[err.message] });
     }
   });
 }
