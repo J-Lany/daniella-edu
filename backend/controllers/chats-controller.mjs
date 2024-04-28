@@ -43,6 +43,7 @@ export function createChatsController(app) {
    */
   app.post("/chats", authorization, async (req, res) => {
     const { authorId, participantsIds, chatType } = req.body;
+
     try {
       const chatId = await chatService.createChat(
         authorId,
@@ -183,12 +184,14 @@ export function createChatsController(app) {
     const authorId = req.query.authorId;
     const chatsPerPage = req.query.chatsPerPage;
     const pageNumber = req.query.pageNumber;
+
     try {
       const result = await chatService.getChatsByUser(
         authorId,
         chatsPerPage,
         pageNumber
       );
+
       return res.status(200).json(result);
     } catch (err) {
       return res
@@ -255,6 +258,7 @@ export function createChatsController(app) {
   app.get("/chats/:chatId", authorization, async (req, res) => {
     const authorId = req.query.authorId;
     const chatId = req.params.chatId;
+
     try {
       const result = await chatService.getParticipants(chatId, authorId);
       return res.status(200).json(result);
@@ -325,6 +329,7 @@ export function createChatsController(app) {
     async (req, res) => {
       const chatId = req.params.chatId;
       const { authorId, toDeleteParticipateId } = req.body;
+
       try {
         await chatService.deleteParticipants(
           authorId,
@@ -402,6 +407,7 @@ export function createChatsController(app) {
     async (req, res) => {
       const chatId = req.params.chatId;
       const { authorId, participantsId } = req.body;
+
       try {
         await chatService.setParticipants(authorId, chatId, participantsId);
         return res.status(200).json({ message: "Участник добавлен успешно" });
@@ -472,6 +478,7 @@ export function createChatsController(app) {
   app.patch("/chat/set-role/:chatId", authorization, async (req, res) => {
     const chatId = req.params.chatId;
     const { authorId, participantId, role } = req.body;
+
     try {
       await chatService.setSpesialRole(authorId, participantId, chatId, role);
       return res.status(200).json({ message: "Роль добавлена успешно" });
@@ -539,6 +546,7 @@ export function createChatsController(app) {
   app.patch("/chat/set-ban/:chatId", authorization, async (req, res) => {
     const chatId = req.params.chatId;
     const { authorId, participantId } = req.body;
+
     try {
       await chatService.setBan(authorId, participantId, chatId);
       return res.status(200).json({ message: "Пользователь забанен успешно" });
