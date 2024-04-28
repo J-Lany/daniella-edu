@@ -81,8 +81,9 @@ export class ChatsDao {
     const isChatExist = !!chats[chatId];
     const isAdmin = chats[chatId].adminsId.includes(authorId);
     const isUserExist = chatsByUser[toDeleteParticipantId].includes(chatId);
+    const isChangeForbidden = !isChatExist || !isAdmin || !isUserExist;
 
-    if (!isChatExist || !isAdmin || !isUserExist) {
+    if (isChangeForbidden) {
       return null;
     }
 
@@ -107,8 +108,9 @@ export class ChatsDao {
     const isP2pChat = chats[chatId].chatType === CHAT_TYPES.p2p;
     const isChatExist = !!chats[chatId];
     const isAdmin = chats[chatId].adminsId.includes(authorId);
+    const isChangeForbidden = !isChatExist || isP2pChat || !isAdmin;
 
-    if (!isChatExist || isP2pChat || !isAdmin) {
+    if (isChangeForbidden) {
       return null;
     }
 
@@ -144,8 +146,9 @@ export class ChatsDao {
     const isP2pChat = chats[chatId].chatType === CHAT_TYPES.p2p;
     const isChatExist = !!chats[chatId];
     const isAdmin = chats[chatId].adminsId.includes(authorId);
+    const isChangeForbidden = !isChatExist || isP2pChat || !isAdmin;
 
-    if (!isChatExist || isP2pChat || !isAdmin) {
+    if (isChangeForbidden) {
       return null;
     }
 
@@ -166,8 +169,10 @@ export class ChatsDao {
     const isChatExist = !!chats[chatId];
     const isAdmin = chats[chatId].adminsId.includes(authorId);
     const isModerator = chats[chatId].moderatorsId.includes(authorId);
+    const isChangeForbidden =
+      isChatExist || isP2pChat || (!isAdmin && !isModerator);
 
-    if (!isChatExist || isP2pChat || (!isAdmin && !isModerator)) {
+    if (!isChangeForbidden) {
       return null;
     }
 

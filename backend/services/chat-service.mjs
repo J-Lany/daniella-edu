@@ -10,6 +10,7 @@ export class ChatService {
     if (authorId === null) {
       throw new Error(401);
     }
+
     const chatId = uuidv4();
     const date = new Date();
     const newChat = {
@@ -28,6 +29,7 @@ export class ChatService {
 
   async getChatsByUser(authorId, chatsPerPage, pageNumber) {
     const chatsList = await this.#chatsDao.getChatsByUser(authorId);
+
     return paginator(chatsPerPage, pageNumber, chatsList);
   }
 
@@ -37,7 +39,10 @@ export class ChatService {
       chatId,
       toDeleteParticipateId
     );
-    if (!result) throw new Error(401);
+
+    if (!result) {
+      throw new Error(401);
+    }
   }
 
   async deleteChat(authorId, deleteChatId) {
@@ -50,12 +55,18 @@ export class ChatService {
       chatId,
       participantsId
     );
-    if (!result) throw new Error(500);
+
+    if (!result) {
+      throw new Error(500);
+    }
   }
 
   async getParticipants(chatId, authorId) {
     const result = await this.#chatsDao.getParticipants(chatId, authorId);
-    if (!result) throw new Error(401);
+
+    if (!result) {
+      throw new Error(401);
+    }
 
     return result;
   }
@@ -67,11 +78,17 @@ export class ChatService {
       chatId,
       role
     );
-    if (!result) throw new Error(401);
+
+    if (!result) {
+      throw new Error(401);
+    }
   }
 
   async setBan(authorId, participantId, chatId) {
     const result = await this.#chatsDao.setBan(authorId, participantId, chatId);
-    if (!result) throw new Error(401);
+
+    if (!result) {
+      throw new Error(401);
+    }
   }
 }
