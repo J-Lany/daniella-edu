@@ -16,6 +16,7 @@ export const getMessageInputStyle = () => {
     padding: 1rem;
     border-top-left-radius: 0.5rem;
     border-bottom-left-radius: 0.5rem;
+    width: 100%;
   }
 
   .message-input__button{
