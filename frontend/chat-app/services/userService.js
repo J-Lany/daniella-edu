@@ -1,12 +1,8 @@
-const MOC_USER = {
-  id: 1,
-  lastName: "Dzheylani",
-  firstName: "Daniella",
-  status: 1,
-  login: "ProffesorQ",
-};
+import { diContainer } from "../di/di";
+import { SERVICES } from "../di/api";
 
 export class UserService {
+  #httpServise = diContainer.resolve(SERVICES.http);
   #userSubscribers = new Map();
   #users = new Map();
   #currentUser;
@@ -20,6 +16,7 @@ export class UserService {
     this.notifySubscribers(userId);
     return () => this.unSubscribe(userId, subscription);
   }
+
   unSubscribe(userId, subscription) {
     if (this.#userSubscribers.has(userId)) {
       this.#userSubscribers.get(userId).delete(subscription);
@@ -36,8 +33,10 @@ export class UserService {
         .get(userId)
         .forEach((subs) => subs(this.#users.get(userId)));
     } else {
-      const user = this.getUserById(userId);
+      const user = await this.getUserById(userId);
       this.#users.set(userId, user);
+
+      this.#userSubscribers.forEach((subs) => subs(this.#users.get(userId)));
     }
   }
 
@@ -46,7 +45,6 @@ export class UserService {
   }
 
   async getUserById(id) {
-    const response = await Promise.resolve(MOC_USER);
-    return response;
+    return await this.#httpServise.post(`users/${id}`);
   }
 }
