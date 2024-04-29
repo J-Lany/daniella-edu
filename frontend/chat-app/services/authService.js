@@ -34,9 +34,9 @@ export class AuthService {
     return () => this.unSubscribe(subs);
   }
 
-  async login(login, password) {
+  async login(email, password) {
     await this.#httpServise
-      .post(`login/`, { login, password })
+      .post(`login/`, { email, password })
       .then((res) => {
         this.#userService.setCurrentUser(res.user);
         this.#token = res.token;
