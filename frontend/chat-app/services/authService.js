@@ -40,6 +40,7 @@ export class AuthService {
       .then((res) => {
         this.#userService.setCurrentUser(res.user);
         this.#token = res.token;
+        this.#userService.setToken(res.token);
         this.notifySubscribers();
       })
       .catch(this.notifyError);
@@ -51,5 +52,9 @@ export class AuthService {
       email,
       password,
     });
+  }
+
+  getToken() {
+    return this.#token;
   }
 }

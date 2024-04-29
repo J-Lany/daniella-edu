@@ -6,6 +6,7 @@ export class UserService {
   #userSubscribers = new Map();
   #users = new Map();
   #currentUser;
+  #token;
 
   subscribeUserById(userId, subscription) {
     if (this.#userSubscribers.has(userId)) {
@@ -26,6 +27,9 @@ export class UserService {
   setCurrentUser(user) {
     this.#currentUser = user;
   }
+  setToken(token) {
+    this.#token = token;
+  }
 
   async notifySubscribers(userId) {
     if (this.#users.has(userId)) {
@@ -34,9 +38,11 @@ export class UserService {
         .forEach((subs) => subs(this.#users.get(userId)));
     } else {
       const user = await this.getUserById(userId);
-      this.#users.set(userId, user);
 
-      this.#userSubscribers.forEach((subs) => subs(this.#users.get(userId)));
+      this.#users.set(userId, user);
+      this.#userSubscribers.get(userId).forEach((subs) => {
+        subs(this.#users.get(userId));
+      });
     }
   }
 
@@ -45,6 +51,10 @@ export class UserService {
   }
 
   async getUserById(id) {
-    return await this.#httpServise.post(`users/${id}`);
+    const headers = this.#token
+      ? { Authorization: `Bearer ${this.#token}` }
+      : {};
+
+    return await this.#httpServise.get(`users/${id}`, headers);
   }
 }
