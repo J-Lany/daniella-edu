@@ -45,7 +45,11 @@ export class AuthService {
       .catch(this.notifyError);
   }
 
-  async registration(login, password) {
-    return await this.#httpServise.post(`registration/`, { login, password });
+  async registration(login, email, password) {
+    return await this.#httpServise.post(`registration/`, {
+      login,
+      email,
+      password,
+    });
   }
 }
