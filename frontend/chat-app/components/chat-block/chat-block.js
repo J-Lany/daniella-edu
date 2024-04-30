@@ -1,6 +1,10 @@
 import { createChatBlockTemplate } from "./chat-block.template";
+import { diContainer } from "../../di/di";
+import { SERVICES } from "../../di/api";
 
 export class ChatBlock extends HTMLElement {
+  #messagesService = diContainer.resolve(SERVICES.messages);
+
   static get name() {
     return "chat-block";
   }
@@ -11,11 +15,20 @@ export class ChatBlock extends HTMLElement {
   }
 
   connectedCallback() {
-    this.render();
+    this.unSubscribeFromMessages =
+      this.#messagesService.subscribeMessagesByCurrentChat(
+        this.render.bind(this)
+      );
   }
-  render() {
+
+  disconnectedCallback() {
+    this.unSubscribeFromMessages();
+  }
+
+
+  render(messages) {
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createChatBlockTemplate();
+    templateElem.innerHTML = createChatBlockTemplate(messages);
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
