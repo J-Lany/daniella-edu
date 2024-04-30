@@ -12,7 +12,7 @@ export class EmailService {
   }
 
   isEmailCorrect(email) {
-    const check = /^\w+@\w+\.\w+$/;
+    const check = /^([\w.-]+@[\w.-]+\.[a-zA-Z0-9_-]+)$/;
     return check.test(email);
   }
 }

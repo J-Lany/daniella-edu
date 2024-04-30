@@ -34,18 +34,27 @@ export class AuthService {
     return () => this.unSubscribe(subs);
   }
 
-  async login(login, password) {
+  async login(email, password) {
     await this.#httpServise
-      .post(`login/`, { login, password })
+      .post(`login/`, { email, password })
       .then((res) => {
         this.#userService.setCurrentUser(res.user);
         this.#token = res.token;
+        this.#userService.setToken(res.token);
         this.notifySubscribers();
       })
       .catch(this.notifyError);
   }
 
-  async registration(login, password) {
-    return await this.#httpServise.post(`registration/`, { login, password });
+  async registration(login, email, password) {
+    return await this.#httpServise.post(`registration/`, {
+      login,
+      email,
+      password,
+    });
+  }
+
+  getToken() {
+    return this.#token;
   }
 }

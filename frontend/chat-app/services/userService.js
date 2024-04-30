@@ -1,15 +1,12 @@
-const MOC_USER = {
-  id: 1,
-  lastName: "Dzheylani",
-  firstName: "Daniella",
-  status: 1,
-  login: "ProffesorQ",
-};
+import { diContainer } from "../di/di";
+import { SERVICES } from "../di/api";
 
 export class UserService {
+  #httpServise = diContainer.resolve(SERVICES.http);
   #userSubscribers = new Map();
   #users = new Map();
   #currentUser;
+  #token;
 
   subscribeUserById(userId, subscription) {
     if (this.#userSubscribers.has(userId)) {
@@ -20,6 +17,7 @@ export class UserService {
     this.notifySubscribers(userId);
     return () => this.unSubscribe(userId, subscription);
   }
+
   unSubscribe(userId, subscription) {
     if (this.#userSubscribers.has(userId)) {
       this.#userSubscribers.get(userId).delete(subscription);
@@ -29,6 +27,9 @@ export class UserService {
   setCurrentUser(user) {
     this.#currentUser = user;
   }
+  setToken(token) {
+    this.#token = token;
+  }
 
   async notifySubscribers(userId) {
     if (this.#users.has(userId)) {
@@ -36,8 +37,12 @@ export class UserService {
         .get(userId)
         .forEach((subs) => subs(this.#users.get(userId)));
     } else {
-      const user = this.getUserById(userId);
+      const user = await this.getUserById(userId);
+
       this.#users.set(userId, user);
+      this.#userSubscribers.get(userId).forEach((subs) => {
+        subs(this.#users.get(userId));
+      });
     }
   }
 
@@ -46,7 +51,10 @@ export class UserService {
   }
 
   async getUserById(id) {
-    const response = await Promise.resolve(MOC_USER);
-    return response;
+    const headers = this.#token
+      ? { Authorization: `Bearer ${this.#token}` }
+      : {};
+
+    return await this.#httpServise.get(`users/${id}`, headers);
   }
 }

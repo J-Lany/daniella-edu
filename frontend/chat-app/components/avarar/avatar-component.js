@@ -2,12 +2,24 @@ import { createAvatarTemplate } from "./avatar-component.template";
 import { diContainer } from "../../di/di";
 import { SERVICES } from "../../di/api";
 
+const avatarAttribute = {
+  USER_ID: "user-id",
+};
+
 export class AvatarComponent extends HTMLElement {
   #userService = diContainer.resolve(SERVICES.user);
-  userId = this.getAttribute("user-id");
+  #userId;
+
+  #ATTRIBUTE_MAPPING = new Map([
+    [avatarAttribute.USER_ID, this.setUserId.bind(this)],
+  ]);
 
   static get name() {
     return "avatar-component";
+  }
+
+  static get observedAttributes() {
+    return Object.values(avatarAttribute);
   }
 
   constructor() {
@@ -17,12 +29,27 @@ export class AvatarComponent extends HTMLElement {
 
   connectedCallback() {
     this.unsubscribeFromUser = this.#userService.subscribeUserById(
+      this.#userId,
       this.render.bind(this)
     );
   }
 
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue !== newValue) {
+      const callback = this.#ATTRIBUTE_MAPPING.get(name);
+      if (callback) {
+        callback(newValue);
+        this.render();
+      }
+    }
+  }
+
   disconnectedCallback() {
     this.unsubscribeFromUser();
+  }
+
+  setUserId(newId) {
+    this.#userId = newId;
   }
 
   render(user) {

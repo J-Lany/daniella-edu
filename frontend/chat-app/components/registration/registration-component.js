@@ -27,6 +27,7 @@ export class RegistrationComponent extends HTMLElement {
 
   #onRegistrationClick() {
     const login = this.shadowRoot.querySelector("#login").value;
+    const email = this.shadowRoot.querySelector("#email").value;
     const password = this.shadowRoot.querySelector("#password").value;
     const confirmPassword =
       this.shadowRoot.querySelector("#confirm-password").value;
@@ -35,7 +36,7 @@ export class RegistrationComponent extends HTMLElement {
       this.render("Пароли не совпадают");
       return;
     }
-    this.#authService.registration(login, password).then((res) => {
+    this.#authService.registration(login, email, password).then((res) => {
       const registrationEvent = new CustomEvent("login", {
         detail: {
           registration: "success",

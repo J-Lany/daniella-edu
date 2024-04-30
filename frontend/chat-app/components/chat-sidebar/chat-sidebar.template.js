@@ -1,6 +1,9 @@
 import { getChatSidebarStyle } from "./chat-sidebar.styles";
 
 export function createChatSidebarTemplate(chats) {
+  if (!chats) {
+    return null;
+  }
   return `
     ${getChatSidebarStyle()}
     <div class="chat-sidebar">

@@ -37,10 +37,10 @@ export class LoginComponent extends HTMLElement {
 
   #onLoginClick(event) {
     event.preventDefault();
-    const login = this.shadowRoot.querySelector("#login").value;
+    const email = this.shadowRoot.querySelector("#email").value;
     const password = this.shadowRoot.querySelector("#password").value;
 
-    this.#authService.login(login, password);
+    this.#authService.login(email, password);
   }
   #onRegistrationClick() {
     this.dispatchEvent(new Event("registration"));
