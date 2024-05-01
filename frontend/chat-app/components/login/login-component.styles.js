@@ -18,31 +18,34 @@ const getLoginComponentStyle = () => {
     }
     .login-form__input {
       font-size: 1.5rem;
-      padding: 1.5rem;
+      padding: 1rem;
       border: none;
       background: var(--light-gray-background);
       border-radius: 0.5rem;
     }
     .login-form__btn {
-      padding: 1rem;
-      width: 50%;
-      font-size: 1.5rem;
-      outline: none;
+      padding: 0.7rem 7.3rem;
+      font-size: 1rem;
       border: 1px solid var(--light-gray-background);
       border-radius: 0.3rem;
       color: var(--gray-text-color);
-      background-color: var(--light-gray-background);
-      box-shadow: 0 1px 3px var(--gray-text-color);
+      background-color: var(--light-green-background);
+      box-shadow: 0 1px 3px var(--light-gray-background);
     }
     .login-form__btn:active {
       background-color: var(--light-gray-color);
     }
     .login-form__btn-group {
       display: flex;
-      justify-content: center;
-      gap: 2rem;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
     }
     .login-form__btn:hover {
+      background-color: var(--light-blue-background)
+    }
+
+    .registration-btn {
       background-color: var(--light-blue-background)
     }
     .error-messsge{

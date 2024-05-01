@@ -8,15 +8,23 @@ export function createRegistrationTemplate(errorMessage) {
   <div class="registration-page">
     <h3>Sign up</h3>
     <div class="registration-form">
+    <div>
       <input id="login" class="registration-form__input" type="text" placeholder="login" required/>
+    </div>
+    <div>
       <input id="email" class="registration-form__input" type="text" placeholder="email" required/>
+    </div>
+    <div>
       <input id="password" class="registration-form__input ${
         hasErrorMessage ? "error" : ""
       }" type="password" placeholder="password" required />
+    </div>
+    <div>
       <input id="confirm-password" class="registration-form__input ${
         hasErrorMessage ? "error" : ""
       } type="password" placeholder="confirm password" required />
-      <button class="registration-form__btn">Sign up</button>
+    </div>
+      <div><button class="registration-form__btn">Sign up</button></div>
     </div>
    <div class="error-messsge ${errorMessageClass}">${errorMessage}</div>
   </div>

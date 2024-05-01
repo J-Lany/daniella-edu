@@ -6,8 +6,12 @@ export function createLoginTemplate(errorMessage) {
    <div class="login-page">
     <h3>Log in</h3>
       <div class="login-form">
-        <input id="email" class="login-form__input" type="text" placeholder="email" required/>
-        <input id="password" class="login-form__input" type="password" placeholder="password" required />
+        <div>
+          <input id="email" class="login-form__input" type="text" placeholder="email" required/>
+        </div>
+        <div>
+          <input id="password" class="login-form__input" type="password" placeholder="password" required />
+        </div>
         <div class="login-form__btn-group">
           <button class="login-form__btn login-btn">Log in</button>
           <button class="login-form__btn registration-btn">Sign up</button>

@@ -20,22 +20,20 @@ export const getRegistrationComponentStyle = () => {
 
   .registration-form__input {
     font-size: 1.5rem;
-    padding: 1.5rem;
+    padding: 1rem;
     border: none;
     background: var(--light-gray-background);
     border-radius: 0.5rem;
   }
 
   .registration-form__btn {
-    padding: 1rem;
-    width: 50%;
-    font-size: 1.5rem;
-    outline: none;
+    padding: 0.7rem 7.3rem;
+    font-size: 1rem;
     border: 1px solid var(--light-gray-background);
     border-radius: 0.3rem;
     color: var(--gray-text-color);
-    background-color: var(--light-gray-background);
-    box-shadow: 0 1px 3px var(--gray-text-color);
+    background-color: var(--light-green-background);
+    box-shadow: 0 1px 3px var(--light-gray-background);
   }
 
   .registration-form__btn:active {
