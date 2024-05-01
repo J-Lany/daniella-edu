@@ -1,4 +1,6 @@
-export function httpService(baseUrl = "http://localhost:3000") {
+import packageJson from "../../package.json";
+
+export function httpService(baseUrl = packageJson.scripts.baseUrl) {
   async function get(url, headers) {
     const response = await fetch(`${baseUrl}/${url}`, { headers });
 
