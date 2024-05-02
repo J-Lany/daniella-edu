@@ -1,6 +1,6 @@
 import { SERVICES } from "../../di/api.mjs";
 import { diContainer } from "../../di/di.mjs";
-import { FILE_PATHS } from "../../utils/data-file-paths.mjs";
+import { FILE_PATHS } from "../data/data-file-paths.mjs";
 
 export class EmailsDao {
   #filePath = FILE_PATHS.emails;
