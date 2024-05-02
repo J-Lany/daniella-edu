@@ -22,7 +22,7 @@ export function createRegistrationTemplate(errorMessage) {
     <div>
       <input id="confirm-password" class="registration-form__input ${
         hasErrorMessage ? "error" : ""
-      } type="password" placeholder="confirm password" required />
+      }" type="password" placeholder="confirm password" required />
     </div>
       <div><button class="registration-form__btn">Sign up</button></div>
     </div>
