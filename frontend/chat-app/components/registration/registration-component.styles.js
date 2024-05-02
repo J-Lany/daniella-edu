@@ -19,21 +19,22 @@ export const getRegistrationComponentStyle = () => {
   }
 
   .registration-form__input {
-    font-size: 1.5rem;
+    font-size: 1rem;
     padding: 1rem;
+    min-width: 20rem;
     border: none;
     background: var(--light-gray-background);
     border-radius: 0.5rem;
   }
 
   .registration-form__btn {
-    padding: 0.7rem 7.3rem;
+    padding: 0.75rem;
+    min-width: 22rem;
     font-size: 1rem;
     border: 1px solid var(--light-gray-background);
-    border-radius: 0.3rem;
+    border-radius: 2rem;
     color: var(--gray-text-color);
-    background-color: var(--light-green-background);
-    box-shadow: 0 1px 3px var(--light-gray-background);
+    transition: background-color 0.5s ease-in-out;
   }
 
   .registration-form__btn:active {
@@ -62,14 +63,15 @@ export const getRegistrationComponentStyle = () => {
 
   @media screen and (max-width: 600px) {
     .registration-form__btn {
-        padding: 0.75rem 3.5rem;
+      padding: 0.75rem;
         font-size: 1rem;
-        width: auto;
+        min-width: 17rem;
       }
 
     .registration-form__input {
       font-size: 1rem;
       padding: 1rem;
+      min-width: 15rem;
     }
 
     .error-messsge{

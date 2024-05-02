@@ -14,7 +14,8 @@ export function createLoginTemplate(errorMessage) {
         </div>
         <div class="login-form__btn-group">
           <button class="login-form__btn login-btn">Log in</button>
-          <button class="login-form__btn registration-btn">Sign up</button>
+          <p>Don't have an account?
+          <span class="registration-btn">Sign up</span></p>
         </div>
       </div>
       ${errorMessage ? `<div class="error-messsge">${errorMessage}</div>` : ""}
