@@ -16,10 +16,12 @@ import { MessagesBlock } from "./chat-app/components/messages-block/messages-blo
 import { AvatarComponent } from "./chat-app/components/avarar/avatar-component.js";
 import { MessageInfoBlock } from "./chat-app/components/message-info-block/message-info-block.js";
 import { Message } from "./chat-app/components/message/message.js";
-import { ChatSidebar } from "./chat-app/components/chat-sidebar/chat-sidebar.js";
 import { MessageInput } from "./chat-app/components/message-input/message-input.js";
 import { ChatBlock } from "./chat-app/components/chat-block/chat-block.js";
 import { SearchInput } from "./chat-app/components/search-users/search-users-input.js";
+import { ChatSidebar } from "./chat-app/components/sidebar-chats/sidebar-chats.js";
+import { UsersSidebar } from "./chat-app/components/sidebar-users/sidebar-users.js";
+import { Sidebar } from "./chat-app/components/sidebar/sidebar.js";
 
 diContainer.register(SERVICES.http, httpService);
 diContainer.register(SERVICES.messages, new MessageService());
@@ -30,8 +32,8 @@ diContainer.register(SERVICES.auth, new AuthService());
   ChatComponent,
   UserInfoBlock,
   HeaderComponent,
-  ChatSidebar,
   ChatBlock,
+  Sidebar,
   LoginComponent,
   RegistrationComponent,
   AppComponent,
@@ -42,6 +44,8 @@ diContainer.register(SERVICES.auth, new AuthService());
   Message,
   MessageInput,
   SearchInput,
+  ChatSidebar,
+  UsersSidebar,
 ].map((component) => customElements.define(component.name, component));
 
 document.querySelector("#app").innerHTML = `<app-component></app-component>`;

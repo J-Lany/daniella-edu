@@ -28,6 +28,12 @@ export class SearchInput extends HTMLElement {
     clearTimeout(this.#timeOutId);
     this.#timeOutId = setTimeout(async () => {
       const result = await this.#userService.searchUser(value);
+      const searchEvent = new CustomEvent("search", {
+        detail: {
+          result,
+        },
+      });
+      this.dispatchEvent(searchEvent);
       console.log(result);
     }, 500);
   }

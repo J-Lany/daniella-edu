@@ -1,7 +1,8 @@
-import { createChatSidebarTemplate } from "./chat-sidebar.template";
+import { createChatSidebarTemplate } from "./sidebar-chats.template";
+
 export class ChatSidebar extends HTMLElement {
   static get name() {
-    return "chat-sidebar";
+    return "chats-sidebar";
   }
 
   constructor() {
@@ -12,8 +13,6 @@ export class ChatSidebar extends HTMLElement {
   connectedCallback() {
     this.render();
   }
-
-  disconnectedCallback() {}
 
   render() {
     const templateElem = document.createElement("template");
