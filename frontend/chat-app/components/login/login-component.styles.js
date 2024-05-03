@@ -11,50 +11,68 @@ const getLoginComponentStyle = () => {
       padding: 2rem;
       text-align: center;
     }
+
     .login-form {
       display: flex;
       flex-flow: column;
       gap: 1rem;
     }
+
     .login-form__input {
-      font-size: 1.5rem;
-      padding: 1.5rem;
+      font-size: 1rem;
+      padding: 1rem;
+      min-width: 20rem;
       border: none;
       background: var(--light-gray-background);
+      box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
       border-radius: 0.5rem;
     }
+
     .login-form__btn {
-      padding: 1rem;
-      width: 50%;
-      font-size: 1.5rem;
-      outline: none;
+      padding: 0.75rem;
+      min-width: 22rem;
+      font-size: 1rem;
       border: 1px solid var(--light-gray-background);
-      border-radius: 0.3rem;
+      border-radius: 2rem;
       color: var(--gray-text-color);
-      background-color: var(--light-gray-background);
-      box-shadow: 0 1px 3px var(--gray-text-color);
+      transition: background-color 0.2s ease-in-out;
     }
+
     .login-form__btn:active {
       background-color: var(--light-gray-color);
     }
+
     .login-form__btn-group {
       display: flex;
-      justify-content: center;
-      gap: 2rem;
+      flex-direction: column;
+      align-items: center;
     }
+
     .login-form__btn:hover {
-      background-color: var(--light-blue-background)
+      background-color: var(--light-blue-background);
+      cursor: pointer;
     }
+
     .error-messsge{
       color: red;
       margin-top: 0.5rem;
       text-align: center;
     }
+
+    .registration-btn{
+      color:  var(--light-blue-background);
+      font-weight: bold;
+    }
+
+    .registration-btn:hover {
+      cursor: pointer;
+    }
+
     @media screen and (max-width: 600px) {
       .login-form__btn {
-          padding: 0.75rem 3.5rem;
+          padding: 0.75rem;
           font-size: 1rem;
-          width: auto;
+          min-width: 17rem;
         }
       .login-form__btn-group {
         display: flex;
@@ -65,6 +83,7 @@ const getLoginComponentStyle = () => {
       .login-form__input {
         font-size: 1rem;
         padding: 1rem;
+        min-width: 15rem;
       }
       .error-messsge{
         margin-top: 0.25rem;
