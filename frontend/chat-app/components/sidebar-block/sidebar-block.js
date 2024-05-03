@@ -29,11 +29,10 @@ export class SidebarBlock extends HTMLElement {
     this.render(this.#currentViewTupe);
   }
 
-  #onSearch(event) {
-    console.log("After event");
+  #onSearch() {
+    console.log("Проверка отлова события (не работает)");
     this.#currentViewTupe = viewTypes.USERS;
     this.render(this.#currentViewTupe);
-    console.log("After event");
   }
 
   disconnectedCallback() {

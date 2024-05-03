@@ -25,6 +25,7 @@ export class SearchInput extends HTMLElement {
   }
 
   #onInputFocus() {
+    console.log("onInputFocus");
     this.dispatchEvent(new Event("search-focus"));
   }
 
