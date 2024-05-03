@@ -4,11 +4,7 @@ import { addListeners, removeListeners, select } from "../../utils/utils.js";
 export class UsersSidebar extends HTMLElement {
   #users;
   #listeners = [
-    [
-      select.bind(this, "sidebar-component"),
-      "gotUsers",
-      this.#onSearch.bind(this),
-    ],
+    [select.bind(this, "search-input"), "search", this.#onSearch.bind(this)],
   ];
 
   static get name() {
@@ -21,13 +17,12 @@ export class UsersSidebar extends HTMLElement {
   }
 
   connectedCallback() {
-    console.log("UsersSideBar");
     this.render(this.#users);
   }
 
   #onSearch(event) {
     this.#users = event.detail.result;
-    console.log("event");
+    console.log("Проверка отлова события - не работает");
     this.render(this.#users);
   }
 
