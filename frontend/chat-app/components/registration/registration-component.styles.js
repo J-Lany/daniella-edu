@@ -35,7 +35,8 @@ export const getRegistrationComponentStyle = () => {
     border: 1px solid var(--light-gray-background);
     border-radius: 2rem;
     color: var(--gray-text-color);
-    transition: background-color 0.5s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
   }
 
   .registration-form__btn:active {
