@@ -6,7 +6,9 @@ const chatsAttribute = {
 
 export class ChatSidebar extends HTMLElement {
   #chats;
-  #ATTRIBUTE_MAPPING = new Map([[chatsAttribute.CHATS, this.setChats]]);
+  #ATTRIBUTE_MAPPING = new Map([
+    [chatsAttribute.CHATS, this.setChats.bind(this)],
+  ]);
 
   static get name() {
     return "chats-sidebar";
@@ -21,20 +23,19 @@ export class ChatSidebar extends HTMLElement {
     this.attachShadow({ mode: "open" });
   }
 
-  connectedCallback() {
-    this.render();
-  }
+  connectedCallback() {}
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue !== newValue) {
       const callback = this.#ATTRIBUTE_MAPPING.get(name);
       if (callback) {
-        callback(this, newValue);
+        callback(newValue);
+        this.render();
       }
     }
   }
 
-  setChats(_, newChats) {
+  setChats(newChats) {
     this.#chats = newChats;
   }
 

@@ -25,23 +25,20 @@ export class Sidebar extends HTMLElement {
     this.render();
   }
 
-  #onSearch(event) {
+  #onSearch() {
     this.#currentViewTupe = viewTypes.USERS;
-    this.render(event.detail.result);
+    this.render();
   }
 
   disconnectedCallback() {
     this.#listeners.forEach(removeListeners.bind(this));
   }
 
-  render(payload) {
+  render() {
     this.#listeners.forEach(removeListeners.bind(this));
 
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createSidebarTemplate(
-      this.#currentViewTupe,
-      payload
-    );
+    templateElem.innerHTML = createSidebarTemplate(this.#currentViewTupe);
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));

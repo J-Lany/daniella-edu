@@ -34,7 +34,6 @@ export class SearchInput extends HTMLElement {
         },
       });
       this.dispatchEvent(searchEvent);
-      console.log(result);
     }, 500);
   }
 

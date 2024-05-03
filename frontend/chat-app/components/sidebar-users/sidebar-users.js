@@ -1,19 +1,13 @@
 import { createUsersSidebarTemplate } from "./sidebar-users.template";
-
-const usersAttribute = {
-  USERS: "users",
-};
+import { addListeners, removeListeners, select } from "../../utils/utils.js";
 
 export class UsersSidebar extends HTMLElement {
-  #users;
-  #ATTRIBUTE_MAPPING = new Map([[usersAttribute.USERS, this.setUsers]]);
+  #listeners = [
+    [select.bind(this, "search-input"), "search", this.#onSearch.bind(this)],
+  ];
 
   static get name() {
     return "users-sidebar";
-  }
-
-  static get observedAttributes() {
-    return Object.values(usersAttribute);
   }
 
   constructor() {
@@ -21,28 +15,25 @@ export class UsersSidebar extends HTMLElement {
     this.attachShadow({ mode: "open" });
   }
 
-  connectedCallback() {
-    this.render();
+  connectedCallback() {}
+
+  #onSearch(event) {
+    this.render(event.detail.result);
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue !== newValue) {
-      const callback = this.#ATTRIBUTE_MAPPING.get(name);
-      if (callback) {
-        callback(this, newValue);
-      }
-    }
+  disconnectedCallback() {
+    this.#listeners.forEach(removeListeners.bind(this));
   }
 
-  setUsers(_, newUsers) {
-    this.#users = newUsers;
-  }
+  render(users) {
+    this.#listeners.forEach(removeListeners.bind(this));
 
-  render() {
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createUsersSidebarTemplate(this.#users);
+    templateElem.innerHTML = createUsersSidebarTemplate(users);
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
+
+    this.#listeners.forEach(addListeners.bind(this));
   }
 }
