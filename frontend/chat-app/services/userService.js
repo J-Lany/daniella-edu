@@ -72,6 +72,6 @@ export class UserService {
       pageNumber: PAGE_NUMBER,
     };
 
-    return await this.#httpServise.get(`users/search`, { headers, params });
+    return await this.#httpServise.get(`users/search`, headers, params);
   }
 }
