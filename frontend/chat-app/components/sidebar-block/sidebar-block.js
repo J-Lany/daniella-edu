@@ -1,18 +1,23 @@
-import { createUsersSidebarTemplate } from "./sidebar-users.template";
+import { createSidebarBlockTemplate } from "./sidebar-block.template.js";
 import { addListeners, removeListeners, select } from "../../utils/utils.js";
 
-export class UsersSidebar extends HTMLElement {
-  #users;
+export const viewTypes = {
+  CHATS: "chats",
+  USERS: "users",
+};
+
+export class SidebarBlock extends HTMLElement {
+  #currentViewTupe = viewTypes.CHATS;
   #listeners = [
     [
-      select.bind(this, "sidebar-component"),
-      "gotUsers",
+      select.bind(this, "search-input"),
+      "search-focus",
       this.#onSearch.bind(this),
     ],
   ];
 
   static get name() {
-    return "users-sidebar";
+    return "sidebar-block";
   }
 
   constructor() {
@@ -21,25 +26,25 @@ export class UsersSidebar extends HTMLElement {
   }
 
   connectedCallback() {
-    console.log("UsersSideBar");
-    this.render(this.#users);
+    this.render(this.#currentViewTupe);
   }
 
   #onSearch(event) {
-    this.#users = event.detail.result;
-    console.log("event");
-    this.render(this.#users);
+    console.log("After event");
+    this.#currentViewTupe = viewTypes.USERS;
+    this.render(this.#currentViewTupe);
+    console.log("After event");
   }
 
   disconnectedCallback() {
     this.#listeners.forEach(removeListeners.bind(this));
   }
 
-  render(users) {
+  render(currentViewTupe) {
     this.#listeners.forEach(removeListeners.bind(this));
 
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createUsersSidebarTemplate(users);
+    templateElem.innerHTML = createSidebarBlockTemplate(currentViewTupe);
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));

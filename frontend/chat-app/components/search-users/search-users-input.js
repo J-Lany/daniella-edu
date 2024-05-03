@@ -7,6 +7,7 @@ export class SearchInput extends HTMLElement {
   #userService = diContainer.resolve(SERVICES.user);
   #listeners = [
     [select.bind(this, "#search"), "input", this.#onInputChange.bind(this)],
+    [select.bind(this, "#search"), "focus", this.#onInputFocus.bind(this)],
   ];
   #timeOutId;
 
@@ -21,6 +22,10 @@ export class SearchInput extends HTMLElement {
 
   connectedCallback() {
     this.render();
+  }
+
+  #onInputFocus() {
+    this.dispatchEvent(new Event("search-focus"));
   }
 
   #onInputChange(e) {

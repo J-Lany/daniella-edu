@@ -8,6 +8,7 @@ export class UserService {
   #httpServise = diContainer.resolve(SERVICES.http);
   #userSubscribers = new Map();
   #users = new Map();
+  #usesBySearch;
   #currentUser;
   #token;
 
@@ -72,6 +73,11 @@ export class UserService {
       pageNumber: PAGE_NUMBER,
     };
 
-    return await this.#httpServise.get(`users/search`, headers, params);
+    const result = await this.#httpServise.get(`users/search`, headers, params);
+    this.#usesBySearch = result;
+  }
+
+  getUsersBySearch() {
+    return this.#usesBySearch;
   }
 }

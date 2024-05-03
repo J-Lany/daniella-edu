@@ -22,6 +22,7 @@ import { SearchInput } from "./chat-app/components/search-users/search-users-inp
 import { ChatSidebar } from "./chat-app/components/sidebar-chats/sidebar-chats.js";
 import { UsersSidebar } from "./chat-app/components/sidebar-users/sidebar-users.js";
 import { Sidebar } from "./chat-app/components/sidebar/sidebar.js";
+import { SidebarBlock } from "./chat-app/components/sidebar-block/sidebar-block.js";
 
 diContainer.register(SERVICES.http, httpService);
 diContainer.register(SERVICES.messages, new MessageService());
@@ -46,6 +47,7 @@ diContainer.register(SERVICES.auth, new AuthService());
   SearchInput,
   ChatSidebar,
   UsersSidebar,
+  SidebarBlock,
 ].map((component) => customElements.define(component.name, component));
 
 document.querySelector("#app").innerHTML = `<app-component></app-component>`;
