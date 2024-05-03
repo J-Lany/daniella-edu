@@ -1,6 +1,9 @@
 import { diContainer } from "../di/di";
 import { SERVICES } from "../di/api";
 
+const USER_PER_PAGE = 10;
+const PAGE_NUMBER = 1;
+
 export class UserService {
   #httpServise = diContainer.resolve(SERVICES.http);
   #userSubscribers = new Map();
@@ -56,5 +59,19 @@ export class UserService {
       : {};
 
     return await this.#httpServise.get(`users/${id}`, headers);
+  }
+
+  async searchUser(search) {
+    const headers = this.#token
+      ? { Authorization: `Bearer ${this.#token}` }
+      : {};
+
+    const params = {
+      search,
+      userPerPage: USER_PER_PAGE,
+      pageNumber: PAGE_NUMBER,
+    };
+
+    return await this.#httpServise.get(`users/search`, { headers, params });
   }
 }
