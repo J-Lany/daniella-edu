@@ -3,12 +3,16 @@ import { addListeners, removeListeners, select } from "../../utils/utils.js";
 import { diContainer } from "../../di/di.js";
 import { SERVICES } from "../../di/api.js";
 
+export const LIST_TYPE = {
+  users: "users",
+  chats: "chats",
+};
+
 export class Sidebar extends HTMLElement {
   #userService = diContainer.resolve(SERVICES.user);
   #listeners = [
     [select.bind(this, "search-input"), "search", this.#onSearch.bind(this)],
   ];
-  #timerId;
 
   static get name() {
     return "sidebar-component";
@@ -34,6 +38,7 @@ export class Sidebar extends HTMLElement {
     this.#userService.debouncedSearch(inputValue).then((res) => {
       sidebarBlock.handleCustomEvent({
         detail: res.result,
+        listType: LIST_TYPE.users,
       });
     });
   }

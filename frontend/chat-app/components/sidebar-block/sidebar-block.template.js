@@ -1,9 +1,11 @@
+import { LIST_TYPE } from "../sidebar/sidebar";
 import { getSidebarBlockStyle } from "./sidebar-block.styles";
 
-export function createSidebarBlockTemplate(list) {
+export function createSidebarBlockTemplate(list, type) {
   return `
     ${getSidebarBlockStyle()}
     <div class="sidebar-block">
+    ${type === LIST_TYPE.users ? `<div class="close-button">x</div>` : ""}
     ${
       list && list.length > 0
         ? list.map(
