@@ -14,21 +14,20 @@ export function getSidebarBlockStyle() {
        .sidebar-block__item {
           border-bottom: 0.5px solid var(--gray-text-color);
           padding: 0.5rem;
+          transition: background-color 0.2s ease-in-out;
        }
 
-       .close-button{
-         border-bottom: 0.5px solid var(--gray-text-color);
-         border-top: 0.5px solid var(--gray-text-color);
-         font-weight: bold;
-         padding: 0.5rem;
-         color: var(--gray-text-color);
-         transition: background-color 0.2s ease-in-out;
-       }
-
-       .close-button:hover {
+       .sidebar-block__item:hover {
          background: var(--light-gray-background);
          cursor: pointer;
+      }
+
+       .close-button{
+         border-top: 0.5px solid var(--gray-text-color);
+         font-weight: bold;
+         color: var(--gray-text-color);
        }
+
 
      </style>
  `;
