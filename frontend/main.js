@@ -19,8 +19,6 @@ import { Message } from "./chat-app/components/message/message.js";
 import { MessageInput } from "./chat-app/components/message-input/message-input.js";
 import { ChatBlock } from "./chat-app/components/chat-block/chat-block.js";
 import { SearchInput } from "./chat-app/components/search-users/search-users-input.js";
-import { ChatSidebar } from "./chat-app/components/sidebar-chats/sidebar-chats.js";
-import { UsersSidebar } from "./chat-app/components/sidebar-users/sidebar-users.js";
 import { Sidebar } from "./chat-app/components/sidebar/sidebar.js";
 import { SidebarBlock } from "./chat-app/components/sidebar-block/sidebar-block.js";
 
@@ -45,8 +43,6 @@ diContainer.register(SERVICES.auth, new AuthService());
   Message,
   MessageInput,
   SearchInput,
-  ChatSidebar,
-  UsersSidebar,
   SidebarBlock,
 ].map((component) => customElements.define(component.name, component));
 

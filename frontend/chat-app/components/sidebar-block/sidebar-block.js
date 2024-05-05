@@ -1,21 +1,6 @@
 import { createSidebarBlockTemplate } from "./sidebar-block.template.js";
-import { addListeners, removeListeners, select } from "../../utils/utils.js";
-
-export const viewTypes = {
-  CHATS: "chats",
-  USERS: "users",
-};
 
 export class SidebarBlock extends HTMLElement {
-  #currentViewTupe = viewTypes.CHATS;
-  #listeners = [
-    [
-      select.bind(this, "search-input"),
-      "search-focus",
-      this.#onSearch.bind(this),
-    ],
-  ];
-
   static get name() {
     return "sidebar-block";
   }
@@ -26,28 +11,18 @@ export class SidebarBlock extends HTMLElement {
   }
 
   connectedCallback() {
-    this.render(this.#currentViewTupe);
+    this.render();
   }
 
-  #onSearch() {
-    console.log("Проверка отлова события (не работает)");
-    this.#currentViewTupe = viewTypes.USERS;
-    this.render(this.#currentViewTupe);
+  handleCustomEvent(event) {
+    this.render(event.detail);
   }
 
-  disconnectedCallback() {
-    this.#listeners.forEach(removeListeners.bind(this));
-  }
-
-  render(currentViewTupe) {
-    this.#listeners.forEach(removeListeners.bind(this));
-
+  render(list) {
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createSidebarBlockTemplate(currentViewTupe);
+    templateElem.innerHTML = createSidebarBlockTemplate(list);
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
-
-    this.#listeners.forEach(addListeners.bind(this));
   }
 }

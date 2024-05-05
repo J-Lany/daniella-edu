@@ -1,6 +1,15 @@
 import { createSidebarTemplate } from "./sidebar.template";
+import { addListeners, removeListeners, select } from "../../utils/utils.js";
+import { diContainer } from "../../di/di.js";
+import { SERVICES } from "../../di/api.js";
 
 export class Sidebar extends HTMLElement {
+  #userService = diContainer.resolve(SERVICES.user);
+  #listeners = [
+    [select.bind(this, "search-input"), "search", this.#onSearch.bind(this)],
+  ];
+  #timerId;
+
   static get name() {
     return "sidebar-component";
   }
@@ -14,11 +23,34 @@ export class Sidebar extends HTMLElement {
     this.render();
   }
 
-  render() {
+  disconnectedCallback() {
+    this.#listeners.forEach(removeListeners.bind(this));
+  }
+
+  #onSearch(event) {
+    const inputValue = event.detail.value;
+    const sidebarBlock = this.shadowRoot.querySelector("sidebar-block");
+
+    this.#timerId = setTimeout(async () => {
+      clearTimeout(this.#timerId);
+
+      const list = await this.#userService.searchUser(inputValue);
+
+      sidebarBlock.handleCustomEvent({
+        detail: list.result,
+      });
+    }, 500);
+  }
+
+  render(inputValue) {
+    this.#listeners.forEach(removeListeners.bind(this));
+
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createSidebarTemplate();
+    templateElem.innerHTML = createSidebarTemplate(inputValue);
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
+
+    this.#listeners.forEach(addListeners.bind(this));
   }
 }

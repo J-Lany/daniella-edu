@@ -1,18 +1,25 @@
 import { createSearchInputTemplate } from "./search-users-input.template.js";
 import { addListeners, removeListeners, select } from "../../utils/utils.js";
-import { diContainer } from "../../di/di.js";
-import { SERVICES } from "../../di/api.js";
+
+const searchAttribute = {
+  VALUE: "value",
+};
 
 export class SearchInput extends HTMLElement {
-  #userService = diContainer.resolve(SERVICES.user);
+  #value;
   #listeners = [
     [select.bind(this, "#search"), "input", this.#onInputChange.bind(this)],
-    [select.bind(this, "#search"), "focus", this.#onInputFocus.bind(this)],
   ];
-  #timeOutId;
+  #ATTRIBUTE_MAPPING = new Map([
+    [searchAttribute.VALUE, this.setValue.bind(this)],
+  ]);
 
   static get name() {
     return "search-input";
+  }
+
+  static get observedAttributes() {
+    return Object.values(searchAttribute);
   }
 
   constructor() {
@@ -24,23 +31,30 @@ export class SearchInput extends HTMLElement {
     this.render();
   }
 
-  #onInputFocus() {
-    console.log("onInputFocus");
-    this.dispatchEvent(new Event("search-focus"));
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue !== newValue) {
+      const callback = this.#ATTRIBUTE_MAPPING.get(name);
+      if (callback) {
+        callback(newValue);
+        this.render();
+      }
+    }
+  }
+
+  setValue(newValue) {
+    this.#value = newValue;
   }
 
   #onInputChange(e) {
     const value = e.target.value;
-    clearTimeout(this.#timeOutId);
-    this.#timeOutId = setTimeout(async () => {
-      const result = await this.#userService.searchUser(value);
-      const searchEvent = new CustomEvent("search", {
-        detail: {
-          result,
-        },
-      });
-      this.dispatchEvent(searchEvent);
-    }, 500);
+
+    const searchEvent = new CustomEvent("search", {
+      detail: {
+        value,
+      },
+    });
+
+    this.dispatchEvent(searchEvent);
   }
 
   disconnectedCallback() {
@@ -51,7 +65,7 @@ export class SearchInput extends HTMLElement {
     this.#listeners.forEach(removeListeners.bind(this));
 
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createSearchInputTemplate();
+    templateElem.innerHTML = createSearchInputTemplate(this.#value);
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));

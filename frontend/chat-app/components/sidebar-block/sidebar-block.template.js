@@ -1,14 +1,15 @@
 import { getSidebarBlockStyle } from "./sidebar-block.styles";
-import { viewTypes } from "./sidebar-block";
 
-export function createSidebarBlockTemplate(viewType) {
+export function createSidebarBlockTemplate(list) {
   return `
     ${getSidebarBlockStyle()}
     <div class="chat-sidebar">
     ${
-      viewType === viewTypes.CHATS
-        ? `<chats-sidebar></chats-sidebar>`
-        : `<users-sidebar></users-sidebar>`
+      list
+        ? list.map(
+            (item) => `<message-info user-id=${item.userId}></umessage-info>`
+          )
+        : "Упс, тут ничего нет"
     }
     </div>
 `;

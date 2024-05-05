@@ -1,5 +1,6 @@
 import { diContainer } from "../di/di";
 import { SERVICES } from "../di/api";
+import { debounce } from "../utils/debounce";
 
 const USER_PER_PAGE = 10;
 const PAGE_NUMBER = 1;
@@ -35,6 +36,10 @@ export class UserService {
     this.#token = token;
   }
 
+  getToken() {
+    return this.#token;
+  }
+
   async notifySubscribers(userId) {
     if (this.#users.has(userId)) {
       this.#userSubscribers
@@ -63,8 +68,8 @@ export class UserService {
   }
 
   async searchUser(search) {
-    const headers = this.#token
-      ? { Authorization: `Bearer ${this.#token}` }
+    const headers = this.getToken()
+      ? { Authorization: `Bearer ${this.getToken()}` }
       : {};
 
     const params = {
@@ -74,8 +79,10 @@ export class UserService {
     };
 
     const result = await this.#httpServise.get(`users/search`, headers, params);
-    this.#usesBySearch = result;
+    return result;
   }
+
+  debouncedSearch = debounce(this.searchUser.bind(this), 500);
 
   getUsersBySearch() {
     return this.#usesBySearch;
