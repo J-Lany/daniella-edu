@@ -5,7 +5,7 @@ export function createChatBlockTemplate(messages) {
     return `
     ${getChatBlockStyle()}
     <div class="chat-empty">
-      Упс... тут ничего нет. Нажмите на <span class="chat-plus">+</span> и выберите с кем хотите переписываться
+      Упс... тут ничего нет. Нажмите на '&#128269 поиск' и выберите с кем хотите переписываться
     </div>`;
   }
   return `
