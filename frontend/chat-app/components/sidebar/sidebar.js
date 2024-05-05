@@ -31,15 +31,11 @@ export class Sidebar extends HTMLElement {
     const inputValue = event.detail.value;
     const sidebarBlock = this.shadowRoot.querySelector("sidebar-block");
 
-    this.#timerId = setTimeout(async () => {
-      clearTimeout(this.#timerId);
-
-      const list = await this.#userService.searchUser(inputValue);
-
+    this.#userService.debouncedSearch(inputValue).then((res) => {
       sidebarBlock.handleCustomEvent({
-        detail: list.result,
+        detail: res.result,
       });
-    }, 500);
+    });
   }
 
   render(inputValue) {

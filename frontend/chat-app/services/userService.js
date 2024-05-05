@@ -4,12 +4,12 @@ import { debounce } from "../utils/debounce";
 
 const USER_PER_PAGE = 10;
 const PAGE_NUMBER = 1;
+const DELAY = 500;
 
 export class UserService {
   #httpServise = diContainer.resolve(SERVICES.http);
   #userSubscribers = new Map();
   #users = new Map();
-  #usesBySearch;
   #currentUser;
   #token;
 
@@ -82,9 +82,5 @@ export class UserService {
     return result;
   }
 
-  debouncedSearch = debounce(this.searchUser.bind(this), 500);
-
-  getUsersBySearch() {
-    return this.#usesBySearch;
-  }
+  debouncedSearch = debounce(this.searchUser.bind(this), DELAY);
 }

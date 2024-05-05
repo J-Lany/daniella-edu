@@ -2,11 +2,17 @@ export const debounce = (func, delay) => {
   let timeoutId;
 
   return function (...args) {
-    clearTimeout(timeoutId);
-
-    timeoutId = setTimeout(async () => {
+    return new Promise((resolve, reject) => {
       clearTimeout(timeoutId);
-      return func(...args);
-    }, delay);
+
+      timeoutId = setTimeout(async () => {
+        try {
+          const result = await func(...args);
+          resolve(result);
+        } catch (error) {
+          reject(error);
+        }
+      }, delay);
+    });
   };
 };
