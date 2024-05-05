@@ -3,11 +3,11 @@ import { getSidebarBlockStyle } from "./sidebar-block.styles";
 export function createSidebarBlockTemplate(list) {
   return `
     ${getSidebarBlockStyle()}
-    <div class="chat-sidebar">
+    <div class="sidebar-block">
     ${
       list
         ? list.map(
-            (item) => `<message-info user-id=${item.userId}></umessage-info>`
+            (item) => `<message-info class="sidebar-block__item" user-id=${item.userId}></umessage-info>`
           )
         : "Упс, тут ничего нет"
     }
