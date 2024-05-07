@@ -11,12 +11,7 @@ export function createSidebarBlockTemplate(list, type) {
   return `
     ${getSidebarBlockStyle()}
     <div class="sidebar-block">
-    ${
-      type === LIST_TYPE.users
-        ? `<div class="close-button sidebar-block__item ">x</div>`
-        : ""
-    }
-    ${list && list.length > 0 ? layoutList().join("") : "Упс, тут ничего нет"}
+      ${list && list.length > 0 ? layoutList().join("") : "Упс, тут ничего нет"}
     </div>
 `;
 }

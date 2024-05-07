@@ -4,13 +4,6 @@ import { addListeners, removeListeners, select } from "../../utils/utils.js";
 
 export class SidebarBlock extends HTMLElement {
   #listType = LIST_TYPE.chats;
-  #listeners = [
-    [
-      select.bind(this, ".close-button"),
-      "click",
-      this.#onCloseClick.bind(this),
-    ],
-  ];
 
   static get name() {
     return "sidebar-block";
@@ -26,7 +19,7 @@ export class SidebarBlock extends HTMLElement {
   }
 
   disconnectedCallback() {
-    this.#listeners.forEach(removeListeners.bind(this));
+    document.removeEventListener("click", this.#handleClickOutside.bind(this));
   }
 
   handleCustomEvent(event) {
@@ -34,13 +27,24 @@ export class SidebarBlock extends HTMLElement {
     this.render(event.detail);
   }
 
-  #onCloseClick() {
-    this.#listType = LIST_TYPE.chats;
-    this.render();
+  addClickOutsideListener() {
+    if (this.#listType === LIST_TYPE.users) {
+      document.addEventListener("click", this.#handleClickOutside.bind(this));
+    }
+  }
+
+  #handleClickOutside(event) {
+    const sidebarBlock = this;
+    const target = event.target;
+  
+    if (sidebarBlock !== target || !sidebarBlock.contains(target)) {
+      this.#listType = LIST_TYPE.chats;
+      this.render();
+    }
   }
 
   render(list) {
-    this.#listeners.forEach(removeListeners.bind(this));
+    document.removeEventListener("click", this.#handleClickOutside.bind(this));
 
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createSidebarBlockTemplate(list, this.#listType);
@@ -48,6 +52,6 @@ export class SidebarBlock extends HTMLElement {
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
 
-    this.#listeners.forEach(addListeners.bind(this));
+    this.addClickOutsideListener();
   }
 }
