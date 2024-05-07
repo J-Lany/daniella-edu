@@ -59,6 +59,11 @@ export function createUserController(app) {
    *         required: true
    *         schema:
    *           type: string
+   *       - in: query
+   *         name: userId
+   *         required: true
+   *         schema:
+   *           type: string
    *       - name: userPerPage
    *         in: query
    *         required: true
@@ -93,15 +98,14 @@ export function createUserController(app) {
    *         description: Ошибка валидации запроса
    */
   app.get("/users/search", authorization, async (req, res) => {
-    const search = req.query.search;
-    const userPerPage = req.query.userPerPage;
-    const pageNumber = req.query.pageNumber;
+    const { search, userPerPage, pageNumber, userId } = req.query;
 
     try {
       const result = await userService.searchUser(
         search,
         userPerPage,
-        pageNumber
+        pageNumber,
+        userId
       );
       return res.status(200).json(result);
     } catch (err) {
