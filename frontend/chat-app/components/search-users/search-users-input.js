@@ -1,7 +1,10 @@
 import { createSearchInputTemplate } from "./search-users-input.template.js";
 import { addListeners, removeListeners, select } from "../../utils/utils.js";
+import { diContainer } from "../../di/di.js";
+import { SERVICES } from "../../di/api.js";
 
 export class SearchInput extends HTMLElement {
+  #userService = diContainer.resolve(SERVICES.user);
   #listeners = [
     [select.bind(this, "#search"), "input", this.#onInputChange.bind(this)],
   ];
@@ -21,10 +24,12 @@ export class SearchInput extends HTMLElement {
 
   #onInputChange(e) {
     const value = e.target.value;
+    const { userId } = this.#userService.getCurrentUser();
 
     const searchEvent = new CustomEvent("search", {
       detail: {
         value,
+        userId,
       },
     });
 

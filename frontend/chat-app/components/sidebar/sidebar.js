@@ -33,9 +33,10 @@ export class Sidebar extends HTMLElement {
 
   #onSearch(event) {
     const inputValue = event.detail.value;
+    const userId = event.detail.userId;
     const sidebarBlock = this.shadowRoot.querySelector("sidebar-block");
 
-    this.#userService.debouncedSearch(inputValue).then((res) => {
+    this.#userService.debouncedSearch(inputValue, userId).then((res) => {
       sidebarBlock.handleCustomEvent({
         detail: res.result,
         listType: LIST_TYPE.users,

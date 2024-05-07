@@ -1,6 +1,6 @@
 import "../common.css";
 
-export function getNessageInfoBlockStyle() {
+export function getMessageInfoBlockStyle() {
   return `
   <style>
     @import url('../common.css');

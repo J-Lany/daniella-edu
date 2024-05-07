@@ -67,13 +67,14 @@ export class UserService {
     return await this.#httpServise.get(`users/${id}`, headers);
   }
 
-  async searchUser(search) {
+  async searchUser(search, userId) {
     const headers = this.getToken()
       ? { Authorization: `Bearer ${this.getToken()}` }
       : {};
 
     const params = {
       search,
+      userId,
       userPerPage: USER_PER_PAGE,
       pageNumber: PAGE_NUMBER,
     };
