@@ -13,7 +13,7 @@ export function getNessageInfoBlockStyle() {
 
     .message-info__author{
       font-weight: bold;
-      font-size: 1.25rem;
+      font-size: 0.85rem;
     }
     
     .message-info__time{

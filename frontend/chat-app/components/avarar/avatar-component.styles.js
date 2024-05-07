@@ -1,13 +1,19 @@
 import "../common.css";
 
-export function getAvatarStyles() {
+export function getAvatarStyles(displayMode) {
+  const sizesByMode = {
+    abbSize: displayMode == "sidebar" ? "2rem" : "3.5rem",
+    gap: displayMode == "sidebar" ? "1rem" : "0.5rem",
+    maxWidth: displayMode == "sidebar" ? "2rem" : "3.5rem",
+  };
+
   return `
   <style>
     @import url('../common.css');
 
     .avatar__img{
-      max-width: 4.5rem;
-      max-height: 4.5rem;
+      max-width: ${sizesByMode.maxWidth};
+      max-height: ${sizesByMode.maxWidth};
       border-radius: 3.2rem;
     }
 
@@ -16,7 +22,7 @@ export function getAvatarStyles() {
       color: white;
       border-radius: 5rem;
       padding: 1rem;
-      font-size: 3rem;
+      font-size: ${sizesByMode.maxWidth};
     }
       
     @media screen and (max-width: 600px) {

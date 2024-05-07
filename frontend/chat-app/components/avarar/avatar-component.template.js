@@ -1,12 +1,16 @@
 import { getAvatarStyles } from "./avatar-component.styles";
 
-export function createAvatarTemplate({ avatar, login, firstName, lastName }) {
+export function createAvatarTemplate(
+  { avatar, login, firstName, lastName },
+  displayMode
+) {
   const abbreviation =
     firstName && lastName
       ? `${firstName[0]}${lastName[0]}`
       : `${login[0]}${login[login.length - 1]}`;
+
   return `
-  ${getAvatarStyles()}
+  ${getAvatarStyles(displayMode)}
   <div class="avatar">
   ${
     avatar
