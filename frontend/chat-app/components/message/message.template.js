@@ -7,7 +7,7 @@ export function createMessageTemplate(message, time, authorId, displayMode) {
       <avatar-component display-mode=${displayMode} user-id="${authorId}"></avatar-component>
       <div class="message-block__body">
         <message-info user-id="${authorId}" time="${time}"></message-info>
-       <div class="message-block__body">${message}</div>
+        ${message ? ` <div class="message-block__body">${message}</div>` : ""}
       </div>
     </div>
 `;

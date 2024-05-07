@@ -6,7 +6,7 @@ export function getChatComponentStyle() {
   @import url('../common.css');
    .chat {
     display: grid;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: 1fr 2fr;
     grid-template-rows: auto 1fr;
     grid-template-areas:
       "header header"
