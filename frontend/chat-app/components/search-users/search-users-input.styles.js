@@ -6,13 +6,13 @@ export const getSearchInputStyle = () => {
   @import url('../common.css');
 
   .search {
-    background: var(--white-background);
+    background: var(--light-gray-background);
   }
   .search__input {
     font-size: 1rem;
     padding: 0.75rem;
     border: none;
-    background: var(--light-gray-background);
+    background: var(--white-background);
     border-radius: 2rem;
   }
 

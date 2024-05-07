@@ -9,6 +9,8 @@ export function getSidebarStyle() {
           display: flex;
           flex-direction: column;
           gap: 1rem;
+          background: var(--light-gray-background);
+          padding: 1rem;
        }
 
        .avatar{

@@ -13,7 +13,8 @@ export function getAppComponentStyles() {
       flex-direction: column;
       flex-grow: 1;
       font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
     }
   </style>
-  `
+  `;
 }

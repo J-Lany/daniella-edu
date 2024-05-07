@@ -11,22 +11,14 @@ export function getSidebarBlockStyle() {
        }
 
        .sidebar-block__item {
-          border-bottom: 0.5px solid var(--gray-text-color);
-          padding: 1rem;
+          padding: 1.25rem;
           transition: background-color 0.2s ease-in-out;
        }
 
        .sidebar-block__item:hover {
-         background: var(--light-gray-background);
+         background: var(--white-background);
          cursor: pointer;
       }
-
-       .close-button{
-         border-top: 0.5px solid var(--gray-text-color);
-         font-weight: bold;
-         color: var(--gray-text-color);
-       }
-
 
      </style>
  `;
