@@ -39,7 +39,8 @@ export class RegistrationComponent extends HTMLElement {
     this.#authService.registration(login, email, password).then((res) => {
       const registrationEvent = new CustomEvent("login", {
         detail: {
-          registration: "success",
+          status: res.status,
+          registration: res.content.message,
         },
       });
       this.dispatchEvent(registrationEvent);

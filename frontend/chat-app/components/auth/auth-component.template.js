@@ -3,9 +3,7 @@ import { getAuthComponentStyle } from "./auth-component.styles";
 
 export function createAuthComponent(viewType, successReg) {
   const successItem = (successReg) => {
-    return successReg
-      ? `<div class="success-reg"> Вы успешно зарегестрированы</div>`
-      : "";
+    return successReg ? `<div class="success-reg"> ${successReg}</div>` : "";
   };
 
   return `

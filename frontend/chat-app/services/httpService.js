@@ -23,7 +23,8 @@ export function httpService(baseUrl = packageJson.scripts.baseUrl) {
       },
       body: JSON.stringify(payload),
     });
-    return await response.json();
+
+    return { status: response.status, content: await response.json() };
   }
 
   return {
