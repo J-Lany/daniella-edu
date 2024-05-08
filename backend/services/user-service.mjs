@@ -28,7 +28,10 @@ export class UserService {
     if (!this.#emailService.isEmailCorrect(email)) {
       throw new Error(403);
     }
-    this.isUserAlreadyExist(email);
+
+    if (this.isUserAlreadyExist(email)) {
+      throw new Error(401);
+    }
 
     this.#emailService.setEmail(email);
     this.#userDao.setUser({ login, email, hashedPassword, userId });
@@ -37,9 +40,9 @@ export class UserService {
   async isUserAlreadyExist(email) {
     const isEmailExist = await this.#emailService.isEmailExist(email);
     if (isEmailExist) {
-      throw new Error(401);
+      return true;
     }
-    return true;
+    return false;
   }
 
   async getUser(userId) {
