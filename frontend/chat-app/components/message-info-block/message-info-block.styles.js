@@ -12,7 +12,7 @@ export function getMessageInfoBlockStyle() {
     }
 
     .message-info__author{
-      font-weight: bold;
+      font-weight: 500;
       font-size: 0.85rem;
     }
     

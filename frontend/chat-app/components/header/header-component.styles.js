@@ -7,13 +7,13 @@ const getHeaderComponentStyle = () => {
 
       .header {
         background-color: var(--light-gray-background);
-        padding-top: 2rem;
-        padding-bottom: 2rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
       }
       @media screen and (max-width: 600px) {
         .header {
-          padding-bottom: 1.125rem;
-          padding-top: 1.125rem;
+          padding-bottom: 0.75rem;
+          padding-top:0.75rem;
         }
       }
    </style>

@@ -2,9 +2,9 @@ import "../common.css";
 
 export function getAvatarStyles(displayMode) {
   const sizesByMode = {
-    abbSize: displayMode == "sidebar" ? "2rem" : "3.5rem",
+    abbSize: displayMode == "sidebar" ? "1rem" : "1.375rem",
     gap: displayMode == "sidebar" ? "1rem" : "0.5rem",
-    maxWidth: displayMode == "sidebar" ? "2rem" : "3.5rem",
+    maxWidth: displayMode == "sidebar" ? "2rem" : "2.375rem",
   };
 
   return `
@@ -14,15 +14,15 @@ export function getAvatarStyles(displayMode) {
     .avatar__img{
       max-width: ${sizesByMode.maxWidth};
       max-height: ${sizesByMode.maxWidth};
-      border-radius: 3.2rem;
+      border-radius: 1rem;
     }
 
     .avatar__abb {
       background-color: var(--blue-background);
       color: white;
-      border-radius: 5rem;
+      border-radius: 1rem;
       padding: 1rem;
-      font-size: ${sizesByMode.maxWidth};
+      font-size: ${sizesByMode.abbSize};
     }
       
     @media screen and (max-width: 600px) {
