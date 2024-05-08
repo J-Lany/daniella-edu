@@ -17,7 +17,7 @@ export const getSearchInputStyle = () => {
     padding: 0.75rem;
     border: none;
     background: var(--white-background);
-    border-radius: 2rem;
+    border-radius: 0.7rem;
     min-width: 80%;
   }
 

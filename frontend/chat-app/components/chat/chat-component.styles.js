@@ -6,24 +6,26 @@ export function getChatComponentStyle() {
   @import url('../common.css');
    .chat {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    padding-left: 5.6rem;
+    background-color: var(--light-gray-background);
+    grid-template-columns: 1fr 3fr;
     grid-template-rows: auto 1fr;
     grid-template-areas:
       "header header"
       "sidebar messages";
-    height: 100%;
-    gap: 1rem;
+    height: 100vh;
+    width: 100vw;
   }
   
   header-component {
     grid-area: header;
   }
   
-  message-sidebar {
+  sidebar-component {
     grid-area: sidebar;
   }
   
-  messages-block {
+  chat-block {
     grid-area: messages;
   }
   

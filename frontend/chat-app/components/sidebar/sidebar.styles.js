@@ -10,7 +10,7 @@ export function getSidebarStyle() {
           flex-direction: column;
           gap: 1rem;
           background: var(--light-gray-background);
-          padding: 1rem;
+          padding-top: 1rem;
        }
 
        .avatar{
