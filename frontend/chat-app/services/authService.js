@@ -38,9 +38,10 @@ export class AuthService {
     await this.#httpServise
       .post(`login/`, { email, password })
       .then((res) => {
-        this.#userService.setCurrentUser(res.user);
-        this.#token = res.token;
-        this.#userService.setToken(res.token);
+        console.log(res);
+        this.#userService.setCurrentUser(res.content.user);
+        this.#token = res.content.token;
+        this.#userService.setToken(res.content.token);
         this.notifySubscribers();
       })
       .catch(this.notifyError);
