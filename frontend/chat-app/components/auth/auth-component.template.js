@@ -1,10 +1,12 @@
 import { viewTypes } from "./auth-component";
 import { getAuthComponentStyle } from "./auth-component.styles";
 
+const successRegText = "Вы успешно зарегестрированы";
+
 export function createAuthComponent(viewType, successReg) {
   const successItem = (successReg) => {
     return successReg
-      ? `<div class="success-reg"> Вы успешно зарегестрированы</div>`
+      ? `<toast-component type="sucsess" message="${successRegText}"></toast-component>`
       : "";
   };
 

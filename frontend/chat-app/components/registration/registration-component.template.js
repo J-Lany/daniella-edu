@@ -1,6 +1,7 @@
 import { getRegistrationComponentStyle } from "./registration-component.styles";
 
 export function createRegistrationTemplate(errorMessage) {
+  console.log(errorMessage);
   const hasErrorMessage = !!errorMessage;
   const errorMessageClass = hasErrorMessage ? "show" : "";
   return `
@@ -26,7 +27,11 @@ export function createRegistrationTemplate(errorMessage) {
     </div>
       <div><button class="registration-form__btn">Sign up</button></div>
     </div>
-   <div class="error-messsge ${errorMessageClass}">${errorMessage}</div>
+    ${
+      errorMessage
+        ? `<toast-component type="error" message="${errorMessage}"></toast-component>`
+        : ""
+    }
   </div>
   `;
 }
