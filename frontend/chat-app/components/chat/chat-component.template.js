@@ -4,9 +4,11 @@ export function createChatTemplate() {
   return `
   ${getChatComponentStyle()}
   <div class="chat">
-    <header-component></header-component>
-    <sidebar-component></sidebar-component>
-    <chat-block></chat-block>
+    <header-component class="header"></header-component>
+   <div class="chat-wrapper">
+   <sidebar-component class="sidebar"></sidebar-component>
+   <chat-block class="chat-block"></chat-block>
+   </div>
   </div>
   `;
 }

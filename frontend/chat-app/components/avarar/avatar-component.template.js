@@ -14,8 +14,8 @@ export function createAvatarTemplate(
   <div class="avatar">
   ${
     avatar
-      ? `<img class="avatar__img" src="${avatar}" alt='avatar'/>`
-      : `<div class="avatar__abb">${abbreviation.toUpperCase()}</div>`
+      ? `<img class="${displayMode}-avatar__img" src="${avatar}" alt='avatar'/>`
+      : `<div class="${displayMode}-avatar__abb avatar__abb">${abbreviation.toUpperCase()}</div>`
   }
   </div>
   `;

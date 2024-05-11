@@ -18,7 +18,6 @@ export const getSearchInputStyle = () => {
     border: none;
     background: var(--white-background);
     border-radius: 0.7rem;
-    min-width: 80%;
   }
 
   .search-icon {

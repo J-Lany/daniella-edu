@@ -5,7 +5,7 @@ export function getChatBlockStyle() {
   <style>
   @import url('../common.css');
 
-  .chat{
+  .chat {
     background: var(--white-background);
     height: 100%;
     padding: 1rem;

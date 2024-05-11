@@ -5,28 +5,26 @@ export function getChatComponentStyle() {
   <style>
   @import url('../common.css');
    .chat {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     padding-left: 5.6rem;
     background-color: var(--light-gray-background);
-    grid-template-columns: 1fr 3fr;
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-      "header header"
-      "sidebar messages";
-    height: 100vh;
-    width: 100vw;
+  }
+
+  .chat-wrapper {
+    display: flex;
   }
   
-  header-component {
-    grid-area: header;
+  .header {
+    flex-grow: 1;
   }
   
-  sidebar-component {
-    grid-area: sidebar;
+ .sidebar {
+  flex-grow: 1;
   }
   
-  chat-block {
-    grid-area: messages;
+  .chat-block {
+    flex-grow: 3;
   }
   
 </style>

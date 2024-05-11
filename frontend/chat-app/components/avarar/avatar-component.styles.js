@@ -1,20 +1,27 @@
 import "../common.css";
 
-export function getAvatarStyles(displayMode) {
-  const sizesByMode = {
-    abbSize: displayMode == "sidebar" ? "1rem" : "1.375rem",
-    gap: displayMode == "sidebar" ? "1rem" : "0.5rem",
-    maxWidth: displayMode == "sidebar" ? "2rem" : "2.375rem",
-  };
-
+export function getAvatarStyles() {
   return `
   <style>
     @import url('../common.css');
 
-    .avatar__img{
-      max-width: ${sizesByMode.maxWidth};
-      max-height: ${sizesByMode.maxWidth};
+    .sidebar-avatar__img {
+      max-width: 2rem;
+      max-height: 2rem;
       border-radius: 1rem;
+    }
+    .chat-avatar__img {
+      max-width: 2.375rem;
+      max-height: 2.375rem;
+      border-radius: 1rem;
+    }
+
+    .sidebar-avatar__abb {
+      font-size: 1rem;
+    }
+
+    .chat-avatar__abb {
+      font-size: 1.375rem;
     }
 
     .avatar__abb {
@@ -22,7 +29,6 @@ export function getAvatarStyles(displayMode) {
       color: white;
       border-radius: 1rem;
       padding: 1rem;
-      font-size: ${sizesByMode.abbSize};
     }
       
     @media screen and (max-width: 600px) {
