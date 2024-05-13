@@ -31,16 +31,16 @@ export class Sidebar extends HTMLElement {
     this.#listeners.forEach(removeListeners.bind(this));
   }
 
-  #onSearch(event) {
+  async #onSearch(event) {
     const inputValue = event.detail.value;
     const userId = event.detail.userId;
     const sidebarBlock = this.shadowRoot.querySelector("sidebar-block");
 
-    this.#userService.debouncedSearch(inputValue, userId).then((res) => {
-      sidebarBlock.handleCustomEvent({
-        detail: res.result,
-        listType: LIST_TYPE.users,
-      });
+    const res = await this.#userService.debouncedSearch(inputValue, userId);
+
+    sidebarBlock.handleCustomEvent({
+      detail: res.result,
+      listType: LIST_TYPE.users,
     });
   }
 
