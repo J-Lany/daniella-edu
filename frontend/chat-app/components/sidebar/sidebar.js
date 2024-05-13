@@ -2,17 +2,21 @@ import { createSidebarTemplate } from "./sidebar.template";
 import { addListeners, removeListeners, select } from "../../utils/utils.js";
 import { diContainer } from "../../di/di.js";
 import { SERVICES } from "../../di/api.js";
+import { debounce } from "../../utils/debounce.js";
 
 export const LIST_TYPE = {
   users: "users",
   chats: "chats",
 };
 
+const DELAY = 500;
+
 export class Sidebar extends HTMLElement {
   #userService = diContainer.resolve(SERVICES.user);
   #listeners = [
     [select.bind(this, "search-input"), "search", this.#onSearch.bind(this)],
   ];
+  #debauncedSearch = debounce(this.#userService.searchUser, DELAY);
 
   static get name() {
     return "sidebar-component";
@@ -36,7 +40,7 @@ export class Sidebar extends HTMLElement {
     const userId = event.detail.userId;
     const sidebarBlock = this.shadowRoot.querySelector("sidebar-block");
 
-    const res = await this.#userService.debouncedSearch(inputValue, userId);
+    const res = await this.#debauncedSearch(inputValue, userId);
 
     sidebarBlock.handleCustomEvent({
       detail: res.result,

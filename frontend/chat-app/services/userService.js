@@ -4,7 +4,6 @@ import { debounce } from "../utils/debounce";
 
 const USER_PER_PAGE = 10;
 const PAGE_NUMBER = 1;
-const DELAY = 500;
 
 export class UserService {
   #httpServise = diContainer.resolve(SERVICES.http);
@@ -82,6 +81,4 @@ export class UserService {
     const result = await this.#httpServise.get(`users/search`, headers, params);
     return result;
   }
-
-  debouncedSearch = debounce(this.searchUser.bind(this), DELAY);
 }
