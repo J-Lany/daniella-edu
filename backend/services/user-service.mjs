@@ -38,11 +38,7 @@ export class UserService {
   }
 
   async isUserAlreadyExist(email) {
-    const isEmailExist = await this.#emailService.isEmailExist(email);
-    if (isEmailExist) {
-      return true;
-    }
-    return false;
+    return await this.#emailService.isEmailExist(email);
   }
 
   async getUser(userId) {
@@ -59,10 +55,7 @@ export class UserService {
 
   async searchUser(search, userPerPage, pageNumber, userId) {
     let result = await this.#userDao.searchUser(search);
-    if (!result) {
-      throw new Error(401);
-    }
-    result = result.filter((user) => user.userId !== userId);
+    result = result?.filter((user) => user.userId !== userId);
 
     if (!result) {
       throw new Error(403);
