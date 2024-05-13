@@ -38,7 +38,6 @@ export class AuthService {
     await this.#httpServise
       .post(`login/`, { email, password })
       .then((res) => {
-        console.log(res);
         this.#userService.setCurrentUser(res.content.user);
         this.#token = res.content.token;
         this.#userService.setToken(res.content.token);
