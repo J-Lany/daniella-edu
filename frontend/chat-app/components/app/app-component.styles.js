@@ -7,9 +7,6 @@ export function getAppComponentStyles() {
     .app {
       margin: 0 auto;
       font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-      min-height: 100vh;
-      width: 100vw;
-      display: flex;  
     }
 
  .auth-container {
