@@ -32,7 +32,6 @@ export class UserService {
 
     const isUserAlreadyExist = await this.isUserAlreadyExist(email);
     if (isUserAlreadyExist) {
-      console.log(this.isUserAlreadyExist(email));
       throw new Error(401);
     }
 
