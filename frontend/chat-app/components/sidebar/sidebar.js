@@ -13,10 +13,14 @@ const DELAY = 500;
 
 export class Sidebar extends HTMLElement {
   #userService = diContainer.resolve(SERVICES.user);
+  #debauncedSearch = debounce(this.#onSearch.bind(this), DELAY);
   #listeners = [
-    [select.bind(this, "search-input"), "search", this.#onSearch.bind(this)],
+    [
+      select.bind(this, "search-input"),
+      "search",
+      this.#debauncedSearch.bind(this),
+    ],
   ];
-  #debauncedSearch = debounce(this.#userService.searchUser, DELAY);
 
   static get name() {
     return "sidebar-component";
@@ -40,7 +44,7 @@ export class Sidebar extends HTMLElement {
     const userId = event.detail.userId;
     const sidebarBlock = this.shadowRoot.querySelector("sidebar-block");
 
-    const res = await this.#debauncedSearch(inputValue, userId);
+    const res = await this.#userService.searchUser(inputValue, userId);
 
     sidebarBlock.handleCustomEvent({
       detail: res.result,
