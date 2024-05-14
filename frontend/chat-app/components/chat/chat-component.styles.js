@@ -24,7 +24,7 @@ export function getChatComponentStyle() {
   }
   
   .chat-block {
-    flex-grow: 3;
+    flex-grow: 2;
   }
   
 </style>

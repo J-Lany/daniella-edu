@@ -8,11 +8,12 @@ export const getSearchInputStyle = () => {
   .search {
     background: var(--light-gray-background);
     display: flex;
-    justify-content: center;
+    padding-right: 1rem;
     align-items: center;
     gap: 1rem;
   }
   .search__input {
+    flex-grow: 1;
     font-size: 1rem;
     padding: 0.75rem;
     border: none;
