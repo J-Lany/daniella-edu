@@ -5,6 +5,25 @@ export function getAvatarStyles() {
   <style>
     @import url('../common.css');
 
+    .avatar {
+      position: relative;
+    }
+
+    .dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      background-color: var(--orange-color);
+      border: 1px solid var(--white-background);
+      border-radius: 1rem;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+
+    .active {
+      background-color: var(--green-color);
+    }
+
     .sidebar-avatar__img {
       max-width: 2rem;
       max-height: 2rem;

@@ -1,7 +1,7 @@
 import { getAvatarStyles } from "./avatar-component.styles";
 
 export function createAvatarTemplate(
-  { avatar, login, firstName, lastName },
+  { avatar, login, firstName, lastName, status },
   displayMode
 ) {
   const abbreviation =
@@ -17,6 +17,7 @@ export function createAvatarTemplate(
       ? `<img class="${displayMode}-avatar__img" src="${avatar}" alt='avatar'/>`
       : `<div class="${displayMode}-avatar__abb avatar__abb">${abbreviation.toUpperCase()}</div>`
   }
+  <div class="dot ${status}"></div>
   </div>
   `;
 }
