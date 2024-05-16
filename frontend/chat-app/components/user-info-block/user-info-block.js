@@ -15,9 +15,15 @@ export class UserInfoBlock extends HTMLElement {
   }
 
   connectedCallback() {
-    this.unSubscribeFromAuth = this.#authService.subscribeToken(
-      this.#render.bind(this)
-    );
+    const token = this.#authService.getToken();
+    if (token) {
+      this.#render(token);
+    } else {
+      this.unSubscribeFromAuth = this.#authService.subscribeToken(
+        this.#render.bind(this)
+      );
+      this.#render();
+    }
   }
 
   disconnectedCallback() {

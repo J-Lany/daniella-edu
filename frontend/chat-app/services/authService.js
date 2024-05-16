@@ -1,6 +1,8 @@
 import { diContainer } from "../di/di";
 import { SERVICES } from "../di/api";
 
+export const TOKEN = "token";
+
 export class AuthService {
   #tokenSubscribers = new Set();
   #errorSubscribers = new Set();
@@ -40,6 +42,7 @@ export class AuthService {
       .then((res) => {
         this.#userService.setCurrentUser(res.user);
         this.#token = res.token;
+        sessionStorage.setItem(TOKEN, res.token);
         this.#userService.setToken(res.token);
         this.notifySubscribers();
       })
@@ -55,6 +58,9 @@ export class AuthService {
   }
 
   getToken() {
-    return this.#token;
+    if (this.#token) {
+      return this.#token;
+    }
+    return sessionStorage.getItem(TOKEN);
   }
 }

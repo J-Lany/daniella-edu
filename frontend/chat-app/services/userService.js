@@ -1,6 +1,8 @@
 import { diContainer } from "../di/di";
 import { SERVICES } from "../di/api";
 
+export const USER = "user";
+
 export class UserService {
   #httpServise = diContainer.resolve(SERVICES.http);
   #userSubscribers = new Map();
@@ -26,6 +28,7 @@ export class UserService {
 
   setCurrentUser(user) {
     this.#currentUser = user;
+    sessionStorage.setItem(USER, user);
   }
   setToken(token) {
     this.#token = token;
@@ -47,7 +50,10 @@ export class UserService {
   }
 
   getCurrentUser() {
-    return this.#currentUser;
+    if (this.#currentUser) {
+      return this.#currentUser;
+    }
+    return sessionStorage.getItem(USER);
   }
 
   async getUserById(id) {

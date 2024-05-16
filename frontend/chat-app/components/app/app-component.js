@@ -15,10 +15,15 @@ export class AppComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    this.unSubscribeFromAuth = this.#authService.subscribeToken(
-      this.#render.bind(this)
-    );
-    this.#render();
+    const token = this.#authService.getToken();
+    if (token) {
+      this.#render(token);
+    } else {
+      this.unSubscribeFromAuth = this.#authService.subscribeToken(
+        this.#render.bind(this)
+      );
+      this.#render();
+    }
   }
 
   disconnectedCallback() {
@@ -28,7 +33,7 @@ export class AppComponent extends HTMLElement {
   #render(token) {
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createAppTemplate(token);
-    
+
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
   }
