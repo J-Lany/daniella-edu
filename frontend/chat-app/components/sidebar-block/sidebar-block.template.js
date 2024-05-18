@@ -12,7 +12,11 @@ export function createSidebarBlockTemplate(list) {
   return `
     ${getSidebarBlockStyle()}
     <div class="sidebar-block">
-      ${list && list.length > 0 ? layoutList(list) : "Упс, тут ничего нет"}
+      ${
+        list && list.length > 0
+          ? layoutList(list)
+          : "<div class='sidebar-empty'>Упс, тут ничего нет</div>"
+      }
     </div>
 `;
 }
