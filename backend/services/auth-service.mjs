@@ -29,17 +29,20 @@ export class AuthService {
 
   async login(email, password) {
     try {
-      const currentUser = await this.#userServise.getUserByEmail(email);
-      if (!currentUser) {
+      const userForBack = await this.#userServise.getUserByEmailForBack(email);
+      if (!userForBack) {
         throw new Error(403);
       }
-      if (!bcrypt.compareSync(password, currentUser.hashedPassword)) {
+      if (!bcrypt.compareSync(password, userForBack.hashedPassword)) {
         throw new Error(401);
       }
-      const token = await this.createToken(email, currentUser.login);
+      const token = await this.createToken(email, userForBack.login);
+      const userForFront = await this.#userServise.getUserByEmailForFront(
+        email
+      );
 
       return {
-        user: currentUser,
+        user: userForFront,
         token,
       };
     } catch (err) {
