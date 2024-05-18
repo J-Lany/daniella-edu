@@ -1,6 +1,5 @@
 import { LIST_TYPE } from "../sidebar/sidebar.js";
 import { createSidebarBlockTemplate } from "./sidebar-block.template.js";
-import { addListeners, removeListeners, select } from "../../utils/utils.js";
 
 export class SidebarBlock extends HTMLElement {
   #listType = LIST_TYPE.chats;
@@ -36,7 +35,7 @@ export class SidebarBlock extends HTMLElement {
   #handleClickOutside(event) {
     const sidebarBlock = this;
     const target = event.target;
-  
+
     if (sidebarBlock !== target || !sidebarBlock.contains(target)) {
       this.#listType = LIST_TYPE.chats;
       this.render();

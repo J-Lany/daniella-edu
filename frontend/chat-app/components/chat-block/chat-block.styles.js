@@ -10,6 +10,9 @@ export function getChatBlockStyle() {
     height: 100%;
     padding: 1rem;
   }
+  .chat-empty {
+    text-align: center;
+  }
 
   .chat-block {
     display: flex;

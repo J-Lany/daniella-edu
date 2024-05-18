@@ -8,6 +8,7 @@ export function getSidebarBlockStyle() {
        .sidebar-block {
           display: flex;
           flex-direction: column;
+          align-items: center;
        }
 
        .sidebar-block__item {

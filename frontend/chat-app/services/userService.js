@@ -78,7 +78,12 @@ export class UserService {
       pageNumber: PAGE_NUMBER,
     };
 
-    const result = await this.#httpServise.get(`users/search`, headers, params);
+    const searchParams = new URLSearchParams(params).toString();
+
+    const result = await this.#httpServise.get(
+      `users/search?${searchParams}`,
+      headers
+    );
     return result;
   }
 }
