@@ -50,7 +50,7 @@ export class UsersDao {
   async updateUser(userId, updates) {
     const users = await this.#storeServise.getData(this.#filePath);
 
-    users[userId] = { ...usersByFront[userId], ...updates };
+    users[userId] = { ...users[userId], ...updates };
 
     await this.#storeServise.setData(this.#filePath, users);
 
@@ -62,6 +62,6 @@ export class UsersDao {
 
     delete users[userId];
 
-    await this.#storeServise.setData(this.#filePath, usersByFront);
+    await this.#storeServise.setData(this.#filePath, users);
   }
 }
