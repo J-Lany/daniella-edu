@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
-import { UserDTO } from "../utils/UserDTO.mjs";
+import { convertToDTO } from "../utils/UserDTO.mjs";
 
 export class AuthService {
   #userServise = diContainer.resolve(SERVICES.users);
@@ -34,13 +34,18 @@ export class AuthService {
       if (!user) {
         throw new Error(403);
       }
-      if (!bcrypt.compareSync(password, user.hashedPassword)) {
+
+      const isPasswordCorrect = bcrypt.compareSync(
+        password,
+        user.hashedPassword
+      );
+      if (!isPasswordCorrect) {
         throw new Error(401);
       }
       const token = await this.createToken(email, user.login);
 
       return {
-        user: UserDTO.convertToDTO(user),
+        user: convertToDTO(user),
         token,
       };
     } catch (err) {

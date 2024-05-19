@@ -6,8 +6,8 @@ export class UserDTO {
     this.firstName = user.firstName;
     this.lastName = user.lastName;
   }
+}
 
-  static convertToDTO(user) {
-    return new UserDTO(user);
-  }
+export function convertToDTO(user) {
+  return new UserDTO(user);
 }
