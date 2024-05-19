@@ -5,13 +5,15 @@ export function getSidebarStyle() {
      <style>
        @import url('../common.css');
        
-       .chat-sidebar{
+       .chat-sidebar {
+          align-self: flex-end;
           display: flex;
           flex-direction: column;
           gap: 1rem;
           background: var(--light-gray-background);
           padding-top: 1rem;
           height: 100vh;
+          width: 19rem;
        }
 
        .avatar{

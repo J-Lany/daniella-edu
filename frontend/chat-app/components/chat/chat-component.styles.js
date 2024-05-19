@@ -21,6 +21,8 @@ export function getChatComponentStyle() {
   
  .sidebar {
   flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
   }
   
   .chat-block {
