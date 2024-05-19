@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
+import { UserDTO } from "../utils/UserDTO.mjs";
 
 export class AuthService {
   #userServise = diContainer.resolve(SERVICES.users);
@@ -29,20 +30,17 @@ export class AuthService {
 
   async login(email, password) {
     try {
-      const userForBack = await this.#userServise.getUserByEmailForBack(email);
-      if (!userForBack) {
+      const user = await this.#userServise.getUserByEmail(email);
+      if (!user) {
         throw new Error(403);
       }
-      if (!bcrypt.compareSync(password, userForBack.hashedPassword)) {
+      if (!bcrypt.compareSync(password, user.hashedPassword)) {
         throw new Error(401);
       }
-      const token = await this.createToken(email, userForBack.login);
-      const userForFront = await this.#userServise.getUserByEmailForFront(
-        email
-      );
+      const token = await this.createToken(email, user.login);
 
       return {
-        user: userForFront,
+        user: UserDTO.convertToDTO(user),
         token,
       };
     } catch (err) {

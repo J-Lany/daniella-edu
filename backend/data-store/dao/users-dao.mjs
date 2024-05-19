@@ -3,58 +3,40 @@ import { diContainer } from "../../di/di.mjs";
 import { FILE_PATHS } from "../data/data-file-paths.mjs";
 
 export class UsersDao {
-  #filePathForFront = FILE_PATHS.usersForFront;
-  #filePathForBack = FILE_PATHS.usersForBack;
+  #filePath = FILE_PATHS.users;
   #storeServise = diContainer.resolve(SERVICES.store);
 
   async getUsers() {
-    return await this.#storeServise.getData(this.#filePathForFront);
+    return await this.#storeServise.getData(this.#filePath);
   }
 
   async getUserById(userId) {
-    const users = await this.#storeServise.getData(this.#filePathForFront);
+    const users = await this.#storeServise.getData(this.#filePath);
     if (!users[userId]) {
       return null;
     }
     return users[userId];
   }
 
-  async getUserByEmailForBack(email) {
-    const users = await this.#storeServise.getData(this.#filePathForBack);
-    return Object.values(users).find((user) => user.email === email);
-  }
-
-  async getUserByEmailForFront(email) {
-    const users = await this.#storeServise.getData(this.#filePathForFront);
+  async getUserByEmail(email) {
+    const users = await this.#storeServise.getData(this.#filePath);
     return Object.values(users).find((user) => user.email === email);
   }
 
   async setUser(user) {
-    const usersByFront = await this.#storeServise.getData(
-      this.#filePathForFront
-    );
+    const users = await this.#storeServise.getData(this.#filePath);
 
-    if (usersByFront[user.userId]) {
+    if (users[user.userId]) {
       return;
     }
 
-    const usersByBack = await this.#storeServise.getData(this.#filePathForBack);
+    users[user.userId] = user;
 
-    usersByFront[user.userId] = {
-      userId: user.userId,
-      login: user.login,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-    };
-    usersByBack[user.userId] = user;
-
-    await this.#storeServise.setData(this.#filePathForFront, usersByFront);
-    await this.#storeServise.setData(this.#filePathForBack, usersByBack);
+    await this.#storeServise.setData(this.#filePath, users);
   }
 
   async searchUser(search) {
-    const users = await this.#storeServise.getData(this.#filePathForFront);
+    const users = await this.#storeServise.getData(this.#filePath);
     const check = new RegExp(search, "gi");
 
     return Object.values(users).filter(
@@ -66,30 +48,20 @@ export class UsersDao {
   }
 
   async updateUser(userId, updates) {
-    const usersByFront = await this.#storeServise.getData(
-      this.#filePathForFront
-    );
-    const usersByBack = await this.#storeServise.getData(this.#filePathForBack);
+    const users = await this.#storeServise.getData(this.#filePath);
 
-    usersByFront[userId] = { ...usersByFront[userId], ...updates };
-    usersByBack[userId] = { ...usersByBack[userId], ...updates };
+    users[userId] = { ...usersByFront[userId], ...updates };
 
-    await this.#storeServise.setData(this.#filePathForFront, usersByFront);
-    await this.#storeServise.setData(this.#filePathForBack, usersByBack);
+    await this.#storeServise.setData(this.#filePath, users);
 
-    return usersByFront[userId];
+    return users[userId];
   }
 
   async deleteUser(userId) {
-    const usersByFront = await this.#storeServise.getData(
-      this.#filePathForFront
-    );
-    const usersByBack = await this.#storeServise.getData(this.#filePathForBack);
+    const users = await this.#storeServise.getData(this.#filePath);
 
-    delete usersByFront[userId];
-    delete usersByBack[userId];
+    delete users[userId];
 
-    await this.#storeServise.setData(this.#filePathForFront, usersByFront);
-    await this.#storeServise.setData(this.#filePathForBack, usersByBack);
+    await this.#storeServise.setData(this.#filePath, usersByFront);
   }
 }

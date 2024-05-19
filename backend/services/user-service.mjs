@@ -3,6 +3,7 @@ import { SERVICES } from "../di/api.mjs";
 import { diContainer } from "../di/di.mjs";
 import { v4 as uuidv4 } from "uuid";
 import { paginator } from "../utils/paginator.mjs";
+import { UserDTO } from "../utils/UserDTO.mjs";
 
 export class UserService {
   #userDao = diContainer.resolve(SERVICES.usersDao);
@@ -18,8 +19,9 @@ export class UserService {
 
   async getUsers(userPerPage, pageNumber) {
     const userList = Object.values(await this.#userDao.getUsers());
+    const userDTOList = userList.map((user) => UserDTO.convertToDTO(user));
 
-    return paginator(userPerPage, pageNumber, userList);
+    return paginator(userPerPage, pageNumber, userDTOList);
   }
 
   async setUser({ login, email, password }) {
@@ -48,20 +50,18 @@ export class UserService {
     if (!user) {
       throw new Error(401);
     }
-    return user;
+    return UserDTO.convertToDTO(user);
   }
 
-  async getUserByEmailForBack(email) {
-    return await this.#userDao.getUserByEmailForBack(email);
-  }
-
-  async getUserByEmailForFront(email) {
-    return await this.#userDao.getUserByEmailForFront(email);
+  async getUserByEmail(email) {
+    return await this.#userDao.getUserByEmail(email);
   }
 
   async searchUser(search, userPerPage, pageNumber, userId) {
     const result = await this.#userDao.searchUser(search);
-    const filtresResult = result?.filter((user) => user.userId !== userId);
+    const filtresResult = result
+      ?.filter((user) => user.userId !== userId)
+      .map((user) => UserDTO.convertToDTO(user));
 
     if (!filtresResult) {
       throw new Error(403);
@@ -75,7 +75,9 @@ export class UserService {
     if (!user) {
       throw new Error(401);
     }
-    return await this.#userDao.updateUser(userId, updates);
+
+    const updatedUser = await this.#userDao.updateUser(userId, updates);
+    return UserDTO.convertToDTO(updatedUser);
   }
 
   async deleteUser(userId) {
