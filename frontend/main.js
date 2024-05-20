@@ -24,8 +24,8 @@ import { SidebarBlock } from "./chat-app/components/sidebar-block/sidebar-block.
 
 diContainer.register(SERVICES.http, httpService);
 diContainer.register(SERVICES.messages, new MessageService());
-diContainer.register(SERVICES.user, new UserService());
 diContainer.register(SERVICES.auth, new AuthService());
+diContainer.register(SERVICES.user, new UserService());
 
 [
   ChatComponent,

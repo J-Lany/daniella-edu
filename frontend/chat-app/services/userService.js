@@ -1,16 +1,14 @@
 import { diContainer } from "../di/di";
 import { SERVICES } from "../di/api";
-import { debounce } from "../utils/debounce";
 
 const USER_PER_PAGE = 10;
 const PAGE_NUMBER = 1;
 
 export class UserService {
   #httpServise = diContainer.resolve(SERVICES.http);
+  #authService = diContainer.resolve(SERVICES.auth);
   #userSubscribers = new Map();
   #users = new Map();
-  #currentUser;
-  #token;
 
   subscribeUserById(userId, subscription) {
     if (this.#userSubscribers.has(userId)) {
@@ -26,17 +24,6 @@ export class UserService {
     if (this.#userSubscribers.has(userId)) {
       this.#userSubscribers.get(userId).delete(subscription);
     }
-  }
-
-  setCurrentUser(user) {
-    this.#currentUser = user;
-  }
-  setToken(token) {
-    this.#token = token;
-  }
-
-  getToken() {
-    return this.#token;
   }
 
   async notifySubscribers(userId) {
@@ -55,21 +42,19 @@ export class UserService {
   }
 
   getCurrentUser() {
-    return this.#currentUser;
+    return this.#authService.getCurrentUser();
   }
 
   async getUserById(id) {
-    const headers = this.#token
-      ? { Authorization: `Bearer ${this.#token}` }
-      : {};
+    const token = this.#authService.getToken();
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
     return await this.#httpServise.get(`users/${id}`, headers);
   }
 
   async searchUser(search, userId) {
-    const headers = this.getToken()
-      ? { Authorization: `Bearer ${this.getToken()}` }
-      : {};
+    const token = this.#authService.getToken();
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
     const params = {
       search,

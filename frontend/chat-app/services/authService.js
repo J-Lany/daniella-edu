@@ -5,7 +5,7 @@ export class AuthService {
   #tokenSubscribers = new Set();
   #errorSubscribers = new Set();
   #httpServise = diContainer.resolve(SERVICES.http);
-  #userService = diContainer.resolve(SERVICES.user);
+  #currentUser;
   #token;
 
   notifySubscribers() {
@@ -38,9 +38,8 @@ export class AuthService {
     await this.#httpServise
       .post(`login/`, { email, password })
       .then((res) => {
-        this.#userService.setCurrentUser(res.content.user);
+        this.#currentUser = res.content.user;
         this.#token = res.content.token;
-        this.#userService.setToken(res.content.token);
         this.notifySubscribers();
       })
       .catch(this.notifyError);
@@ -56,5 +55,9 @@ export class AuthService {
 
   getToken() {
     return this.#token;
+  }
+
+  getCurrentUser() {
+    return this.#currentUser;
   }
 }
