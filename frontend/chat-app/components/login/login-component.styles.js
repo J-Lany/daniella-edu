@@ -24,7 +24,7 @@ const getLoginComponentStyle = () => {
       min-width: 20rem;
       border: none;
       background: var(--light-gray-background);
-      box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
+      box-shadow: inbox 0 0 0.5rem rgba(0, 0, 0, 0.2);
       border-radius: 0.5rem;
     }
 
