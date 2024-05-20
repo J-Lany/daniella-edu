@@ -45,7 +45,7 @@ export class AuthService {
       const token = await this.createToken(email, user.login);
 
       return {
-        user: convertToDTO(user),
+        user,
         token,
       };
     } catch (err) {

@@ -1,10 +1,10 @@
 export class UserDTO {
-  constructor(user) {
-    this.userId = user.userId;
-    this.email = user.email;
-    this.login = user.login;
-    this.firstName = user.firstName;
-    this.lastName = user.lastName;
+  constructor({ userId, email, login, firstName, lastName }) {
+    this.userId = userId;
+    this.email = email;
+    this.login = login;
+    this.firstName = firstName;
+    this.lastName = lastName;
   }
 }
 
