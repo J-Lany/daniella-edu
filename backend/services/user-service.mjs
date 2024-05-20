@@ -28,16 +28,17 @@ export class UserService {
     const hashedPassword = await this.#hashPassword(password);
     const userId = uuidv4();
 
-    if (!this.#emailService.isEmailCorrect(email)) {
-      throw new Error(403);
-    }
-
     const isUserAlreadyExist = await this.isUserAlreadyExist(email);
     if (isUserAlreadyExist) {
       throw new Error(401);
     }
 
-    await this.#emailService.setEmail(email);
+    const isEmailInstalled = await this.#emailService.setEmail(email);
+
+    if (!isEmailInstalled) {
+      throw new Error(403);
+    }
+
     this.#userDao.setUser({ login, email, hashedPassword, userId });
   }
 
