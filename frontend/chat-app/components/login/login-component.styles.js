@@ -35,7 +35,7 @@ const getLoginComponentStyle = () => {
       border: 1px solid var(--light-gray-background);
       border-radius: 2rem;
       color: var(--gray-text-color);
-      transition: background-color 0.2s ease-in-out;
+      transition: background-color 0.2s ease-in-out,  color 0.2s ease-in-out;
     }
 
     .login-form__btn:active {
@@ -50,6 +50,7 @@ const getLoginComponentStyle = () => {
 
     .login-form__btn:hover {
       background-color: var(--light-blue-background);
+      color: var(--white-background);
       cursor: pointer;
     }
 
