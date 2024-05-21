@@ -1,7 +1,10 @@
+import { SERVICES } from "../../di/api.js";
+import { diContainer } from "../../di/di.js";
 import { LIST_TYPE } from "../sidebar/sidebar.js";
 import { createSidebarBlockTemplate } from "./sidebar-block.template.js";
 
 export class SidebarBlock extends HTMLElement {
+  #listenerService = diContainer.resolve(SERVICES.listener);
   #listType = LIST_TYPE.chats;
 
   static get name() {
@@ -18,7 +21,9 @@ export class SidebarBlock extends HTMLElement {
   }
 
   disconnectedCallback() {
-    document.removeEventListener("click", this.#handleClickOutside.bind(this));
+    if (this.#listType === LIST_TYPE.users) {
+      this.#listenerService.removeListeners(this.handleClickOutside.bind(this));
+    }
   }
 
   handleCustomEvent(event) {
@@ -26,13 +31,7 @@ export class SidebarBlock extends HTMLElement {
     this.render(event.detail);
   }
 
-  addClickOutsideListener() {
-    if (this.#listType === LIST_TYPE.users) {
-      document.addEventListener("click", this.#handleClickOutside.bind(this));
-    }
-  }
-
-  #handleClickOutside(event) {
+  handleClickOutside(event) {
     const sidebarBlock = this;
     const target = event.target;
 
@@ -43,14 +42,15 @@ export class SidebarBlock extends HTMLElement {
   }
 
   render(list) {
-    document.removeEventListener("click", this.#handleClickOutside.bind(this));
-
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createSidebarBlockTemplate(list, this.#listType);
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
 
-    this.addClickOutsideListener();
+    if (this.#listType === LIST_TYPE.users) {
+      this.#listenerService.addListeners(this.handleClickOutside.bind(this));
+    }
   }
 }
+
