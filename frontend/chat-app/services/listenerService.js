@@ -1,9 +1,11 @@
 export class ListenerService {
   #subscribers = new Set();
 
-  addListeners(callback) {
+  constructor() {
     document.addEventListener("click", this.handleClick.bind(this));
+  }
 
+  addListeners(callback) {
     this.#subscribers.add(callback);
   }
 

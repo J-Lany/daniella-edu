@@ -34,14 +34,18 @@ export class SidebarBlock extends HTMLElement {
   handleClickOutside(event) {
     const sidebarBlock = this;
     const target = event.target;
+    const isClickOutsideSidebar =
+      sidebarBlock !== target || !sidebarBlock.contains(target);
 
-    if (sidebarBlock !== target || !sidebarBlock.contains(target)) {
+    if (isClickOutsideSidebar) {
       this.#listType = LIST_TYPE.chats;
       this.render();
     }
   }
 
   render(list) {
+    this.#listenerService.removeListeners(this.handleClickOutside.bind(this));
+    
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createSidebarBlockTemplate(list, this.#listType);
 
@@ -53,4 +57,3 @@ export class SidebarBlock extends HTMLElement {
     }
   }
 }
-
