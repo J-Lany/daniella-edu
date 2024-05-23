@@ -4,14 +4,17 @@ import { SERVICES } from "../../di/api";
 
 const avatarAttribute = {
   USER_ID: "user-id",
+  DISPLAY_MODE: "display-mode",
 };
 
 export class AvatarComponent extends HTMLElement {
   #userService = diContainer.resolve(SERVICES.user);
   #userId;
+  #displayMode;
 
   #ATTRIBUTE_MAPPING = new Map([
     [avatarAttribute.USER_ID, this.setUserId.bind(this)],
+    [avatarAttribute.DISPLAY_MODE, this.setDisplayMode.bind(this)],
   ]);
 
   static get name() {
@@ -52,9 +55,13 @@ export class AvatarComponent extends HTMLElement {
     this.#userId = newId;
   }
 
+  setDisplayMode(newMode) {
+    this.#displayMode = newMode;
+  }
+
   render(user) {
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createAvatarTemplate(user);
+    templateElem.innerHTML = createAvatarTemplate(user, this.#displayMode);
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));

@@ -25,9 +25,11 @@ export class UsersDao {
 
   async setUser(user) {
     const users = await this.#storeServise.getData(this.#filePath);
+
     if (users[user.userId]) {
       return;
     }
+
     users[user.userId] = user;
 
     await this.#storeServise.setData(this.#filePath, users);
@@ -57,6 +59,7 @@ export class UsersDao {
 
   async deleteUser(userId) {
     const users = await this.#storeServise.getData(this.#filePath);
+
     delete users[userId];
 
     await this.#storeServise.setData(this.#filePath, users);
