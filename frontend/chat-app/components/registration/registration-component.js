@@ -36,32 +36,37 @@ export class RegistrationComponent extends HTMLElement {
       this.render("Пароли не совпадают");
       return;
     }
+
     this.#authService.registration(login, email, password).then((res) => {
       if (res.status !== 200) {
         this.render(res.content.message);
         return;
       }
-      
+
       const registrationEvent = new CustomEvent("login", {
         detail: {
           status: res.status,
           registration: res.content.message,
         },
       });
+
       this.dispatchEvent(registrationEvent);
     });
   }
+
   disconnectedCallback() {
     this.#listeners.forEach(removeListeners.bind(this));
   }
 
   #onInput() {
     const password = this.shadowRoot.querySelector("#password");
+
     if (password.classList.contains("error")) {
       this.shadowRoot
         .querySelectorAll(".registration-form__input")
         .forEach((input) => input.classList.remove("error"));
     }
+
     return;
   }
 
