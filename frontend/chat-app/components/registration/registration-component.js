@@ -37,6 +37,11 @@ export class RegistrationComponent extends HTMLElement {
       return;
     }
     this.#authService.registration(login, email, password).then((res) => {
+      if (res.status !== 200) {
+        this.render(res.content.message);
+        return;
+      }
+      
       const registrationEvent = new CustomEvent("login", {
         detail: {
           status: res.status,

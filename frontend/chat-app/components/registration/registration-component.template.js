@@ -1,7 +1,6 @@
 import { getRegistrationComponentStyle } from "./registration-component.styles";
 
 export function createRegistrationTemplate(errorMessage) {
-  console.log(errorMessage);
   const hasErrorMessage = !!errorMessage;
   const errorMessageClass = hasErrorMessage ? "show" : "";
   return `

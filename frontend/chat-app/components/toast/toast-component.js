@@ -41,7 +41,7 @@ export class ToastComponent extends HTMLElement {
       const callback = this.#ATTRIBUTE_MAPPING.get(name);
       if (callback) {
         callback(newValue);
-        this.render();
+        this.#render();
       }
     }
   }

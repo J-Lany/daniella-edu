@@ -24,10 +24,10 @@ export class LoginComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    this.render();
     this.unSubscribeFromError = this.#authService.subscribeOnLoginError(
       this.render.bind(this)
     );
-    this.render();
   }
 
   disconnectedCallback() {
@@ -35,13 +35,13 @@ export class LoginComponent extends HTMLElement {
     this.#listeners.forEach(removeListeners.bind(this));
   }
 
-  #onLoginClick(event) {
-    event.preventDefault();
+  #onLoginClick() {
     const email = this.shadowRoot.querySelector("#email").value;
     const password = this.shadowRoot.querySelector("#password").value;
 
     this.#authService.login(email, password);
   }
+
   #onRegistrationClick() {
     this.dispatchEvent(new Event("registration"));
   }

@@ -6,7 +6,6 @@ export const TOAST_SYMBOLS = {
 };
 
 export function createToastComponentTemplate(type, message) {
-  console.log(message);
   return `
   ${getToastComponentStyle(type)}
   <div class="toast">

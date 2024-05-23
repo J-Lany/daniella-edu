@@ -16,7 +16,7 @@ export class AuthService {
 
   notifyError(error) {
     this.#errorSubscribers.forEach((subscription) => {
-      subscription();
+      subscription(error);
     });
   }
 
@@ -38,6 +38,10 @@ export class AuthService {
     await this.#httpServise
       .post(`login/`, { email, password })
       .then((res) => {
+        if (res.status !== 200) {
+          this.notifyError(res.content.message);
+          return;
+        }
         this.#currentUser = res.content.user;
         this.#token = res.content.token;
         this.notifySubscribers();

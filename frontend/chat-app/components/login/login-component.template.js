@@ -18,7 +18,11 @@ export function createLoginTemplate(errorMessage) {
           <span class="registration-btn">Sign up</span></p>
         </div>
       </div>
-      ${errorMessage ? `<div class="error-messsge">${errorMessage}</div>` : ""}
+      ${
+        errorMessage
+          ? `<toast-component type="error" message="${errorMessage}"></toast-component>`
+          : ""
+      }
    </div>
   `;
 }
