@@ -37,6 +37,7 @@ export class Message extends HTMLElement {
     this.render();
   }
   disconnectedCallback() {}
+
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue !== newValue) {
       const callback = this.#ATTRIBUTE_MAPPING.get(name);
@@ -46,15 +47,19 @@ export class Message extends HTMLElement {
       }
     }
   }
+
   setTime(newTime) {
     this.#messageTime = newTime;
   }
+
   setUserId(newId) {
     this.#userId = newId;
   }
+
   setMessage(newMessage) {
     this.#message = newMessage;
   }
+
   setDisplayMode(newMode) {
     this.#displayMode = newMode;
   }

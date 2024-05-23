@@ -16,22 +16,26 @@ import { MessagesBlock } from "./chat-app/components/messages-block/messages-blo
 import { AvatarComponent } from "./chat-app/components/avarar/avatar-component.js";
 import { MessageInfoBlock } from "./chat-app/components/message-info-block/message-info-block.js";
 import { Message } from "./chat-app/components/message/message.js";
-import { ChatSidebar } from "./chat-app/components/chat-sidebar/chat-sidebar.js";
 import { MessageInput } from "./chat-app/components/message-input/message-input.js";
 import { ChatBlock } from "./chat-app/components/chat-block/chat-block.js";
 import { ToastComponent } from "./chat-app/components/toast/toast-component.js";
+import { SearchInput } from "./chat-app/components/search-users/search-users-input.js";
+import { Sidebar } from "./chat-app/components/sidebar/sidebar.js";
+import { SidebarBlock } from "./chat-app/components/sidebar-block/sidebar-block.js";
+import { ListenerService } from "./chat-app/services/listenerService.js";
 
 diContainer.register(SERVICES.http, httpService);
 diContainer.register(SERVICES.messages, new MessageService());
-diContainer.register(SERVICES.user, new UserService());
 diContainer.register(SERVICES.auth, new AuthService());
+diContainer.register(SERVICES.user, new UserService());
+diContainer.register(SERVICES.listener, new ListenerService());
 
 [
   ChatComponent,
   UserInfoBlock,
   HeaderComponent,
-  ChatSidebar,
   ChatBlock,
+  Sidebar,
   LoginComponent,
   RegistrationComponent,
   AppComponent,
@@ -42,6 +46,8 @@ diContainer.register(SERVICES.auth, new AuthService());
   Message,
   MessageInput,
   ToastComponent,
+  SearchInput,
+  SidebarBlock,
 ].map((component) => customElements.define(component.name, component));
 
 document.querySelector("#app").innerHTML = `<app-component></app-component>`;

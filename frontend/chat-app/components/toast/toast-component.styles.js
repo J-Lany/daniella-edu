@@ -4,9 +4,7 @@ import { TOAST_TYPE } from "./toast-component";
 const getToastComponentStyle = (type) => {
   const colorByType = {
     color:
-      type === TOAST_TYPE.sucsess
-        ? "var(--light-green-background)"
-        : "var(--red-error)",
+      type === TOAST_TYPE.sucsess ? "var(--green-color)" : "var(--red-error)",
   };
 
   return `
