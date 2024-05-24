@@ -5,6 +5,11 @@ export const getRegistrationComponentStyle = () => {
   <style>
   @import url('../common.css');
 
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
   .registration-page{
     max-width: 80rem;
     margin: 0 auto;
@@ -81,7 +86,9 @@ export const getRegistrationComponentStyle = () => {
   
 
   .error{
-    background-color: var( --red-error-background)
+    background-color: var( --red-error-background);
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
   }
 
   @media screen and (max-width: 600px) {
