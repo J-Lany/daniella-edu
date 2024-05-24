@@ -12,7 +12,7 @@ export function createAuthComponent(viewType, successReg) {
 
   return `
   ${getAuthComponentStyle()}
-  <div>
+  <div class="auth-wrap">
     ${
       viewType === viewTypes.LOGIN
         ? `<login-component></login-component> ${successItem(successReg)}`
