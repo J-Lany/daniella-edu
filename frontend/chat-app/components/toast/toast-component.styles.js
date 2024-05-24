@@ -10,7 +10,13 @@ const getToastComponentStyle = (type) => {
   return `
   <style>
       @import url('../common.css');
-     
+
+      @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+
+ 
       .toast {
         display: flex;
         gap: 1rem;
@@ -19,9 +25,12 @@ const getToastComponentStyle = (type) => {
         padding-bottom: 0.75rem;
         padding-left: 0.75rem;
         border-radius: 0.5rem;
-        background-color: var(--white-background);
+        background-color: rgba(var(--white-background), 0.5);
         box-shadow: 0 0.5px 3px var(--gray-text-color);
         max-width: 20rem;
+        opacity: 0;
+        animation: fadeIn 0.5s ease forwards;
+
       }
 
       .toast__text{
