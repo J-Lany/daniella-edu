@@ -44,6 +44,21 @@ export const getRegistrationComponentStyle = () => {
     background-color: var(--light-gray-color);
   }
 
+  .registration-form__btn-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .login-btn {
+    color:  var(--light-blue-background);
+    font-weight: bold;
+  }
+
+  .login-btn:hover {
+    cursor: pointer;
+  }
+
   .registration-form__btn:hover {
     background-color: var(--light-blue-background)
   }

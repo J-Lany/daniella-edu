@@ -12,6 +12,7 @@ export class RegistrationComponent extends HTMLElement {
       this.#onRegistrationClick.bind(this),
     ],
     [select.bind(this, "#password"), "input", this.#onInput.bind(this)],
+    [select.bind(this, ".login-btn"), "click", this.#onLoginClick.bind(this)],
   ];
   static get name() {
     return "registration-component";
@@ -43,7 +44,7 @@ export class RegistrationComponent extends HTMLElement {
         return;
       }
 
-      const registrationEvent = new CustomEvent("login", {
+      const registrationEvent = new CustomEvent("sucsess-reg", {
         detail: {
           status: res.status,
           registration: res.content.message,
@@ -52,6 +53,10 @@ export class RegistrationComponent extends HTMLElement {
 
       this.dispatchEvent(registrationEvent);
     });
+  }
+
+  #onLoginClick() {
+    this.dispatchEvent(new Event("login"));
   }
 
   disconnectedCallback() {
