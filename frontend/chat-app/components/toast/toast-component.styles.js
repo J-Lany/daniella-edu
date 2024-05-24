@@ -11,13 +11,15 @@ const getToastComponentStyle = (type) => {
   <style>
       @import url('../common.css');
      
-      .toast{
+      .toast {
+        display: flex;
+        gap: 1rem;
         border-left: 0.5rem solid ${colorByType.color};
-        padding: 1.25rem;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+        padding-left: 0.75rem;
         border-radius: 0.5rem;
         background-color: var(--white-background);
-        display: grid;
-        grid-template-columns: 1.3fr 6fr 0.5fr;
         box-shadow: 0 0.5px 3px var(--gray-text-color);
         max-width: 20rem;
       }
@@ -43,6 +45,7 @@ const getToastComponentStyle = (type) => {
         font-size: 1.6rem;
         line-height: 0;
         cursor:pointer;
+        text-align: right;
         color: var(--gray-text-color);
       }
    </style>
