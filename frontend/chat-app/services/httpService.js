@@ -2,7 +2,8 @@ import packageJson from "../../package.json";
 
 export function httpService(baseUrl = packageJson.scripts.baseUrl) {
   async function get(url, headers) {
-    const response = await fetch(`${baseUrl}/${url}`, { headers });
+    const fullUrl = `${baseUrl}/${url}`;
+    const response = await fetch(fullUrl, { headers });
 
     return await response.json();
   }
@@ -16,7 +17,8 @@ export function httpService(baseUrl = packageJson.scripts.baseUrl) {
       },
       body: JSON.stringify(payload),
     });
-    return await response.json();
+
+    return { status: response.status, content: await response.json() };
   }
 
   return {

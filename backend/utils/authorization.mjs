@@ -13,6 +13,6 @@ export async function authorization(req, res, next) {
   if (await authService.isAuth(token)) {
     next();
   } else {
-    return res.sendStatus(403);
+    return res.sendStatus(401);
   }
 }

@@ -7,12 +7,19 @@ export class EmailsDao {
   #storeServise = diContainer.resolve(SERVICES.store);
 
   async isEmailExist(email) {
-    return await this.#storeServise.getData(this.#filePath)[email];
+    const emailLowerdCase = email.toLowerCase();
+    const result = await this.#storeServise.getData(this.#filePath)[
+      emailLowerdCase
+    ];
+
+    return !!result;
   }
 
   async setEmail(email) {
     const emails = await this.#storeServise.getData(this.#filePath);
-    emails[email] = true;
+    const emailLowerdCase = email.toLowerCase();
+
+    emails[emailLowerdCase] = true;
     this.#storeServise.setData(this.#filePath, emails);
   }
 }

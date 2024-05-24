@@ -1,6 +1,6 @@
 import "../common.css";
 
-export function getNessageInfoBlockStyle() {
+export function getMessageInfoBlockStyle() {
   return `
   <style>
     @import url('../common.css');
@@ -12,8 +12,13 @@ export function getNessageInfoBlockStyle() {
     }
 
     .message-info__author{
-      font-weight: bold;
-      font-size: 1.25rem;
+      font-weight: 500;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 10rem;
+  }
     }
     
     .message-info__time{

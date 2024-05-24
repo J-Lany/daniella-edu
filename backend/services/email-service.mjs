@@ -3,12 +3,18 @@ import { diContainer } from "../di/di.mjs";
 
 export class EmailService {
   #emailsDao = diContainer.resolve(SERVICES.emailsDao);
+
   async isEmailExist(email) {
     return await this.#emailsDao.isEmailExist(email);
   }
 
   async setEmail(email) {
+    if (!this.isEmailCorrect(email)) {
+      return false;
+    }
     await this.#emailsDao.setEmail(email);
+
+    return true;
   }
 
   isEmailCorrect(email) {

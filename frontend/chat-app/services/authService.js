@@ -7,7 +7,7 @@ export class AuthService {
   #tokenSubscribers = new Set();
   #errorSubscribers = new Set();
   #httpServise = diContainer.resolve(SERVICES.http);
-  #userService = diContainer.resolve(SERVICES.user);
+  #currentUser;
   #token;
 
   notifySubscribers() {
@@ -40,10 +40,9 @@ export class AuthService {
     await this.#httpServise
       .post(`login/`, { email, password })
       .then((res) => {
-        this.#userService.setCurrentUser(res.user);
-        this.#token = res.token;
         sessionStorage.setItem(TOKEN, res.token);
-        this.#userService.setToken(res.token);
+        this.#currentUser = res.content.user;
+        this.#token = res.content.token;
         this.notifySubscribers();
       })
       .catch(this.notifyError);
@@ -62,5 +61,9 @@ export class AuthService {
       return this.#token;
     }
     return sessionStorage.getItem(TOKEN);
+  }
+
+  getCurrentUser() {
+    return this.#currentUser;
   }
 }

@@ -6,13 +6,14 @@ const messagesAttribute = {
   USER_ID: "user-id",
   MESSAGE_TIME: "time",
 };
+
 export class MessageInfoBlock extends HTMLElement {
   #userService = diContainer.resolve(SERVICES.user);
   #messageTime;
   #userID;
   #ATTRIBUTE_MAPPING = new Map([
-    [messagesAttribute.MESSAGE_TIME, this.setTime],
-    [messagesAttribute.USER_ID, this.setUserId],
+    [messagesAttribute.MESSAGE_TIME, this.setTime.bind(this)],
+    [messagesAttribute.USER_ID, this.setUserId.bind(this)],
   ]);
 
   static get name() {
@@ -43,16 +44,16 @@ export class MessageInfoBlock extends HTMLElement {
     if (oldValue !== newValue) {
       const callback = this.#ATTRIBUTE_MAPPING.get(name);
       if (callback) {
-        callback(this, newValue);
+        callback(newValue);
       }
     }
   }
 
-  setTime(_, newTime) {
+  setTime(newTime) {
     this.#messageTime = newTime;
   }
 
-  setUserId(_, newId) {
+  setUserId(newId) {
     this.#userID = newId;
   }
 

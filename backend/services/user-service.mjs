@@ -3,6 +3,7 @@ import { SERVICES } from "../di/api.mjs";
 import { diContainer } from "../di/di.mjs";
 import { v4 as uuidv4 } from "uuid";
 import { paginator } from "../utils/paginator.mjs";
+import { convertToDTO } from "../utils/UserDTO.mjs";
 
 export class UserService {
   #userDao = diContainer.resolve(SERVICES.usersDao);
@@ -18,28 +19,31 @@ export class UserService {
 
   async getUsers(userPerPage, pageNumber) {
     const userList = Object.values(await this.#userDao.getUsers());
+    const userDTOList = userList.map(convertToDTO);
 
-    return paginator(userPerPage, pageNumber, userList);
+    return paginator(userPerPage, pageNumber, userDTOList);
   }
 
   async setUser({ login, email, password }) {
     const hashedPassword = await this.#hashPassword(password);
     const userId = uuidv4();
-    if (!this.#emailService.isEmailCorrect(email)) {
+
+    const isUserAlreadyExist = await this.isUserAlreadyExist(email);
+    if (isUserAlreadyExist) {
+      throw new Error(401);
+    }
+
+    const isEmailInstalled = await this.#emailService.setEmail(email);
+
+    if (!isEmailInstalled) {
       throw new Error(403);
     }
-    this.isUserAlreadyExist(email);
 
-    this.#emailService.setEmail(email);
     this.#userDao.setUser({ login, email, hashedPassword, userId });
   }
 
   async isUserAlreadyExist(email) {
-    const isEmailExist = await this.#emailService.isEmailExist(email);
-    if (isEmailExist) {
-      throw new Error(401);
-    }
-    return true;
+    return await this.#emailService.isEmailExist(email);
   }
 
   async getUser(userId) {
@@ -47,19 +51,24 @@ export class UserService {
     if (!user) {
       throw new Error(401);
     }
-    return user;
+    return convertToDTO(user);
   }
 
   async getUserByEmail(email) {
     return await this.#userDao.getUserByEmail(email);
   }
 
-  async searchUser(search, userPerPage, pageNumber) {
+  async searchUser(search, userPerPage, pageNumber, userId) {
     const result = await this.#userDao.searchUser(search);
-    if (!result) {
-      throw new Error(401);
+    const filtresResult = result
+      ?.filter((user) => user.userId !== userId)
+      .map(convertToDTO);
+
+    if (!filtresResult) {
+      throw new Error(403);
     }
-    return paginator(userPerPage, pageNumber, result);
+
+    return paginator(userPerPage, pageNumber, filtresResult);
   }
 
   async updateUser(userId, updates) {
@@ -67,7 +76,9 @@ export class UserService {
     if (!user) {
       throw new Error(401);
     }
-    return await this.#userDao.updateUser(userId, updates);
+
+    const updatedUser = await this.#userDao.updateUser(userId, updates);
+    return convertToDTO(updatedUser);
   }
 
   async deleteUser(userId) {

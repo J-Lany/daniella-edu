@@ -7,9 +7,16 @@
     --gray-text-color: #707070;
     --light-blue-background: #cadaf6;
     --red-error-background: #f7d0d0;
+    --white-background: #ffffff;
     --blue-background: #2b6ee1; 
     --light-blue-background: #7ba7f4; 
     --light-green-background:#84f5af;
+    --green-color: #53E04E;
+    --orange-color: #F0971D;
+}
+
+body {
+    margin: 0 auto;
 }
 
 
