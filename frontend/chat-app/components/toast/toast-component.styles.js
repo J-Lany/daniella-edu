@@ -18,12 +18,8 @@ const getToastComponentStyle = (type) => {
         background-color: var(--white-background);
         display: grid;
         grid-template-columns: 1.3fr 6fr 0.5fr;
-        box-shadow: 0 1px 5px var(--gray-text-color);
+        box-shadow: 0 0.5px 3px var(--gray-text-color);
         max-width: 20rem;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
       }
 
       .toast__text{

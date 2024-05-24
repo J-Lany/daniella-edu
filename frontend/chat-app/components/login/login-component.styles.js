@@ -69,6 +69,11 @@ const getLoginComponentStyle = () => {
       cursor: pointer;
     }
 
+    .toast {
+      display: flex;
+      justify-content: center;
+    }
+
     @media screen and (max-width: 600px) {
       .login-form__btn {
           padding: 0.75rem;

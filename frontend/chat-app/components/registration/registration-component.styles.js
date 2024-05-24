@@ -16,6 +16,7 @@ export const getRegistrationComponentStyle = () => {
     display: flex;
     flex-flow: column;
     gap: 1rem;
+    padding-bottom: 1rem;
   }
 
   .registration-form__input {
@@ -52,6 +53,11 @@ export const getRegistrationComponentStyle = () => {
     margin-top: 1rem;
     text-align: center;
     display: none;
+  }
+
+  .toast {
+    display: flex;
+    justify-content: center;
   }
 
   .show {

@@ -28,7 +28,7 @@ export function createRegistrationTemplate(errorMessage) {
     </div>
     ${
       errorMessage
-        ? `<toast-component type="error" message="${errorMessage}"></toast-component>`
+        ? `<toast-component class="toast" type="error" message="${errorMessage}"></toast-component>`
         : ""
     }
   </div>

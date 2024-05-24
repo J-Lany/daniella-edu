@@ -41,7 +41,6 @@ export class ToastComponent extends HTMLElement {
       const callback = this.#ATTRIBUTE_MAPPING.get(name);
       if (callback) {
         callback(newValue);
-        this.#render();
       }
     }
   }
@@ -61,11 +60,10 @@ export class ToastComponent extends HTMLElement {
 
   setMessage(newMessage) {
     this.#message = newMessage;
-  }
-
-  connectedCallback() {
     this.#render();
   }
+
+  connectedCallback() {}
 
   disconnectedCallback() {
     this.#listeners.forEach(removeListeners.bind(this));
