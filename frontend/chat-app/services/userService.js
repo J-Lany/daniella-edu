@@ -1,7 +1,6 @@
 import { diContainer } from "../di/di";
 import { SERVICES } from "../di/api";
 
-export const USER = "user";
 const USER_PER_PAGE = 10;
 const PAGE_NUMBER = 1;
 

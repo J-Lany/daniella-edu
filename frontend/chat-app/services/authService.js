@@ -2,6 +2,7 @@ import { diContainer } from "../di/di";
 import { SERVICES } from "../di/api";
 
 export const TOKEN = "token";
+export const USER = "user";
 
 export class AuthService {
   #tokenSubscribers = new Set();
@@ -40,7 +41,8 @@ export class AuthService {
     await this.#httpServise
       .post(`login/`, { email, password })
       .then((res) => {
-        sessionStorage.setItem(TOKEN, res.token);
+        sessionStorage.setItem(TOKEN, res.content.token);
+        sessionStorage.setItem(USER, JSON.stringify(res.content.user));
         this.#currentUser = res.content.user;
         this.#token = res.content.token;
         this.notifySubscribers();
@@ -64,6 +66,10 @@ export class AuthService {
   }
 
   getCurrentUser() {
+    if (this.#currentUser) {
+      return this.#currentUser;
+    }
+    this.#currentUser = JSON.parse(sessionStorage.getItem(USER));
     return this.#currentUser;
   }
 }
