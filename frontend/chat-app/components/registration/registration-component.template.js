@@ -1,6 +1,12 @@
 import { getRegistrationComponentStyle } from "./registration-component.styles";
 
-export function createRegistrationTemplate(errorMessage) {
+export function createRegistrationTemplate(
+  errorMessage,
+  login,
+  email,
+  password,
+  confirmPassword
+) {
   const hasErrorMessage = !!errorMessage;
   const errorMessageClass = hasErrorMessage ? "show" : "";
   return `
@@ -9,20 +15,20 @@ export function createRegistrationTemplate(errorMessage) {
     <h3>Sign up</h3>
     <div class="registration-form">
     <div>
-      <input id="login" class="registration-form__input" type="text" placeholder="login" required/>
+      <input id="login" value="${login}" class="registration-form__input" type="text" placeholder="login" required/>
     </div>
     <div>
-      <input id="email" class="registration-form__input" type="text" placeholder="email" required/>
+      <input id="email" value="${email}"  class="registration-form__input" type="text" placeholder="email" required/>
     </div>
     <div>
-      <input id="password" class="registration-form__input ${
-        hasErrorMessage ? "error" : ""
-      }" type="password" placeholder="password" required />
+      <input id="password" value="${password}"  class="registration-form__input ${
+    hasErrorMessage ? "error" : ""
+  }" type="password" placeholder="password" required />
     </div>
     <div>
-      <input id="confirm-password" class="registration-form__input ${
-        hasErrorMessage ? "error" : ""
-      }" type="password" placeholder="confirm password" required />
+      <input id="confirm-password"  value="${confirmPassword}"  class="registration-form__input ${
+    hasErrorMessage ? "error" : ""
+  }" type="password" placeholder="confirm password" required />
     </div>
     <div class="registration-form__btn-group">
       <button class="registration-form__btn registration-btn">Sign up</button>
