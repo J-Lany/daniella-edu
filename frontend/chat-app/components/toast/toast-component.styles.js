@@ -19,11 +19,12 @@ const getToastComponentStyle = (type) => {
  
       .toast {
         display: flex;
-        gap: 1rem;
+        justify-content: space-between;
+        min-width: 20rem;
         border: 1px solid ${colorByType.color};
-        padding: 0.75rem;
+        padding: 1rem;
         border-radius: 0.5rem;
-        background-color: rgba(${colorByType.color}, 0.5);
+        box-shadow: inset 0 0 3px ${colorByType.color};
         max-width: 20rem;
         opacity: 0;
         animation: fadeIn 0.5s ease forwards;
@@ -31,8 +32,7 @@ const getToastComponentStyle = (type) => {
       }
 
       .toast__text{
-        font-size: 0.75rem;
-        font-weight: 500;
+        font-size: 1rem;
       }
 
       .toast__text, .toast__symbol {

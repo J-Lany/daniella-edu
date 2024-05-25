@@ -54,12 +54,6 @@ const getLoginComponentStyle = () => {
       cursor: pointer;
     }
 
-    .error-messsge {
-      color: red;
-      margin-top: 0.5rem;
-      text-align: center;
-    }
-
     .registration-btn {
       color:  var(--light-blue-background);
       font-weight: bold;
