@@ -11,6 +11,10 @@ export class AuthService {
   #currentUser;
   #token;
 
+  constructor() {
+    this.#token = sessionStorage.getItem(TOKEN);
+    this.#currentUser = JSON.parse(sessionStorage.getItem(USER));
+  }
   notifySubscribers() {
     this.#tokenSubscribers.forEach((subscription) => {
       subscription(this.#token);
@@ -71,17 +75,10 @@ export class AuthService {
   }
 
   getToken() {
-    if (this.#token) {
-      return this.#token;
-    }
-    return sessionStorage.getItem(TOKEN);
+    return this.#token;
   }
 
   getCurrentUser() {
-    if (this.#currentUser) {
-      return this.#currentUser;
-    }
-    this.#currentUser = JSON.parse(sessionStorage.getItem(USER));
     return this.#currentUser;
   }
 }
