@@ -20,13 +20,10 @@ const getToastComponentStyle = (type) => {
       .toast {
         display: flex;
         gap: 1rem;
-        border-left: 0.5rem solid ${colorByType.color};
-        padding-top: 0.75rem;
-        padding-bottom: 0.75rem;
-        padding-left: 0.75rem;
+        border: 1px solid ${colorByType.color};
+        padding: 0.75rem;
         border-radius: 0.5rem;
-        background-color: rgba(var(--white-background), 0.5);
-        box-shadow: 0 0.5px 3px var(--gray-text-color);
+        background-color: rgba(${colorByType.color}, 0.5);
         max-width: 20rem;
         opacity: 0;
         animation: fadeIn 0.5s ease forwards;
@@ -48,14 +45,13 @@ const getToastComponentStyle = (type) => {
       }
 
       .toast__button{
-        align-self: flex-start;
         background: transparent;
         border: none;
         font-size: 1.6rem;
+        color: ${colorByType.color};
         line-height: 0;
         cursor:pointer;
         text-align: right;
-        color: var(--gray-text-color);
       }
    </style>
   `;
