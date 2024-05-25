@@ -23,7 +23,6 @@ import { EmailService } from "./services/email-service.mjs";
 import { EmailsDao } from "./data-store/dao/emails-dao.mjs";
 import { createMessageController } from "./controllers/message-controller.mjs";
 import { SessionDao } from "./data-store/dao/session-dao.mjs";
-import { authorization } from "./utils/authorization.mjs";
 
 const app = express();
 
