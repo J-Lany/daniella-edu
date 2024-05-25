@@ -16,6 +16,10 @@ const getToastComponentStyle = (type) => {
         100% { opacity: 1; }
       }
 
+      @keyframes fadeOut {
+        0% { opacity: 1; }
+        100% { opacity: 0; }
+      }      
  
       .toast {
         display: flex;
@@ -30,6 +34,11 @@ const getToastComponentStyle = (type) => {
         animation: fadeIn 0.5s ease forwards;
 
       }
+
+      .fade-out {
+        animation: fadeOut 0.2s ease forwards;
+      }
+      
 
       .toast__text{
         font-size: 1rem;

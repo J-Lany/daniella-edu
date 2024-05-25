@@ -51,7 +51,12 @@ export class ToastComponent extends HTMLElement {
   }
 
   #onCloseClick() {
-    this.remove();
+    const toast = this.shadowRoot.querySelector(".toast");
+    toast.classList.add("fade-out");
+
+    setTimeout(() => {
+      this.remove();
+    }, 500);
   }
 
   setType(newType) {
