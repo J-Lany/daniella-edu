@@ -1,14 +1,18 @@
 import { viewTypes } from "./auth-component";
 import { getAuthComponentStyle } from "./auth-component.styles";
 
+const successRegText = "Вы успешно зарегестрированы";
+
 export function createAuthComponent(viewType, successReg) {
   const successItem = (successReg) => {
-    return successReg ? `<div class="success-reg"> ${successReg}</div>` : "";
+    return successReg
+      ? `<toast-component type="sucsess" message="${successRegText}"></toast-component>`
+      : "";
   };
 
   return `
   ${getAuthComponentStyle()}
-  <div>
+  <div class="auth-wrap">
     ${
       viewType === viewTypes.LOGIN
         ? `<login-component></login-component> ${successItem(successReg)}`

@@ -5,7 +5,7 @@ const getLoginComponentStyle = () => {
   <style>
     @import url('../common.css');
 
-    .login-page{
+    .login-page {
       max-width: 80rem;
       margin: 0 auto;
       padding: 2rem;
@@ -32,9 +32,10 @@ const getLoginComponentStyle = () => {
       padding: 0.75rem;
       min-width: 22rem;
       font-size: 1rem;
-      border: 1px solid var(--light-gray-background);
+      border: 1px solid var(--light-blue-background);
+      background: var(--light-blue-background);
       border-radius: 2rem;
-      color: var(--gray-text-color);
+      color: var(--white-background);
       transition: background-color 0.2s ease-in-out,  color 0.2s ease-in-out;
     }
 
@@ -49,24 +50,22 @@ const getLoginComponentStyle = () => {
     }
 
     .login-form__btn:hover {
-      background-color: var(--light-blue-background);
-      color: var(--white-background);
+      background-color: var(--blue-background);
       cursor: pointer;
     }
 
-    .error-messsge{
-      color: red;
-      margin-top: 0.5rem;
-      text-align: center;
-    }
-
-    .registration-btn{
+    .registration-btn {
       color:  var(--light-blue-background);
       font-weight: bold;
     }
 
     .registration-btn:hover {
       cursor: pointer;
+    }
+
+    .toast {
+      display: flex;
+      justify-content: center;
     }
 
     @media screen and (max-width: 600px) {

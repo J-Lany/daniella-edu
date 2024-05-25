@@ -18,8 +18,13 @@ export class AuthService {
   }
 
   notifyError(error) {
+    let errorMessage = error;
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
     this.#errorSubscribers.forEach((subscription) => {
-      subscription();
+      subscription(errorMessage);
     });
   }
 
@@ -41,13 +46,20 @@ export class AuthService {
     await this.#httpServise
       .post(`login/`, { email, password })
       .then((res) => {
+        if (res.status !== 200) {
+          this.notifyError(res.content.message);
+          return;
+        }
+
         sessionStorage.setItem(TOKEN, res.content.token);
         sessionStorage.setItem(USER, JSON.stringify(res.content.user));
+
         this.#currentUser = res.content.user;
         this.#token = res.content.token;
+
         this.notifySubscribers();
       })
-      .catch(this.notifyError);
+      .catch(this.notifyError.bind(this));
   }
 
   async registration(login, email, password) {

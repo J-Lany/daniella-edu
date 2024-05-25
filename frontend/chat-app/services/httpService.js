@@ -1,6 +1,6 @@
 import packageJson from "../../package.json";
 
-export function httpService(baseUrl = packageJson.scripts.baseUrl) {
+export function httpService(baseUrl = packageJson.baseUrl) {
   async function get(url, headers) {
     const fullUrl = `${baseUrl}/${url}`;
     const response = await fetch(fullUrl, { headers });

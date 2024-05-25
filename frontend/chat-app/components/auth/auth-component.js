@@ -16,8 +16,13 @@ export class AuthComponent extends HTMLElement {
     ],
     [
       select.bind(this, "registration-component"),
-      "login",
+      "sucsess-reg",
       this.#onSucsessRegistratiom.bind(this),
+    ],
+    [
+      select.bind(this, "registration-component"),
+      "login",
+      this.#onLoginClick.bind(this),
     ],
   ];
 
@@ -37,6 +42,12 @@ export class AuthComponent extends HTMLElement {
     this.#currentViewTupe = viewTypes.REGISTRATION;
     this.render();
   }
+
+  #onLoginClick() {
+    this.#currentViewTupe = viewTypes.LOGIN;
+    this.render();
+  }
+
   #onSucsessRegistratiom(event) {
     this.#currentViewTupe = viewTypes.LOGIN;
     this.render(event.detail.registration);

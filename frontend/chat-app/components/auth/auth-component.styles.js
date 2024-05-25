@@ -2,8 +2,10 @@ export function getAuthComponentStyle() {
   return `
   <style>
     @import url('../common.css');
-    .success-reg {
-      color: green;
+    .auth-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
   </style>
   `;
