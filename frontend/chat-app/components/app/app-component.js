@@ -15,15 +15,9 @@ export class AppComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    const token = this.#authService.getToken();
-    if (token) {
-      this.#render(token);
-    } else {
-      this.unSubscribeFromAuth = this.#authService.subscribeToken(
-        this.#render.bind(this)
-      );
-      this.#render();
-    }
+    this.unSubscribeFromAuth = this.#authService.subscribeToken(
+      this.#render.bind(this)
+    );
   }
 
   disconnectedCallback() {
