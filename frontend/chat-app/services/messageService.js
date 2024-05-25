@@ -48,7 +48,7 @@ export class MessageService {
   }
 
   async notifySubscribers() {
-    const messages = null;
+    let messages;
 
     if (this.#currentChatId) {
       messages = this.#messages.has(this.#currentChatId)

@@ -5,6 +5,11 @@ export const getRegistrationComponentStyle = () => {
   <style>
   @import url('../common.css');
 
+  @keyframes fadeIn {
+    0% {  background: var(--light-gray-background); }
+    100% { background-color: var( --red-error-background); }
+  }
+
   .registration-page{
     max-width: 80rem;
     margin: 0 auto;
@@ -16,6 +21,7 @@ export const getRegistrationComponentStyle = () => {
     display: flex;
     flex-flow: column;
     gap: 1rem;
+    padding-bottom: 1rem;
   }
 
   .registration-form__input {
@@ -32,9 +38,10 @@ export const getRegistrationComponentStyle = () => {
     padding: 0.75rem;
     min-width: 22rem;
     font-size: 1rem;
-    border: 1px solid var(--light-gray-background);
+    border: 1px solid var(--light-blue-background);
+    background: var(--light-blue-background);
     border-radius: 2rem;
-    color: var(--gray-text-color);
+    color: var(--white-background);
     transition: background-color 0.2s ease-in-out;
     cursor: pointer;
   }
@@ -43,15 +50,29 @@ export const getRegistrationComponentStyle = () => {
     background-color: var(--light-gray-color);
   }
 
-  .registration-form__btn:hover {
-    background-color: var(--light-blue-background)
+  .registration-form__btn-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
-  .error-messsge {
-    color: red;
-    margin-top: 1rem;
-    text-align: center;
-    display: none;
+  .login-btn {
+    color:  var(--light-blue-background);
+    font-weight: bold;
+  }
+
+  .login-btn:hover {
+    cursor: pointer;
+  }
+
+  .registration-form__btn:hover {
+    background-color: var(--blue-background);
+    cursor: pointer;
+  }
+
+  .toast {
+    display: flex;
+    justify-content: center;
   }
 
   .show {
@@ -60,7 +81,9 @@ export const getRegistrationComponentStyle = () => {
   
 
   .error{
-    background-color: var( --red-error-background)
+    box-shadow: inset 0 0 3px var(--red-error);
+    background-color: var( --red-error-background);
+    animation: fadeIn 0.5s ease forwards;
   }
 
   @media screen and (max-width: 600px) {
