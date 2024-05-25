@@ -83,7 +83,7 @@ export const getRegistrationComponentStyle = () => {
   .error{
     box-shadow: inset 0 0 3px var(--red-error);
     background-color: var( --red-error-background);
-    animation: fadeIn 0.2s ease forwards;
+    animation: fadeIn 0.5s ease forwards;
   }
 
   @media screen and (max-width: 600px) {
