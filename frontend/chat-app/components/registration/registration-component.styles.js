@@ -6,8 +6,8 @@ export const getRegistrationComponentStyle = () => {
   @import url('../common.css');
 
   @keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+    0% {  background: var(--light-gray-background); }
+    100% { background-color: var( --red-error-background); }
   }
 
   .registration-page{
@@ -70,13 +70,6 @@ export const getRegistrationComponentStyle = () => {
     cursor: pointer;
   }
 
-  .error-messsge {
-    color: red;
-    margin-top: 1rem;
-    text-align: center;
-    display: none;
-  }
-
   .toast {
     display: flex;
     justify-content: center;
@@ -88,9 +81,9 @@ export const getRegistrationComponentStyle = () => {
   
 
   .error{
+    box-shadow: inset 0 0 3px var(--red-error);
     background-color: var( --red-error-background);
-    opacity: 0;
-    animation: fadeIn 0.5s ease forwards;
+    animation: fadeIn 0.2s ease forwards;
   }
 
   @media screen and (max-width: 600px) {
