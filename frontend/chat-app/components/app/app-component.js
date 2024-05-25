@@ -15,6 +15,7 @@ export class AppComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    this.#render();
     this.unSubscribeFromAuth = this.#authService.subscribeToken(
       this.#render.bind(this)
     );

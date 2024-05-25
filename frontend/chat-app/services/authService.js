@@ -14,11 +14,8 @@ export class AuthService {
   constructor() {
     this.#token = sessionStorage.getItem(TOKEN);
     this.#currentUser = JSON.parse(sessionStorage.getItem(USER));
-
-    if (this.#token) {
-      this.notifySubscribers();
-    }
   }
+
   notifySubscribers() {
     this.#tokenSubscribers.forEach((subscription) => {
       subscription(this.#token);

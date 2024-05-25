@@ -3,8 +3,8 @@ import { diContainer } from "../../di/di";
 import { SERVICES } from "../../di/api";
 
 export class UserInfoBlock extends HTMLElement {
-  #authService = diContainer.resolve(SERVICES.auth);
   #userService = diContainer.resolve(SERVICES.user);
+
   static get name() {
     return "user-info-block";
   }
@@ -15,23 +15,13 @@ export class UserInfoBlock extends HTMLElement {
   }
 
   connectedCallback() {
-    const token = this.#authService.getToken();
-    if (token) {
-      this.#render(token);
-    } else {
-      this.unSubscribeFromAuth = this.#authService.subscribeToken(
-        this.#render.bind(this)
-      );
-      this.#render();
-    }
+    this.#render();
   }
 
-  disconnectedCallback() {
-    this.unSubscribeFromAuth();
-  }
+  disconnectedCallback() {}
 
-  #render(token) {
-    const user = token ? this.#userService.getCurrentUser() : null;
+  #render() {
+    const user = this.#userService.getCurrentUser();
 
     const templateElm = document.createElement("template");
     templateElm.innerHTML = createUserInfoBlockTemplate(user);
