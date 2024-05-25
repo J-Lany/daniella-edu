@@ -5,7 +5,10 @@ import { createSidebarBlockTemplate } from "./sidebar-block.template.js";
 
 export class SidebarBlock extends HTMLElement {
   #listenerService = diContainer.resolve(SERVICES.listener);
+  #authService = diContainer.resolve(SERVICES.auth);
+  #chatService = diContainer.resolve(SERVICES.chat);
   #listType = LIST_TYPE.chats;
+  #chats;
 
   static get name() {
     return "sidebar-block";
@@ -17,7 +20,15 @@ export class SidebarBlock extends HTMLElement {
   }
 
   connectedCallback() {
-    this.render();
+    this.getChats();
+  }
+
+  getChats() {
+    const currentUser = this.#authService.getCurrentUser();
+    this.#chatService.getChatsByCurrnetUser(currentUser.userId).then((res) => {
+      this.#chats = res;
+      this.render(this.#chats);
+    });
   }
 
   disconnectedCallback() {
@@ -45,7 +56,7 @@ export class SidebarBlock extends HTMLElement {
 
   render(list) {
     this.#listenerService.removeListeners(this.handleClickOutside.bind(this));
-    
+
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createSidebarBlockTemplate(list, this.#listType);
 

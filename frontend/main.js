@@ -23,12 +23,14 @@ import { SearchInput } from "./chat-app/components/search-users/search-users-inp
 import { Sidebar } from "./chat-app/components/sidebar/sidebar.js";
 import { SidebarBlock } from "./chat-app/components/sidebar-block/sidebar-block.js";
 import { ListenerService } from "./chat-app/services/listenerService.js";
+import { ChatService } from "./chat-app/services/chatService.js";
 
 diContainer.register(SERVICES.http, httpService);
 diContainer.register(SERVICES.messages, new MessageService());
 diContainer.register(SERVICES.auth, new AuthService());
 diContainer.register(SERVICES.user, new UserService());
 diContainer.register(SERVICES.listener, new ListenerService());
+diContainer.register(SERVICES.chat, new ChatService());
 
 [
   ChatComponent,
