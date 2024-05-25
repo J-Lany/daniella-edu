@@ -18,8 +18,6 @@ export class UserInfoBlock extends HTMLElement {
     this.#render();
   }
 
-  disconnectedCallback() {}
-
   #render() {
     const user = this.#userService.getCurrentUser();
 
