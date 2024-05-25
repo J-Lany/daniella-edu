@@ -3,8 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "baseUrl": "http://localhost:3000",
   "scripts": {
-    "baseUrl": "http://localhost:3000",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
