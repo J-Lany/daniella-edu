@@ -8,7 +8,7 @@ export function createRegistrationTemplate(
   confirmPassword
 ) {
   const hasErrorMessage = !!errorMessage;
-  const errorMessageClass = hasErrorMessage ? "show" : "";
+
   return `
   ${getRegistrationComponentStyle()}
   <div class="registration-page">

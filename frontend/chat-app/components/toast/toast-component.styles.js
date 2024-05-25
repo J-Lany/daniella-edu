@@ -53,6 +53,12 @@ const getToastComponentStyle = (type) => {
         cursor:pointer;
         text-align: right;
       }
+
+      @media screen and (max-width: 600px) {
+        .toast {
+          min-width: 15rem;
+        }
+      }
    </style>
   `;
 };

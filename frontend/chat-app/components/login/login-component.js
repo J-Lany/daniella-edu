@@ -26,10 +26,10 @@ export class LoginComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    this.render();
     this.unSubscribeFromError = this.#authService.subscribeOnLoginError(
       this.render.bind(this)
     );
+    this.render();
   }
 
   disconnectedCallback() {

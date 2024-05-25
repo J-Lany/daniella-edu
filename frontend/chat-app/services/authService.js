@@ -15,8 +15,13 @@ export class AuthService {
   }
 
   notifyError(error) {
+    let errorMessage = error;
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
     this.#errorSubscribers.forEach((subscription) => {
-      subscription(error);
+      subscription(errorMessage);
     });
   }
 
@@ -45,10 +50,10 @@ export class AuthService {
 
         this.#currentUser = res.content.user;
         this.#token = res.content.token;
-        
+
         this.notifySubscribers();
       })
-      .catch(this.notifyError);
+      .catch(this.notifyError.bind(this));
   }
 
   async registration(login, email, password) {
