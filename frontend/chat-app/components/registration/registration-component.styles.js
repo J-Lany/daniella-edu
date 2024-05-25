@@ -38,9 +38,10 @@ export const getRegistrationComponentStyle = () => {
     padding: 0.75rem;
     min-width: 22rem;
     font-size: 1rem;
-    border: 1px solid var(--light-gray-background);
+    border: 1px solid var(--light-blue-background);
+    background: var(--light-blue-background);
     border-radius: 2rem;
-    color: var(--gray-text-color);
+    color: var(--white-background);
     transition: background-color 0.2s ease-in-out;
     cursor: pointer;
   }
@@ -65,7 +66,8 @@ export const getRegistrationComponentStyle = () => {
   }
 
   .registration-form__btn:hover {
-    background-color: var(--light-blue-background)
+    background-color: var(--blue-background);
+    cursor: pointer;
   }
 
   .error-messsge {
