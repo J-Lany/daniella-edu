@@ -3,8 +3,12 @@ import { TOAST_TYPE } from "./toast-component";
 
 const getToastComponentStyle = (type) => {
   const colorByType = {
-    color:
+    borderColor:
       type === TOAST_TYPE.sucsess ? "var(--green-color)" : "var(--red-error)",
+    backgroundColor:
+      type === TOAST_TYPE.sucsess
+        ? "var(--light-green-background)"
+        : "var(--red-error-background)",
   };
 
   return `
@@ -25,10 +29,10 @@ const getToastComponentStyle = (type) => {
         display: flex;
         justify-content: space-between;
         min-width: 20rem;
-        border: 1px solid ${colorByType.color};
+        border: 1px solid ${colorByType.borderColor};    background-color: ${colorByType.backgroundColor};
         padding: 1rem;
         border-radius: 0.5rem;
-        box-shadow: inset 0 0 3px ${colorByType.color};
+        box-shadow: inset 0 0 1px ${colorByType.borderColor};
         max-width: 20rem;
         opacity: 0;
         animation: fadeIn 0.5s ease forwards;
@@ -41,7 +45,7 @@ const getToastComponentStyle = (type) => {
       
 
       .toast__text{
-        font-size: 1rem;
+        font-size: 0.9rem;
       }
 
       .toast__text, .toast__symbol {
@@ -50,14 +54,14 @@ const getToastComponentStyle = (type) => {
 
       .toast__symbol{
         font-size: 2rem;
-        color: ${colorByType.color}
+        color: ${colorByType.borderColor}
       }
 
       .toast__button{
         background: transparent;
         border: none;
         font-size: 1.6rem;
-        color: ${colorByType.color};
+        color: ${colorByType.borderColor};
         line-height: 0;
         cursor:pointer;
         text-align: right;
