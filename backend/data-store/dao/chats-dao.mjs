@@ -17,15 +17,25 @@ export class ChatsDao {
   #storeServise = diContainer.resolve(SERVICES.store);
 
   async getChatsByUser(authorId) {
-    const result = [];
-    const chatsIdsByUsers = await this.#storeServise.getData(
+    const chatsIdsByUser = await this.getIdsChatsWhereUserParticipant(authorId);
+    const chatsByUser = await this.convertChatIdsToChatsList(chatsIdsByUser);
+
+    return chatsByUser;
+  }
+
+  async getIdsChatsWhereUserParticipant(authorId) {
+    const chatsIds = await this.#storeServise.getData(
       this.#chatsByUserFilePath
     );
-    const chatsIdByCurrentUser = chatsIdsByUsers[authorId];
+    return chatsIds[authorId];
+  }
+
+  async convertChatIdsToChatsList(chatIds) {
+    const result = [];
     const chats = await this.#storeServise.getData(this.#chatsFilePath);
 
-    chatsIdByCurrentUser.forEach((chatId) => result.push(chats[chatId]));
-
+    chatIds.forEach((chatId) => result.push(chats[chatId]));
+    
     return result;
   }
 
