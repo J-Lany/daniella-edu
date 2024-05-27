@@ -3,7 +3,7 @@ import { diContainer } from "../../di/di";
 import { SERVICES } from "../../di/api";
 
 export class UserInfoBlock extends HTMLElement {
-  #userService = diContainer.resolve(SERVICES.user);
+  #authService = diContainer.resolve(SERVICES.auth);
 
   static get name() {
     return "user-info-block";
@@ -15,7 +15,7 @@ export class UserInfoBlock extends HTMLElement {
   }
 
   connectedCallback() {
-    this.unsubscribeFromCurrentUser = this.#userService.subscribeCurrentUser(
+    this.unsubscribeFromCurrentUser = this.#authService.subscribeCurrentUser(
       this.#render.bind(this)
     );
   }
