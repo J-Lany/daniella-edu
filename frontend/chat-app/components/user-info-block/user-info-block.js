@@ -15,12 +15,16 @@ export class UserInfoBlock extends HTMLElement {
   }
 
   connectedCallback() {
-    this.#render();
+    this.unsubscribeFromCurrentUser = this.#userService.subscribeCurrentUser(
+      this.#render.bind(this)
+    );
   }
 
-  #render() {
-    const user = this.#userService.getCurrentUser();
+  disconnectedCallback() {
+    this.unsubscribeFromCurrentUser();
+  }
 
+  #render(user) {
     const templateElm = document.createElement("template");
     templateElm.innerHTML = createUserInfoBlockTemplate(user);
 

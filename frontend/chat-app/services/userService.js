@@ -9,6 +9,29 @@ export class UserService {
   #authService = diContainer.resolve(SERVICES.auth);
   #userSubscribers = new Map();
   #users = new Map();
+  #currentUserSubscribers = new Set();
+  #currentUser;
+
+  subscribeCurrentUser(subscription) {
+    this.#currentUserSubscribers.add(subscription);
+    this.#currentUser = this.#authService.getCurrentUser();
+
+    if (this.#currentUser) {
+      this.notifyCurrentUserSubscribers();
+    }
+
+    return () => this.unSubscribeCurrentUser(subscription);
+  }
+
+  unSubscribeCurrentUser(subs) {
+    this.#currentUserSubscribers.delete(subs);
+  }
+
+  notifyCurrentUserSubscribers() {
+    this.#currentUserSubscribers.forEach((subscription) => {
+      subscription(this.#currentUser);
+    });
+  }
 
   subscribeUserById(userId, subscription) {
     if (this.#userSubscribers.has(userId)) {
