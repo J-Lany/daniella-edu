@@ -20,6 +20,6 @@ export class ChatService {
 
     const chats = await this.#httpServise.get(`chats?${chatsParams}`, headers);
 
-    return chats;
+    return chats.result;
   }
 }

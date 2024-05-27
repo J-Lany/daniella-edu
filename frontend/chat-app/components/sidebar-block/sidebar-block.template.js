@@ -2,8 +2,8 @@ import { getSidebarBlockStyle } from "./sidebar-block.styles";
 
 const layoutList = (list) => {
   return list
-    .map((item) => {
-      return `<message-component class="sidebar-block__item" user-id=${item.userId} display-mode="sidebar"></message-component> `;
+    .map(({ participantsIds }) => {
+      return `<message-component class="sidebar-block__item" user-id=${participantsIds[0]} display-mode="sidebar"></message-component> `;
     })
     .join("");
 };
