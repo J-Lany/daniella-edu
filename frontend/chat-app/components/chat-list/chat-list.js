@@ -7,8 +7,6 @@ export class ChatListComponent extends HTMLElement {
   #listenerService = diContainer.resolve(SERVICES.listener);
   #chatService = diContainer.resolve(SERVICES.chat);
   #listType = LIST_TYPE.chats;
-  #currentUser;
-  #chats;
 
   static get name() {
     return "chat-list";
