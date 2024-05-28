@@ -1,9 +1,9 @@
 import { SERVICES } from "../../di/api.js";
 import { diContainer } from "../../di/di.js";
 import { LIST_TYPE } from "../sidebar/sidebar.js";
-import { createSidebarBlockTemplate } from "./sidebar-block.template.js";
+import { createChatListTemplate } from "./chat-list.template.js";
 
-export class SidebarBlock extends HTMLElement {
+export class ChatListComponent extends HTMLElement {
   #listenerService = diContainer.resolve(SERVICES.listener);
   #authService = diContainer.resolve(SERVICES.auth);
   #chatService = diContainer.resolve(SERVICES.chat);
@@ -12,7 +12,7 @@ export class SidebarBlock extends HTMLElement {
   #chats;
 
   static get name() {
-    return "sidebar-block";
+    return "chat-list";
   }
 
   constructor() {
@@ -61,7 +61,7 @@ export class SidebarBlock extends HTMLElement {
     this.#listenerService.removeListeners(this.handleClickOutside.bind(this));
 
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createSidebarBlockTemplate(
+    templateElem.innerHTML = createChatListTemplate(
       this.#chats,
       this.#currentUser.userId
     );
