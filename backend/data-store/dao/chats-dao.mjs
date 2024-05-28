@@ -1,6 +1,7 @@
 import { SERVICES } from "../../di/api.mjs";
 import { diContainer } from "../../di/di.mjs";
 import { FILE_PATHS } from "../data/data-file-paths.mjs";
+import { convertChatIdsToChatsList } from "../../mappers/mappers.mjs";
 
 const CHAT_TYPES = {
   p2p: "p2p",
@@ -10,10 +11,6 @@ const SPECIAL_ROLES = {
   admin: "admin",
   moderator: "moderator",
 };
-
-export function convertChatIdsToChatsList(chatIds, chats) {
-  return chatIds.map((chatId) => chats[chatId]);
-}
 
 export class ChatsDao {
   #chatsFilePath = FILE_PATHS.chats;
