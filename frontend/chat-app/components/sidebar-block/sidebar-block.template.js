@@ -6,11 +6,11 @@ const getCompanionId = (participantsIds, currentUserId) => {
     .join(",");
 };
 
-const layoutList = (list, currentUserId) => {
-  return list
-    .map(({ participantsIds }) => {
+const layoutList = (chatList, currentUserId) => {
+  return chatList
+    .map(({ participantsIds, chatId }) => {
       const companionId = getCompanionId(participantsIds, currentUserId);
-      return `<message-component class="sidebar-block__item" user-id="${companionId}" display-mode="sidebar"></message-component> `;
+      return `<message-component class="sidebar-block__item" user-id="${companionId}" chat-id="${chatId}" display-mode="sidebar"></message-component> `;
     })
     .join("");
 };
