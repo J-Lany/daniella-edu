@@ -31,12 +31,9 @@ export class ChatsDao {
   }
 
   async convertChatIdsToChatsList(chatIds) {
-    const result = [];
     const chats = await this.#storeServise.getData(this.#chatsFilePath);
 
-    chatIds.forEach((chatId) => result.push(chats[chatId]));
-    
-    return result;
+    return chatIds.map((chatId) => chats[chatId]);
   }
 
   async setChat(chat) {
