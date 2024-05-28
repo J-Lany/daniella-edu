@@ -1,20 +1,27 @@
 import { getSidebarBlockStyle } from "./sidebar-block.styles";
 
-const layoutList = (list) => {
+const getCompanionId = (participantsIds, currentUserId) => {
+  return participantsIds
+    .filter((partisipantId) => partisipantId !== currentUserId)
+    .join(",");
+};
+
+const layoutList = (list, currentUserId) => {
   return list
     .map(({ participantsIds }) => {
-      return `<message-component class="sidebar-block__item" user-id=${participantsIds[0]} display-mode="sidebar"></message-component> `;
+      const companionId = getCompanionId(participantsIds, currentUserId);
+      return `<message-component class="sidebar-block__item" user-id="${companionId}" display-mode="sidebar"></message-component> `;
     })
     .join("");
 };
 
-export function createSidebarBlockTemplate(list) {
+export function createSidebarBlockTemplate(chatList, currentUserId) {
   return `
     ${getSidebarBlockStyle()}
     <div class="sidebar-block">
       ${
-        list && list.length > 0
-          ? layoutList(list)
+        chatList && chatList.length > 0
+          ? layoutList(chatList, currentUserId)
           : "<div class='sidebar-empty'>Упс, тут ничего нет</div>"
       }
     </div>

@@ -8,6 +8,7 @@ export class SidebarBlock extends HTMLElement {
   #authService = diContainer.resolve(SERVICES.auth);
   #chatService = diContainer.resolve(SERVICES.chat);
   #listType = LIST_TYPE.chats;
+  #currentUser;
   #chats;
 
   static get name() {
@@ -24,11 +25,13 @@ export class SidebarBlock extends HTMLElement {
   }
 
   getChats() {
-    const currentUser = this.#authService.getCurrentUser();
-    this.#chatService.getChatsByCurrnetUser(currentUser.userId).then((res) => {
-      this.#chats = res;
-      this.render(this.#chats);
-    });
+    this.#currentUser = this.#authService.getCurrentUser();
+    this.#chatService
+      .getChatsByCurrnetUser(this.#currentUser.userId)
+      .then((res) => {
+        this.#chats = res;
+        this.render();
+      });
   }
 
   disconnectedCallback() {
@@ -54,11 +57,14 @@ export class SidebarBlock extends HTMLElement {
     }
   }
 
-  render(list) {
+  render() {
     this.#listenerService.removeListeners(this.handleClickOutside.bind(this));
 
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createSidebarBlockTemplate(list, this.#listType);
+    templateElem.innerHTML = createSidebarBlockTemplate(
+      this.#chats,
+      this.#currentUser.userId
+    );
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
