@@ -11,6 +11,10 @@ const SPECIAL_ROLES = {
   moderator: "moderator",
 };
 
+export function convertChatIdsToChatsList(chatIds, chats) {
+  return chatIds.map((chatId) => chats[chatId]);
+}
+
 export class ChatsDao {
   #chatsFilePath = FILE_PATHS.chats;
   #chatsByUserFilePath = FILE_PATHS.chatsByUser;
@@ -19,7 +23,7 @@ export class ChatsDao {
   async getChatsByUser(authorId) {
     const chatsIdsByUser = await this.getIdsChatsWhereUserParticipant(authorId);
     const chats = await this.getChats();
-    const chatsByUser = this.convertChatIdsToChatsList(chatsIdsByUser, chats);
+    const chatsByUser = convertChatIdsToChatsList(chatsIdsByUser, chats);
 
     return chatsByUser;
   }
@@ -34,10 +38,6 @@ export class ChatsDao {
 
   async getChats() {
     return await this.#storeServise.getData(this.#chatsFilePath);
-  }
-
-  convertChatIdsToChatsList(chatIds, chats) {
-    return chatIds.map((chatId) => chats[chatId]);
   }
 
   async setChat(chat) {
