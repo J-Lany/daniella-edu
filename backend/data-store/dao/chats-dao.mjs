@@ -18,7 +18,8 @@ export class ChatsDao {
 
   async getChatsByUser(authorId) {
     const chatsIdsByUser = await this.getIdsChatsWhereUserParticipant(authorId);
-    const chatsByUser = await this.convertChatIdsToChatsList(chatsIdsByUser);
+    const chats = await this.getChats();
+    const chatsByUser = this.convertChatIdsToChatsList(chatsIdsByUser, chats);
 
     return chatsByUser;
   }
@@ -27,12 +28,15 @@ export class ChatsDao {
     const chatsIds = await this.#storeServise.getData(
       this.#chatsByUserFilePath
     );
+
     return chatsIds[authorId];
   }
 
-  async convertChatIdsToChatsList(chatIds) {
-    const chats = await this.#storeServise.getData(this.#chatsFilePath);
+  async getChats() {
+    return await this.#storeServise.getData(this.#chatsFilePath);
+  }
 
+  convertChatIdsToChatsList(chatIds, chats) {
     return chatIds.map((chatId) => chats[chatId]);
   }
 
