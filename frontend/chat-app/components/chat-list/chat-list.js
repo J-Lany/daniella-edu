@@ -5,7 +5,6 @@ import { createChatListTemplate } from "./chat-list.template.js";
 
 export class ChatListComponent extends HTMLElement {
   #listenerService = diContainer.resolve(SERVICES.listener);
-  #authService = diContainer.resolve(SERVICES.auth);
   #chatService = diContainer.resolve(SERVICES.chat);
   #listType = LIST_TYPE.chats;
   #currentUser;
@@ -21,20 +20,14 @@ export class ChatListComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    this.getChats();
-  }
-
-  getChats() {
-    this.#currentUser = this.#authService.getCurrentUser();
-    this.#chatService
-      .getChatsByCurrnetUser(this.#currentUser.userId)
-      .then((res) => {
-        this.#chats = res;
-        this.render();
-      });
+    this.unsubscribeFromChats = this.#chatService.subscribeChats(
+      this.render.bind(this)
+    );
   }
 
   disconnectedCallback() {
+    this.unsubscribeFromChats();
+
     if (this.#listType === LIST_TYPE.users) {
       this.#listenerService.removeListeners(this.handleClickOutside.bind(this));
     }
@@ -57,14 +50,11 @@ export class ChatListComponent extends HTMLElement {
     }
   }
 
-  render() {
+  render(chatList, currentUserId) {
     this.#listenerService.removeListeners(this.handleClickOutside.bind(this));
 
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createChatListTemplate(
-      this.#chats,
-      this.#currentUser.userId
-    );
+    templateElem.innerHTML = createChatListTemplate(chatList, currentUserId);
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
