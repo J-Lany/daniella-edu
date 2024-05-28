@@ -102,6 +102,17 @@ export class AuthService {
     });
   }
 
+  logout() {
+    sessionStorage.removeItem(TOKEN);
+    sessionStorage.removeItem(USER);
+
+    this.#currentUser = null;
+    this.#token = null;
+
+    this.notifySubscribers();
+    this.notifyCurrentUserSubscribers();
+  }
+
   getToken() {
     return this.#token;
   }
