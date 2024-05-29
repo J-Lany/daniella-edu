@@ -7,18 +7,21 @@ const messageAttribute = {
   MESSAGE_TIME: "time",
   MESSAGE: "message",
   DISPLAY_MODE: "display-mode",
+  CHAT_ID: "chat-id",
 };
 export class Message extends HTMLElement {
   #userId;
   #messageTime;
   #message;
   #displayMode;
+  #chatId;
 
   #ATTRIBUTE_MAPPING = new Map([
     [messageAttribute.MESSAGE_TIME, this.setTime.bind(this)],
     [messageAttribute.USER_ID, this.setUserId.bind(this)],
     [messageAttribute.MESSAGE, this.setMessage.bind(this)],
     [messageAttribute.DISPLAY_MODE, this.setDisplayMode.bind(this)],
+    [messageAttribute.CHAT_ID, this.setChatId.bind(this)],
   ]);
 
   static get name() {
@@ -62,6 +65,10 @@ export class Message extends HTMLElement {
 
   setDisplayMode(newMode) {
     this.#displayMode = newMode;
+  }
+
+  setChatId(newChatId) {
+    this.#chatId = newChatId;
   }
 
   render() {

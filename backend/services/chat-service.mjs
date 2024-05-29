@@ -30,6 +30,10 @@ export class ChatService {
   async getChatsByUser(authorId, chatsPerPage, pageNumber) {
     const chatsList = await this.#chatsDao.getChatsByUser(authorId);
 
+    if (!chatsList) {
+      throw new Error(401);
+    }
+
     return paginator(chatsPerPage, pageNumber, chatsList);
   }
 

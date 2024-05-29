@@ -5,7 +5,7 @@ export function createSidebarTemplate(value) {
     ${getSidebarStyle()}
     <div class="chat-sidebar">
     <search-input value=${value}></search-input>
-    <sidebar-block></sidebar-block>
+    <chat-list></chat-list>
     </div>
 `;
 }

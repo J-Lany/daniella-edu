@@ -1,14 +1,15 @@
 import { SERVICES } from "../../di/api.js";
 import { diContainer } from "../../di/di.js";
 import { LIST_TYPE } from "../sidebar/sidebar.js";
-import { createSidebarBlockTemplate } from "./sidebar-block.template.js";
+import { createChatListTemplate } from "./chat-list.template.js";
 
-export class SidebarBlock extends HTMLElement {
+export class ChatListComponent extends HTMLElement {
   #listenerService = diContainer.resolve(SERVICES.listener);
+  #chatService = diContainer.resolve(SERVICES.chat);
   #listType = LIST_TYPE.chats;
 
   static get name() {
-    return "sidebar-block";
+    return "chat-list";
   }
 
   constructor() {
@@ -17,10 +18,14 @@ export class SidebarBlock extends HTMLElement {
   }
 
   connectedCallback() {
-    this.render();
+    this.unsubscribeFromChats = this.#chatService.subscribeChats(
+      this.render.bind(this)
+    );
   }
 
   disconnectedCallback() {
+    this.unsubscribeFromChats();
+
     if (this.#listType === LIST_TYPE.users) {
       this.#listenerService.removeListeners(this.handleClickOutside.bind(this));
     }
@@ -43,11 +48,11 @@ export class SidebarBlock extends HTMLElement {
     }
   }
 
-  render(list) {
+  render(chatList, currentUserId) {
     this.#listenerService.removeListeners(this.handleClickOutside.bind(this));
-    
+
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createSidebarBlockTemplate(list, this.#listType);
+    templateElem.innerHTML = createChatListTemplate(chatList, currentUserId);
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));

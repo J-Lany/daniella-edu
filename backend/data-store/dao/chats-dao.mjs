@@ -1,6 +1,7 @@
 import { SERVICES } from "../../di/api.mjs";
 import { diContainer } from "../../di/di.mjs";
 import { FILE_PATHS } from "../data/data-file-paths.mjs";
+import { convertChatIdsToChatsList } from "../../mappers/mappers.mjs";
 
 const CHAT_TYPES = {
   p2p: "p2p",
@@ -17,11 +18,24 @@ export class ChatsDao {
   #storeServise = diContainer.resolve(SERVICES.store);
 
   async getChatsByUser(authorId) {
-    const chatsByUser = await this.#storeServise.getData(
+    const chatsIdsByUser = await this.getIdsChatsWhereUserParticipant(authorId);
+    const chats = await this.getChats();
+
+    const chatsByUser = convertChatIdsToChatsList(chatsIdsByUser, chats);
+
+    return chatsByUser;
+  }
+
+  async getIdsChatsWhereUserParticipant(authorId) {
+    const chatsIds = await this.#storeServise.getData(
       this.#chatsByUserFilePath
     );
 
-    return chatsByUser[authorId];
+    return chatsIds[authorId];
+  }
+
+  async getChats() {
+    return await this.#storeServise.getData(this.#chatsFilePath);
   }
 
   async setChat(chat) {

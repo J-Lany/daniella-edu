@@ -89,7 +89,6 @@ export class AuthService {
         this.#token = res.content.token;
 
         this.notifySubscribers();
-        this.notifyCurrentUserSubscribers();
       })
       .catch(this.notifyError.bind(this));
   }

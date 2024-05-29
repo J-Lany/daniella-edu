@@ -4,4 +4,5 @@ export const SERVICES = {
   auth: "authService",
   user: "userService",
   listener: "listenerService",
+  chat: "chatService",
 };
