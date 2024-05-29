@@ -24,6 +24,7 @@ import { Sidebar } from "./chat-app/components/sidebar/sidebar.js";
 import { ListenerService } from "./chat-app/services/listenerService.js";
 import { ChatService } from "./chat-app/services/chatService.js";
 import { ChatListComponent } from "./chat-app/components/chat-list/chat-list.js";
+import { UserListComponent } from "./chat-app/components/user-list/user-list.js";
 
 diContainer.register(SERVICES.http, httpService);
 diContainer.register(SERVICES.messages, new MessageService());
@@ -50,6 +51,7 @@ diContainer.register(SERVICES.chat, new ChatService());
   ToastComponent,
   SearchInput,
   ChatListComponent,
+  UserListComponent,
 ].map((component) => customElements.define(component.name, component));
 
 document.querySelector("#app").innerHTML = `<app-component></app-component>`;

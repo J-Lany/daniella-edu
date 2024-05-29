@@ -41,12 +41,15 @@ export class Sidebar extends HTMLElement {
 
   async #onSearch(event) {
     const inputValue = event.detail.value;
-    const sidebarBlock = this.shadowRoot.querySelector("sidebar-block");
+
+    const modalElement = this.shadowRoot.querySelector(".modal");
+    modalElement.classList.add("open");
+
+    const userList = this.shadowRoot.querySelector("user-list");
 
     if (inputValue === "") {
-      sidebarBlock.handleCustomEvent({
+      userList.handleCustomEvent({
         detail: null,
-        listType: LIST_TYPE.users,
       });
       return;
     }
@@ -54,9 +57,8 @@ export class Sidebar extends HTMLElement {
     const userId = event.detail.userId;
     const res = await this.#userService.searchUser(inputValue, userId);
 
-    sidebarBlock.handleCustomEvent({
+    userList.handleCustomEvent({
       detail: res.result,
-      listType: LIST_TYPE.users,
     });
   }
 
