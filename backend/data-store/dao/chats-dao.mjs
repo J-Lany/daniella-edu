@@ -20,6 +20,7 @@ export class ChatsDao {
   async getChatsByUser(authorId) {
     const chatsIdsByUser = await this.getIdsChatsWhereUserParticipant(authorId);
     const chats = await this.getChats();
+
     const chatsByUser = convertChatIdsToChatsList(chatsIdsByUser, chats);
 
     return chatsByUser;
