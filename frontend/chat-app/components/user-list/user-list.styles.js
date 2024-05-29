@@ -5,9 +5,19 @@ export function getUserListStyle() {
      <style>
        @import url('../common.css');
        
-       .chat-list {
-          display: flex;
-          flex-direction: column;
+       .user-list {
+         display: none;
+         position: absolute;
+         top: 4rem;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         background-color: var( --light-gray-background);
+       }
+
+       .open {
+         display: flex;
+         flex-direction: column;
        }
 
        .chat-list-empty {

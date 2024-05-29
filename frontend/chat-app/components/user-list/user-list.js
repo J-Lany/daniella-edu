@@ -24,6 +24,8 @@ export class UserListComponent extends HTMLElement {
 
   handleCustomEvent(event) {
     this.render(event.detail);
+    const modalElement = this.shadowRoot.querySelector(".user-list");
+    modalElement.classList.add("open");
   }
 
   handleClickOutside(event) {
@@ -33,7 +35,7 @@ export class UserListComponent extends HTMLElement {
       sidebarBlock !== target || !sidebarBlock.contains(target);
 
     if (isClickOutsideSidebar) {
-      this.remove();
+      console.log("outside");
     }
   }
 

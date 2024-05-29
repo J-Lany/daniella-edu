@@ -41,10 +41,6 @@ export class Sidebar extends HTMLElement {
 
   async #onSearch(event) {
     const inputValue = event.detail.value;
-
-    const modalElement = this.shadowRoot.querySelector(".modal");
-    modalElement.classList.add("open");
-
     const userList = this.shadowRoot.querySelector("user-list");
 
     if (inputValue === "") {

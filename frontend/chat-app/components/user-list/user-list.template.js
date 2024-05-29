@@ -11,7 +11,7 @@ const layoutList = (userList) => {
 export function createUserListTemplate(userList) {
   return `
     ${getUserListStyle()}
-    <div class="chat-list">
+    <div class="user-list">
       ${
         userList && userList.length > 0
           ? layoutList(userList)
