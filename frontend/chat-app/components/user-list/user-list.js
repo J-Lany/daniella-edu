@@ -5,6 +5,7 @@ import { addListeners, removeListeners, select } from "../../utils/utils.js";
 
 export class UserListComponent extends HTMLElement {
   #listenerService = diContainer.resolve(SERVICES.listener);
+  #chatService = diContainer.resolve(SERVICES.chat);
   #listeners = [
     [select.bind(this, ".user-list"), "click", this.#onUserClick.bind(this)],
   ];
@@ -44,8 +45,13 @@ export class UserListComponent extends HTMLElement {
     }
   }
 
-  #onUserClick() {
-    console.log("select user");
+  async #onUserClick(event) {
+    const userId = event.target.getAttribute("user-id");
+
+    await this.#chatService.createChat([userId]);
+
+    const modalElement = this.shadowRoot.querySelector(".chat-list__item");
+    modalElement.classList.remove("open");
   }
 
   render(userList) {
