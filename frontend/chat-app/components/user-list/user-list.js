@@ -1,9 +1,13 @@
 import { SERVICES } from "../../di/api.js";
 import { diContainer } from "../../di/di.js";
 import { createUserListTemplate } from "./user-list.template.js";
+import { addListeners, removeListeners, select } from "../../utils/utils.js";
 
 export class UserListComponent extends HTMLElement {
   #listenerService = diContainer.resolve(SERVICES.listener);
+  #listeners = [
+    [select.bind(this, ".user-list"), "click", this.#onUserClick.bind(this)],
+  ];
 
   static get name() {
     return "user-list";
@@ -20,6 +24,7 @@ export class UserListComponent extends HTMLElement {
 
   disconnectedCallback() {
     this.#listenerService.removeListeners(this.handleClickOutside.bind(this));
+    this.#listeners.forEach(removeListeners.bind(this));
   }
 
   handleCustomEvent(event) {
@@ -39,8 +44,13 @@ export class UserListComponent extends HTMLElement {
     }
   }
 
+  #onUserClick() {
+    console.log("select user");
+  }
+
   render(userList) {
     this.#listenerService.removeListeners(this.handleClickOutside.bind(this));
+    this.#listeners.forEach(removeListeners.bind(this));
 
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createUserListTemplate(userList);
@@ -49,5 +59,6 @@ export class UserListComponent extends HTMLElement {
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
 
     this.#listenerService.addListeners(this.handleClickOutside.bind(this));
+    this.#listeners.forEach(addListeners.bind(this));
   }
 }
