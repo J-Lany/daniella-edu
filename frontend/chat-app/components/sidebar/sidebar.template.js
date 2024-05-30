@@ -4,7 +4,7 @@ export function createSidebarTemplate(value) {
   return `
     ${getSidebarStyle()}
     <div class="chat-sidebar">
-      <search-input value=${value}></search-input>
+      <search-input></search-input>
       <chat-list></chat-list>
       <user-list class="modal__user-list"></user-list>
     </div>

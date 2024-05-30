@@ -58,11 +58,11 @@ export class Sidebar extends HTMLElement {
     });
   }
 
-  render(inputValue) {
+  render() {
     this.#listeners.forEach(removeListeners.bind(this));
 
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createSidebarTemplate(inputValue);
+    templateElem.innerHTML = createSidebarTemplate();
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));

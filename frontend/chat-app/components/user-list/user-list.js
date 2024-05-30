@@ -29,13 +29,13 @@ export class UserListComponent extends HTMLElement {
   }
 
   handleClickOutside(event) {
-    const sidebarBlock = this;
-    const target = event.target;
-    const isClickOutsideSidebar =
-      sidebarBlock !== target || !sidebarBlock.contains(target);
+    const modalElement = this.shadowRoot.querySelector(".user-list");
+    const eventPath = event.composedPath();
 
-    if (isClickOutsideSidebar) {
-      console.log("outside");
+    const isClickOutsideModal = !eventPath.includes(this);
+
+    if (isClickOutsideModal) {
+      modalElement.classList.remove("open");
     }
   }
 
