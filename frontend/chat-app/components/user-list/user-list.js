@@ -48,6 +48,10 @@ export class UserListComponent extends HTMLElement {
   async #onUserClick(event) {
     const userId = event.target.getAttribute("user-id");
 
+    if (!userId) {
+      return;
+    }
+
     await this.#chatService.createChat([userId]);
 
     const modalElement = this.shadowRoot.querySelector(".chat-list__item");
