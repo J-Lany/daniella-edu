@@ -8,28 +8,33 @@ export function getUserListStyle() {
        .user-list {
          display: none;
          position: absolute;
-         top: 4rem;
+         top: 4.2rem;
          left: 0;
          width: 100%;
-         height: 100%;
-         background-color: var( --light-gray-background);
+         background-color: var(--mid-light-gray-background);
+         border-radius: 1rem;
+         transition: transform 0.5s ease-in-out;
+         transform: translateY(100%);
+         will-change: transform;       
        }
 
        .open {
          display: flex;
          flex-direction: column;
+         transform: translateY(0);
        }
 
-       .chat-list-empty {
+       .user-list-empty {
          text-align: center;
+         padding: 1rem;
        }
 
-       .chat-list__item {
+       .user-list__item {
           padding: 1.25rem;
           transition: background-color 0.2s ease-in-out;
        }
 
-       .chat-list__item:hover {
+       .user-list__item:hover {
          background: var(--white-background);
          cursor: pointer;
       }
