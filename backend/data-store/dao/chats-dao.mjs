@@ -26,6 +26,19 @@ export class ChatsDao {
     return chatsByUser;
   }
 
+  async isP2pChatAlreadyExist(authorId, participantId) {
+    const chatsByUser = await this.getChatsByUser(authorId);
+    if (!chatsByUser) {
+      return false;
+    }
+
+    return chatsByUser.filter(
+      (chat) =>
+        chat.chatType === CHAT_TYPES.p2p &&
+        !chat.participantsIds.includes(participantId)
+    ).length;
+  }
+
   async getIdsChatsWhereUserParticipant(authorId) {
     const chatsIds = await this.#storeServise.getData(
       this.#chatsByUserFilePath
@@ -38,11 +51,18 @@ export class ChatsDao {
     return await this.#storeServise.getData(this.#chatsFilePath);
   }
 
-  async setChat(chat) {
+  async setChat(authorId, chat) {
     const chats = await this.#storeServise.getData(this.#chatsFilePath);
     const chatsByUser = await this.#storeServise.getData(
       this.#chatsByUserFilePath
     );
+
+    if (
+      chat.chatType === CHAT_TYPES.p2p &&
+      (await this.isP2pChatAlreadyExist(authorId, chat.participantsIds))
+    ) {
+      return false;
+    }
 
     chats[chat.chatId] = chat;
 
@@ -56,6 +76,8 @@ export class ChatsDao {
 
     await this.#storeServise.setData(this.#chatsFilePath, chats);
     await this.#storeServise.setData(this.#chatsByUserFilePath, chatsByUser);
+
+    return true;
   }
 
   async deleteChat(authorId, deleteChatId) {
