@@ -7,7 +7,7 @@ export class UserListComponent extends HTMLElement {
   #listenerService = diContainer.resolve(SERVICES.listener);
   #chatService = diContainer.resolve(SERVICES.chat);
   #listeners = [
-    [select.bind(this, ".user-list"), "click", this.#onUserClick.bind(this)],
+    [select.bind(this, ".create"), "click", this.#onUserClick.bind(this)],
   ];
 
   static get name() {
