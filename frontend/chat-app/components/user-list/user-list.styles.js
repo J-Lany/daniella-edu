@@ -10,7 +10,7 @@ export function getUserListStyle() {
          position: absolute;
          top: 4.2rem;
          left: 0;
-         width: 100%;
+         width: 95%;
          background-color: var(--mid-light-gray-background);
          border-radius: 1rem;
          transition: transform 0.5s ease-in-out;
@@ -37,6 +37,7 @@ export function getUserListStyle() {
        .user-list__item:hover {
          background: var(--white-background);
          cursor: pointer;
+         border-radius: 1rem;
       }
 
      </style>
