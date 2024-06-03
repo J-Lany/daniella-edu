@@ -22,7 +22,7 @@ export class ChatService {
       bannedId: [],
       chatType,
     };
-    const isChatCreate = await this.#chatsDao.setChat(authorId, newChat);
+    const isChatCreate = await this.#chatsDao.createChat(authorId, newChat);
 
     if (!isChatCreate) {
       throw new Error(401);

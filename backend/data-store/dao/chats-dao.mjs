@@ -67,7 +67,7 @@ export class ChatsDao {
     return await this.#storeServise.getData(this.#chatsFilePath);
   }
 
-  async setChat(authorId, chat) {
+  async createChat(authorId, chat) {
     const chats = await this.#storeServise.getData(this.#chatsFilePath);
     const chatsByUser = await this.#storeServise.getData(
       this.#chatsByUserFilePath
@@ -87,6 +87,10 @@ export class ChatsDao {
       authorId,
       chat.participantsIds
     );
+
+    if (chats[chat.chatId]) {
+      return false;
+    }
 
     chats[chat.chatId] = chat;
     await this.#usersDAO.setFriend(authorId, companionId);
