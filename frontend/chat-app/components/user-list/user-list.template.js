@@ -15,17 +15,39 @@ const layoutList = (list, className) => {
     : "";
 };
 
+const createChatTemplate = (list) => {
+  return `
+${
+  list.usersWithoutConversations
+    ? `<div class="group">Create chat</div>
+  ${layoutList(list.usersWithoutConversations, className.create)}`
+    : ""
+}
+`;
+};
+
+const selectChatTemplate = (list) => {
+  return `
+${
+  list.usersWithConversations
+    ? ` <div class="group">Select chat</div>
+    ${layoutList(list.usersWithConversations, className.select)}`
+    : ""
+}
+`;
+};
+
 export function createUserListTemplate(result) {
-  if (result?.message) {
-    return `<div class='user-list-empty'>${result.message}</div>`;
-  }
   return `
     ${getUserListStyle()}
     <div class="user-list">
-          ${`<div class="group">Create chat</div>
-          ${layoutList(result?.usersWithoutConversations, className.create)}
-            <div class="group">Select chat</div>
-            ${layoutList(result?.usersWithConversations, className.select)}`}
+      ${createChatTemplate(result)}
+      ${selectChatTemplate(result)}
+      ${
+        result?.message
+          ? `<div class='user-list-empty'>${result.message}</div>`
+          : ""
+      }
     </div>
 `;
 }
