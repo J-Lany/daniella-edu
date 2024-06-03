@@ -17,7 +17,11 @@ export function getUserListStyle() {
          transform: translateY(100%);
          will-change: transform;       
        }
-
+       .group {
+         padding: 1rem;
+         font-style: italic;
+       }
+       
        .open {
          display: flex;
          flex-direction: column;
