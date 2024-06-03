@@ -31,7 +31,7 @@ export function getUserListStyle() {
 
        .user-list__item {
           padding: 1.25rem;
-          transition: background-color 0.2s ease-in-out;
+          transition: background-color 0.2s ease-in-out, border-radius 0.2s ease-in-out;
        }
 
        .user-list__item:hover {
