@@ -4,6 +4,6 @@ export const FILE_PATHS = {
   messages: "data-store/data/messages.json",
   emails: "data-store/data/emails.json",
   sessions: "data-store/data/sessions.json",
-  chatsByUser: "data-store/data/chatsByUser.json",
-  userFriends: "data-store/data/userFriends.json",
+  chatsByUser: "data-store/data/chats-by-user.json",
+  userFriends: "data-store/data/user-friends.json",
 };

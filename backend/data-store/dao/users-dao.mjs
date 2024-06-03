@@ -1,6 +1,8 @@
 import { SERVICES } from "../../di/api.mjs";
 import { diContainer } from "../../di/di.mjs";
+import { convertToDTO } from "../../utils/UserDTO.mjs";
 import { FILE_PATHS } from "../data/data-file-paths.mjs";
+convertToDTO;
 
 export class UsersDao {
   #filePath = FILE_PATHS.users;
@@ -36,16 +38,40 @@ export class UsersDao {
     await this.#storeServise.setData(this.#filePath, users);
   }
 
-  async searchUser(search) {
+  async searchUser(search, userId) {
     const users = await this.#storeServise.getData(this.#filePath);
     const check = new RegExp(search, "gi");
+    const usersFriends = await this.#storeServise.getData(this.#usersFriends);
 
-    return Object.values(users).filter(
+    const matchedUsers = Object.values(users).filter(
       (user) =>
         check.test(user.firstName) ||
         check.test(user.lastName) ||
         check.test(user.login)
     );
+
+    if (!matchedUsers) {
+      return null;
+    }
+
+    const filtresResult = matchedUsers.filter((user) => user.userId !== userId);
+
+    if (!filtresResult.length) {
+      return null;
+    }
+
+    const usersWithoutConversations = [];
+    const usersWithConversations = [];
+
+    filtresResult.forEach((user) => {
+      if (usersFriends[userId].includes(user.userId)) {
+        usersWithConversations.push(convertToDTO(user));
+      } else {
+        usersWithoutConversations.push(convertToDTO(user));
+      }
+    });
+
+    return { usersWithoutConversations, usersWithConversations };
   }
 
   async updateUser(userId, updates) {
