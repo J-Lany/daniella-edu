@@ -4,6 +4,7 @@ import { FILE_PATHS } from "../data/data-file-paths.mjs";
 
 export class UsersDao {
   #filePath = FILE_PATHS.users;
+  #usersFriends = FILE_PATHS.userFriends;
   #storeServise = diContainer.resolve(SERVICES.store);
 
   async getUsers() {
@@ -63,5 +64,31 @@ export class UsersDao {
     delete users[userId];
 
     await this.#storeServise.setData(this.#filePath, users);
+  }
+
+  async setFriend(authorId, friendId) {
+    const usersFriends = await this.#storeServise.getData(this.#usersFriends);
+
+    if (usersFriends[authorId]) {
+      usersFriends[authorId].push(friendId);
+    } else {
+      usersFriends[authorId] = [friendId];
+    }
+
+    await this.#storeServise.setData(this.#usersFriends, usersFriends);
+  }
+
+  async deleteFriends(authorId, friendId) {
+    const usersFriends = await this.#storeServise.getData(this.#usersFriends);
+
+    if (!usersFriends[authorId]) {
+      return;
+    }
+
+    usersFriends[authorId] = usersFriends[authorId].filter(
+      (userFriendId) => userFriendId !== friendId
+    );
+
+    await this.#storeServise.setData(this.#usersFriends, usersFriends);
   }
 }

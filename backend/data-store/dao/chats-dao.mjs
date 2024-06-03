@@ -15,6 +15,8 @@ const SPECIAL_ROLES = {
 export class ChatsDao {
   #chatsFilePath = FILE_PATHS.chats;
   #chatsByUserFilePath = FILE_PATHS.chatsByUser;
+  #usersFriends = FILE_PATHS.userFriends;
+  #usersDAO = diContainer.resolve(SERVICES.usersDao);
   #storeServise = diContainer.resolve(SERVICES.store);
 
   async getChatsByUser(authorId) {
@@ -26,17 +28,25 @@ export class ChatsDao {
     return chatsByUser;
   }
 
-  async isP2pChatAlreadyExist(authorId, participantId) {
+  async isP2pChatAlreadyExist(authorId, participantsId) {
+    const usersFriends = await this.#storeServise.getData(this.#usersFriends);
     const chatsByUser = await this.getChatsByUser(authorId);
-    if (!chatsByUser) {
+    const authorFriends = usersFriends[authorId];
+
+    if (!chatsByUser || !authorFriends) {
       return false;
     }
 
-    return chatsByUser.filter(
-      (chat) =>
-        chat.chatType === CHAT_TYPES.p2p &&
-        !chat.participantsIds.includes(participantId)
+    const participantId = this.getCompanionIdFromPartisipants(
+      authorId,
+      participantsId
+    );
+
+    const isPartisipantsAlreadyFriends = !!authorFriends.filter(
+      (companionId) => companionId === participantId
     ).length;
+
+    return isPartisipantsAlreadyFriends;
   }
 
   async getIdsChatsWhereUserParticipant(authorId) {
@@ -45,6 +55,12 @@ export class ChatsDao {
     );
 
     return chatsIds[authorId];
+  }
+
+  getCompanionIdFromPartisipants(authorId, participantsIds) {
+    return participantsIds
+      .filter((participantId) => participantId !== authorId)
+      .join("");
   }
 
   async getChats() {
@@ -57,14 +73,23 @@ export class ChatsDao {
       this.#chatsByUserFilePath
     );
 
-    if (
-      chat.chatType === CHAT_TYPES.p2p &&
-      (await this.isP2pChatAlreadyExist(authorId, chat.participantsIds))
-    ) {
+    const isP2pChat = chat.chatType === CHAT_TYPES.p2p;
+    const isP2pChatAlreadyExist = await this.isP2pChatAlreadyExist(
+      authorId,
+      chat.participantsIds
+    );
+
+    if (isP2pChat && isP2pChatAlreadyExist) {
       return false;
     }
 
+    const companionId = this.getCompanionIdFromPartisipants(
+      authorId,
+      chat.participantsIds
+    );
+
     chats[chat.chatId] = chat;
+    await this.#usersDAO.setFriend(authorId, companionId);
 
     chat.participantsIds.forEach((participantId) => {
       if (!chatsByUser[participantId]) {
@@ -91,6 +116,14 @@ export class ChatsDao {
 
     if (!isChatExist) {
       return null;
+    }
+
+    if (isP2pChat) {
+      const companionId = this.getCompanionIdFromPartisipants(
+        chats[deleteChatId].participantsIds
+      );
+
+      this.#usersDAO.deleteFriends(authorId, companionId);
     }
 
     if (isP2pChat || isAdmin) {
