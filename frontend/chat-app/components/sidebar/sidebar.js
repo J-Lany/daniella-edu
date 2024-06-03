@@ -54,7 +54,7 @@ export class Sidebar extends HTMLElement {
     const res = await this.#userService.searchUser(inputValue, userId);
 
     userList.handleCustomEvent({
-      detail: res.result,
+      detail: res,
     });
   }
 
