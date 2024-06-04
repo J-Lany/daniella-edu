@@ -18,7 +18,7 @@ const layoutList = (list, className) => {
 const createChatTemplate = (list) => {
   return `
 ${
-  list.usersWithoutConversations
+  list && list.usersWithoutConversations.result.length > 0
     ? `<div class="group">Create chat</div>
   ${layoutList(list.usersWithoutConversations, className.create)}`
     : ""
@@ -29,7 +29,7 @@ ${
 const selectChatTemplate = (list) => {
   return `
 ${
-  list.usersWithConversations
+  list && list.usersWithConversations.result.length > 0
     ? ` <div class="group">Select chat</div>
     ${layoutList(list.usersWithConversations, className.select)}`
     : ""
