@@ -42,11 +42,7 @@ export class ChatsDao {
       participantsId
     );
 
-    const isPartisipantsAlreadyFriends = !!authorFriends.filter(
-      (companionId) => companionId === participantId
-    ).length;
-
-    return isPartisipantsAlreadyFriends;
+    return authorFriends.some((companionId) => companionId === participantId);
   }
 
   async getIdsChatsWhereUserParticipant(authorId) {
