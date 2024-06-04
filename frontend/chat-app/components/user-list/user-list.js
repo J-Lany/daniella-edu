@@ -54,7 +54,7 @@ export class UserListComponent extends HTMLElement {
 
     await this.#chatService.createChat([userId]);
 
-    const modalElement = this.shadowRoot.querySelector(".chat-list__item");
+    const modalElement = this.shadowRoot.querySelector(".user-list");
     modalElement.classList.remove("open");
   }
 
