@@ -8,6 +8,7 @@ export class UserListComponent extends HTMLElement {
   #chatService = diContainer.resolve(SERVICES.chat);
   #listeners = [
     [select.bind(this, ".create"), "click", this.#onUserClick.bind(this)],
+    [select.bind(this, ".select"), "click", this.#onChatClick.bind(this)],
   ];
 
   static get name() {
@@ -54,6 +55,11 @@ export class UserListComponent extends HTMLElement {
 
     await this.#chatService.createChat([userId]);
 
+    const modalElement = this.shadowRoot.querySelector(".user-list");
+    modalElement.classList.remove("open");
+  }
+
+  #onChatClick() {
     const modalElement = this.shadowRoot.querySelector(".user-list");
     modalElement.classList.remove("open");
   }
