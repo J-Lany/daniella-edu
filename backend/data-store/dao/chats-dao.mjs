@@ -95,16 +95,23 @@ export class ChatsDao {
     chats[chat.chatId] = chat;
     await this.#usersDAO.setFriend(authorId, companionId);
 
-    chat.participantsIds.forEach((participantId) => {
-      if (!chatsByUser[participantId]) {
-        chatsByUser[participantId] = [chat.chatId];
-      } else {
-        chatsByUser[participantId].push(chat.chatId);
-      }
-    });
+    const updateChatsByUser = chat.participantsIds.reduce(
+      (acc, participantId) => {
+        return {
+          ...acc,
+          [participantId]: acc[participantId]
+            ? [...acc[participantId], chat.chatId]
+            : [chat.chatId],
+        };
+      },
+      chatsByUser
+    );
 
     await this.#storeServise.setData(this.#chatsFilePath, chats);
-    await this.#storeServise.setData(this.#chatsByUserFilePath, chatsByUser);
+    await this.#storeServise.setData(
+      this.#chatsByUserFilePath,
+      updateChatsByUser
+    );
 
     return true;
   }
