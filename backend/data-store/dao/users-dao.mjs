@@ -60,18 +60,28 @@ export class UsersDao {
       return null;
     }
 
-    const usersWithoutConversations = [];
-    const usersWithConversations = [];
+    const isUserFriendsListEmpty = !Object.keys(usersFriends).length;
 
-    filtresResult.forEach((user) => {
-      if (usersFriends[userId].includes(user.userId)) {
-        usersWithConversations.push(convertToDTO(user));
-      } else {
-        usersWithoutConversations.push(convertToDTO(user));
-      }
-    });
+    if (isUserFriendsListEmpty) {
+      return filtresResult.reduce(
+        (acc, user) => {
+          acc.usersWithoutConversations.push(convertToDTO(user));
+          return acc;
+        },
+        { usersWithoutConversations: [], usersWithConversations: [] }
+      );
+    }
 
-    return { usersWithoutConversations, usersWithConversations };
+    return filtresResult.reduce(
+      (acc, user) => {
+        usersFriends[userId].includes(user.userId)
+          ? acc.usersWithConversations.push(convertToDTO(user))
+          : acc.usersWithoutConversations.push(convertToDTO(user));
+
+        return acc;
+      },
+      { usersWithConversations: [], usersWithoutConversations: [] }
+    );
   }
 
   async updateUser(userId, updates) {
