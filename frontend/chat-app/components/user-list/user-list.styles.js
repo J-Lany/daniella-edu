@@ -16,7 +16,7 @@ export function getUserListStyle() {
          border-radius: 1rem;
          opacity: 0;
          z-index: 0;
-         transition: transform 0.5s, z-index 0.5s ease-in-out, opacity 0.5s ease-in-out;   
+         transition: transform 0.5s ease-in-out, z-index 0.5s ease-in-out, opacity 0.5s ease-in-out;   
        }
        
        .group {
@@ -27,7 +27,7 @@ export function getUserListStyle() {
        .open {
          opacity: 1;
          z-index: 2;
-         transform: translateY(-40%);
+         transform: translateY(-12rem);
        }
 
        .user-list-empty {
