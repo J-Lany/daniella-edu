@@ -9,14 +9,14 @@ export function getUserListStyle() {
          display: flex;
          flex-direction: column;
          position: absolute;
-         top: 4.2rem;
+         transform: translateY(-100%);
          left: 0;
          width: 95%;
          background-color: var(--mid-light-gray-background);
          border-radius: 1rem;
          opacity: 0;
          z-index: 0;
-         transition: z-index 0.5s ease-in-out, opacity 0.5s ease-in-out;   
+         transition: transform 0.5s, z-index 0.5s ease-in-out, opacity 0.5s ease-in-out;   
        }
        
        .group {
@@ -27,7 +27,7 @@ export function getUserListStyle() {
        .open {
          opacity: 1;
          z-index: 2;
-         transition: z-index 0.5s ease-in-out, opacity 0.5s ease-in-out; 
+         transform: translateY(-40%);
        }
 
        .user-list-empty {
