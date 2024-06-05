@@ -60,7 +60,7 @@ export class UsersDao {
       return null;
     }
 
-    const isUserFriendsListEmpty = !Object.keys(usersFriends).length;
+    const isUserFriendsListEmpty = !usersFriends[userId];
 
     if (isUserFriendsListEmpty) {
       return filtresResult.reduce(
