@@ -9,14 +9,14 @@ export function getUserListStyle() {
          display: flex;
          flex-direction: column;
          position: absolute;
-         transform: translateY(-100%);
+         transform: translateY(-150%);
          left: 0;
          width: 95%;
          background-color: var(--mid-light-gray-background);
          border-radius: 1rem;
          opacity: 0;
-         z-index: 0;
-         transition: transform 0.5s ease-in-out, z-index 0.5s ease-in-out, opacity 0.5s ease-in-out;   
+         z-index: 0; 
+         transition: transform 0.5s ease-in-out, z-index 0.5s ease-in-out, opacity 0.5s ease-in-out; 
        }
        
        .group {
