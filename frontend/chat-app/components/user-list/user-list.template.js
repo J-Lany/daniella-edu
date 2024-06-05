@@ -7,7 +7,7 @@ const className = {
 
 const layoutList = (list, className) => {
   return list
-    ? list.result
+    ? list
         .map(({ userId }) => {
           return `<message-component class="user-list__item ${className}" user-id="${userId}" display-mode="sidebar"></message-component> `;
         })
@@ -15,37 +15,31 @@ const layoutList = (list, className) => {
     : "";
 };
 
-const createChatTemplate = (list) => {
+const createTemplate = (list, type) => {
+  const typeList = type === className.create ? "Create" : "Select";
+
   return `
-${
-  list && list.usersWithoutConversations.result.length > 0
-    ? `<div class="group">Create chat</div>
-  ${layoutList(list.usersWithoutConversations, className.create)}`
-    : ""
-}
-`;
+  ${
+    list.result && list.result.length > 0
+      ? `<div class="group">${typeList} chat</div>
+    ${layoutList(list.result, type)}`
+      : ""
+  }
+  `;
 };
 
-const selectChatTemplate = (list) => {
-  return `
-${
-  list && list.usersWithConversations.result.length > 0
-    ? ` <div class="group">Select chat</div>
-    ${layoutList(list.usersWithConversations, className.select)}`
-    : ""
-}
-`;
-};
+export function createUserListTemplate(list) {
+  const newContact = list.usersWithoutConversations;
+  const friendsContact = list.usersWithConversations;
 
-export function createUserListTemplate(result) {
   return `
     ${getUserListStyle()}
     <div class="user-list">
-      ${createChatTemplate(result)}
-      ${selectChatTemplate(result)}
+      ${createTemplate(newContact, className.create)}
+      ${createTemplate(friendsContact, className.select)}
       ${
-        result?.message
-          ? `<div class='user-list-empty'>${result.message}</div>`
+        list?.message
+          ? `<div class='user-list-empty'>${list.message}</div>`
           : ""
       }
     </div>
