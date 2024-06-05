@@ -6,16 +6,17 @@ export function getUserListStyle() {
        @import url('../common.css');
        
        .user-list {
-         display: none;
+         display: flex;
+         flex-direction: column;
          position: absolute;
          top: 4.2rem;
          left: 0;
          width: 95%;
          background-color: var(--mid-light-gray-background);
          border-radius: 1rem;
-         transition: transform 0.5s ease-in-out;
-         transform: translateY(100%);
-         will-change: transform;       
+         opacity: 0;
+         z-index: 0;
+         transition: z-index 0.5s ease-in-out, opacity 0.5s ease-in-out;   
        }
        
        .group {
@@ -24,9 +25,9 @@ export function getUserListStyle() {
        }
        
        .open {
-         display: flex;
-         flex-direction: column;
-         transform: translateY(0);
+         opacity: 1;
+         z-index: 2;
+         transition: z-index 0.5s ease-in-out, opacity 0.5s ease-in-out; 
        }
 
        .user-list-empty {

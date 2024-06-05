@@ -15,6 +15,8 @@ export function getSidebarStyle() {
           height: 100vh;
           width: 19rem;
           position: relative;
+          overflow: hidden;
+          z-index: 1;
        }
       
        .avatar{

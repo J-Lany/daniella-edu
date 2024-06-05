@@ -35,12 +35,11 @@ export function createUserListTemplate(list) {
   return `
     ${getUserListStyle()}
     <div class="user-list">
-      ${createTemplate(newContact, className.create)}
-      ${createTemplate(friendsContact, className.select)}
       ${
         list?.message
           ? `<div class='user-list-empty'>${list.message}</div>`
-          : ""
+          : `${createTemplate(newContact, className.create)}
+          ${createTemplate(friendsContact, className.select)}`
       }
     </div>
 `;
