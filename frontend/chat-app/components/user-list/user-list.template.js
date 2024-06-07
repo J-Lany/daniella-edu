@@ -15,7 +15,7 @@ const layoutList = (list, className) => {
     : "";
 };
 
-const createTemplate = (list, type) => {
+const createTypeTemplate = (list, type) => {
   const typeList = type === className.create ? "Create" : "Select";
 
   return `
@@ -28,19 +28,21 @@ const createTemplate = (list, type) => {
   `;
 };
 
-export function createUserListTemplate(list) {
+export const createTemplate = (list) => {
   const newContact = list.usersWithoutConversations;
   const friendsContact = list.usersWithConversations;
+  
+  return list?.message
+    ? `<div class='user-list-empty'>${list.message}</div>`
+    : `${createTypeTemplate(newContact, className.create)}
+  ${createTypeTemplate(friendsContact, className.select)}`;
+};
 
+export function createUserListTemplate(list) {
   return `
     ${getUserListStyle()}
     <div class="user-list">
-      ${
-        list?.message
-          ? `<div class='user-list-empty'>${list.message}</div>`
-          : `${createTemplate(newContact, className.create)}
-          ${createTemplate(friendsContact, className.select)}`
-      }
+      ${createTemplate(list)}
     </div>
 `;
 }

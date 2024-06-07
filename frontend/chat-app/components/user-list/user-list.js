@@ -1,6 +1,9 @@
 import { SERVICES } from "../../di/api.js";
 import { diContainer } from "../../di/di.js";
-import { createUserListTemplate } from "./user-list.template.js";
+import {
+  createTemplate,
+  createUserListTemplate,
+} from "./user-list.template.js";
 import { addListeners, removeListeners, select } from "../../utils/utils.js";
 
 export class UserListComponent extends HTMLElement {
@@ -10,6 +13,7 @@ export class UserListComponent extends HTMLElement {
     [select.bind(this, ".create"), "click", this.#onUserClick.bind(this)],
     [select.bind(this, ".select"), "click", this.#onChatClick.bind(this)],
   ];
+  #isFirstRender = true;
 
   static get name() {
     return "user-list";
@@ -30,11 +34,27 @@ export class UserListComponent extends HTMLElement {
   }
 
   handleCustomEvent(event) {
-    this.render(event.detail);
+    if (this.#isFirstRender) {
+      this.#isFirstRender = false;
+      this.render(event.detail);
+      const modalElement = this.shadowRoot.querySelector(".user-list");
+      setTimeout(() => {
+        modalElement.classList.add("open");
+      }, 100);
+    } else {
+      this.updateList(event.detail);
+    }
+  }
+
+  updateList(list) {
     const modalElement = this.shadowRoot.querySelector(".user-list");
-    setTimeout(() => {
-      modalElement.classList.add("open");
-    }, 100);
+
+    modalElement.innerHTML = "";
+
+    const templateElem = document.createElement("template");
+    templateElem.innerHTML = createTemplate(list);
+
+    modalElement.appendChild(templateElem.content.cloneNode(true));
   }
 
   handleClickOutside(event) {
@@ -45,6 +65,7 @@ export class UserListComponent extends HTMLElement {
 
     if (isClickOutsideModal) {
       modalElement.classList.remove("open");
+      this.#isFirstRender = true;
     }
   }
 
