@@ -16,7 +16,7 @@ export function getUserListStyle() {
          border-radius: 1rem;
          opacity: 0;
          z-index: 0; 
-         transition: transform 0.3s ease-in-out, z-index 0.3s ease-in-out, opacity 0.3s ease-in-out; 
+         transition: transform 0.2s ease-in-out, z-index 0.2s ease-in-out, opacity 0.2s ease-in-out; 
        }
        
        .group {
