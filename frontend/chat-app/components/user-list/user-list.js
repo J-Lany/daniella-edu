@@ -32,7 +32,9 @@ export class UserListComponent extends HTMLElement {
   handleCustomEvent(event) {
     this.render(event.detail);
     const modalElement = this.shadowRoot.querySelector(".user-list");
-    modalElement.classList.add("open");
+    setTimeout(() => {
+      modalElement.classList.add("open");
+    }, 100);
   }
 
   handleClickOutside(event) {
