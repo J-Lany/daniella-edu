@@ -26,7 +26,7 @@ export function getUserListStyle() {
        
        .open {
          opacity: 1;
-         z-index: 2;
+         z-index: 1;
          transform: translateY(-12rem);
        }
 
