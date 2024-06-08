@@ -97,14 +97,12 @@ export class ChatsDao {
     }
 
     const updateChatsByUser = chat.participantsIds.reduce(
-      (acc, participantId) => {
-        return {
-          ...acc,
-          [participantId]: acc[participantId]
-            ? [...acc[participantId], chat.chatId]
-            : [chat.chatId],
-        };
-      },
+      (acc, participantId) => ({
+        ...acc,
+        [participantId]: acc[participantId]
+          ? [...acc[participantId], chat.chatId]
+          : [chat.chatId],
+      }),
       chatsByUser
     );
 
