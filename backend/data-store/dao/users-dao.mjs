@@ -65,10 +65,10 @@ export class UsersDao {
     if (isUserFriendsListEmpty) {
       return filtresResult.reduce(
         (acc, user) => {
-          acc.usersWithoutConversations.push(convertToDTO(user));
+          acc.newContacts.push(convertToDTO(user));
           return acc;
         },
-        { usersWithoutConversations: [], usersWithConversations: [] }
+        { newContacts: [], usersWithConversations: [] }
       );
     }
 
@@ -76,11 +76,11 @@ export class UsersDao {
       (acc, user) => {
         usersFriends[userId].includes(user.userId)
           ? acc.usersWithConversations.push(convertToDTO(user))
-          : acc.usersWithoutConversations.push(convertToDTO(user));
+          : acc.newContacts.push(convertToDTO(user));
 
         return acc;
       },
-      { usersWithConversations: [], usersWithoutConversations: [] }
+      { usersWithConversations: [], newContacts: [] }
     );
   }
 

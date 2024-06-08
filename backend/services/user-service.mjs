@@ -65,13 +65,13 @@ export class UserService {
       throw new Error(403);
     }
 
-    const { usersWithoutConversations, usersWithConversations } = result;
+    const { newContacts, usersWithConversations } = result;
 
     return {
-      usersWithoutConversations: paginator(
+      newContacts: paginator(
         userPerPage,
         pageNumber,
-        usersWithoutConversations
+        newContacts
       ),
       usersWithConversations: paginator(
         userPerPage,
