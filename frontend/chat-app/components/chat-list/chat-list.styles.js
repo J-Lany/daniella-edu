@@ -8,6 +8,7 @@ export function getChatListStyle() {
        .chat-list {
           display: flex;
           flex-direction: column;
+          height: 100vh;
        }
 
        .chat-list-empty {

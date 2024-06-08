@@ -9,7 +9,7 @@ export function getUserListStyle() {
          display: flex;
          flex-direction: column;
          position: absolute;
-         transform: translateY(-250%);
+         transform: translateY(-100rem);
          left: 0;
          width: 95%;
          background-color: var(--mid-light-gray-background);
@@ -27,7 +27,7 @@ export function getUserListStyle() {
        .open {
          opacity: 1;
          z-index: 1;
-         transform: translateY(-12rem);
+         transform: translateY(-55rem);
        }
 
        .user-list-empty {
