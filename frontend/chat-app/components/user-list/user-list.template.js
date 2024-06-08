@@ -17,10 +17,11 @@ const layoutList = (list, className) => {
 
 const createTypeTemplate = (list, type) => {
   const typeList = type === className.create ? "Create" : "Select";
+  const isListNotEmpty = list?.result && list?.result.length > 0;
 
   return `
   ${
-    list.result && list.result.length > 0
+    isListNotEmpty
       ? `<div class="group">${typeList} chat</div>
     ${layoutList(list.result, type)}`
       : ""
@@ -29,9 +30,9 @@ const createTypeTemplate = (list, type) => {
 };
 
 export const createTemplate = (list) => {
-  const newContact = list.usersWithoutConversations;
-  const friendsContact = list.usersWithConversations;
-  
+  const newContact = list?.usersWithoutConversations;
+  const friendsContact = list?.usersWithConversations;
+
   return list?.message
     ? `<div class='user-list-empty'>${list.message}</div>`
     : `${createTypeTemplate(newContact, className.create)}
