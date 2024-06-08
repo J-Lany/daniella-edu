@@ -42,7 +42,9 @@ export class ChatsDao {
       participantsId
     );
 
-    return authorFriends.some((companionId) => companionId === participantId);
+    return authorFriends.some((companionId) =>
+      participantId.includes(companionId)
+    );
   }
 
   async getIdsChatsWhereUserParticipant(authorId) {
@@ -54,9 +56,9 @@ export class ChatsDao {
   }
 
   getCompanionIdFromPartisipants(authorId, participantsIds) {
-    return participantsIds
-      .filter((participantId) => participantId !== authorId)
-      .join("");
+    return participantsIds.filter(
+      (participantId) => participantId !== authorId
+    );
   }
 
   async getChats() {
@@ -89,7 +91,10 @@ export class ChatsDao {
     }
 
     chats[chat.chatId] = chat;
-    await this.#usersDAO.setFriend(authorId, companionId);
+
+    if (isP2pChat) {
+      await this.#usersDAO.setFriend(authorId, ...companionId);
+    }
 
     const updateChatsByUser = chat.participantsIds.reduce(
       (acc, participantId) => {
@@ -130,7 +135,7 @@ export class ChatsDao {
         chats[deleteChatId].participantsIds
       );
 
-      this.#usersDAO.deleteFriends(authorId, companionId);
+      this.#usersDAO.deleteFriends(authorId, ...companionId);
     }
 
     if (isP2pChat || isAdmin) {
