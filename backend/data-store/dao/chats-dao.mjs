@@ -37,13 +37,13 @@ export class ChatsDao {
       return false;
     }
 
-    const participantId = this.getCompanionIdFromPartisipants(
+    const companionIdsFromChat = this.getCompanionIdFromPartisipants(
       authorId,
       participantsId
     );
 
     return authorFriends.some((companionId) =>
-      participantId.includes(companionId)
+    companionIdsFromChat.includes(companionId)
     );
   }
 
