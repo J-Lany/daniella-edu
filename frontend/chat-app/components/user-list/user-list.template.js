@@ -30,12 +30,12 @@ const createTypeTemplate = (list, type) => {
 };
 
 export const createTemplate = (list) => {
-  const newContact = list?.usersWithoutConversations;
+  const newContacts = list?.newContacts;
   const friendsContact = list?.usersWithConversations;
 
   return list?.message
     ? `<div class='user-list-empty'>${list.message}</div>`
-    : `${createTypeTemplate(newContact, className.create)}
+    : `${createTypeTemplate(newContacts, className.create)}
   ${createTypeTemplate(friendsContact, className.select)}`;
 };
 
