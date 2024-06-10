@@ -11,6 +11,8 @@ export const getSearchInputStyle = () => {
     padding-right: 1rem;
     align-items: center;
     gap: 1rem;
+    z-index: 1;
+    position: relative;
   }
   .search__input {
     flex-grow: 1;

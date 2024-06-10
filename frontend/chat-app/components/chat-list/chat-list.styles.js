@@ -1,25 +1,26 @@
 import "../common.css";
 
-export function getSidebarBlockStyle() {
+export function getChatListStyle() {
   return `
      <style>
        @import url('../common.css');
        
-       .sidebar-block {
+       .chat-list {
           display: flex;
           flex-direction: column;
+          height: 100vh;
        }
 
-       .sidebar-empty {
+       .chat-list-empty {
          text-align: center;
        }
 
-       .sidebar-block__item {
+       .chat-list__item {
           padding: 1.25rem;
           transition: background-color 0.2s ease-in-out;
        }
 
-       .sidebar-block__item:hover {
+       .chat-list__item:hover {
          background: var(--white-background);
          cursor: pointer;
       }

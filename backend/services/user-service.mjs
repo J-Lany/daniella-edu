@@ -59,16 +59,26 @@ export class UserService {
   }
 
   async searchUser(search, userPerPage, pageNumber, userId) {
-    const result = await this.#userDao.searchUser(search);
-    const filtresResult = result
-      ?.filter((user) => user.userId !== userId)
-      .map(convertToDTO);
+    const result = await this.#userDao.searchUser(search, userId);
 
-    if (!filtresResult) {
+    if (!result) {
       throw new Error(403);
     }
 
-    return paginator(userPerPage, pageNumber, filtresResult);
+    const { newContacts, usersWithConversations } = result;
+
+    return {
+      newContacts: paginator(
+        userPerPage,
+        pageNumber,
+        newContacts
+      ),
+      usersWithConversations: paginator(
+        userPerPage,
+        pageNumber,
+        usersWithConversations
+      ),
+    };
   }
 
   async updateUser(userId, updates) {
