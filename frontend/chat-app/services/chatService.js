@@ -50,4 +50,21 @@ export class ChatService {
     this.#chats = chats.result;
     this.notifyChatsSubscribers();
   }
+
+  async createChat(participantsIds) {
+    const { userId } = this.#authService.getCurrentUser();
+    const token = this.#authService.getToken();
+
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const body = {
+      authorId: userId,
+      chatType: "p2p",
+      participantsIds: [userId, ...participantsIds],
+    };
+
+    await this.#httpServise.post(`chats`, body, headers);
+
+    await this.getChatsByCurrnetUser();
+  }
 }

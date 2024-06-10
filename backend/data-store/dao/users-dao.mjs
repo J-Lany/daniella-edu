@@ -1,9 +1,12 @@
 import { SERVICES } from "../../di/api.mjs";
 import { diContainer } from "../../di/di.mjs";
+import { convertToDTO } from "../../utils/UserDTO.mjs";
 import { FILE_PATHS } from "../data/data-file-paths.mjs";
+convertToDTO;
 
 export class UsersDao {
   #filePath = FILE_PATHS.users;
+  #usersFriends = FILE_PATHS.userFriends;
   #storeServise = diContainer.resolve(SERVICES.store);
 
   async getUsers() {
@@ -35,15 +38,49 @@ export class UsersDao {
     await this.#storeServise.setData(this.#filePath, users);
   }
 
-  async searchUser(search) {
+  async searchUser(search, userId) {
     const users = await this.#storeServise.getData(this.#filePath);
     const check = new RegExp(search, "gi");
+    const usersFriends = await this.#storeServise.getData(this.#usersFriends);
 
-    return Object.values(users).filter(
+    const matchedUsers = Object.values(users).filter(
       (user) =>
         check.test(user.firstName) ||
         check.test(user.lastName) ||
         check.test(user.login)
+    );
+
+    if (!matchedUsers) {
+      return null;
+    }
+
+    const filtresResult = matchedUsers.filter((user) => user.userId !== userId);
+
+    if (!filtresResult.length) {
+      return null;
+    }
+
+    const isUserFriendsListEmpty = !usersFriends[userId];
+
+    if (isUserFriendsListEmpty) {
+      return filtresResult.reduce(
+        (acc, user) => {
+          acc.newContacts.push(convertToDTO(user));
+          return acc;
+        },
+        { newContacts: [], usersWithConversations: [] }
+      );
+    }
+
+    return filtresResult.reduce(
+      (acc, user) => {
+        usersFriends[userId].includes(user.userId)
+          ? acc.usersWithConversations.push(convertToDTO(user))
+          : acc.newContacts.push(convertToDTO(user));
+
+        return acc;
+      },
+      { usersWithConversations: [], newContacts: [] }
     );
   }
 
@@ -63,5 +100,31 @@ export class UsersDao {
     delete users[userId];
 
     await this.#storeServise.setData(this.#filePath, users);
+  }
+
+  async setFriend(authorId, friendId) {
+    const usersFriends = await this.#storeServise.getData(this.#usersFriends);
+
+    if (usersFriends[authorId]) {
+      usersFriends[authorId].push(friendId);
+    } else {
+      usersFriends[authorId] = [friendId];
+    }
+
+    await this.#storeServise.setData(this.#usersFriends, usersFriends);
+  }
+
+  async deleteFriends(authorId, friendId) {
+    const usersFriends = await this.#storeServise.getData(this.#usersFriends);
+
+    if (!usersFriends[authorId]) {
+      return;
+    }
+
+    usersFriends[authorId] = usersFriends[authorId].filter(
+      (userFriendId) => userFriendId !== friendId
+    );
+
+    await this.#storeServise.setData(this.#usersFriends, usersFriends);
   }
 }

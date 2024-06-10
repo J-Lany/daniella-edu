@@ -50,9 +50,9 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 diContainer.register(SERVICES.config, configService());
 diContainer.register(SERVICES.store, new StoreService());
+diContainer.register(SERVICES.usersDao, new UsersDao());
 diContainer.register(SERVICES.chatsDao, new ChatsDao());
 diContainer.register(SERVICES.emailsDao, new EmailsDao());
-diContainer.register(SERVICES.usersDao, new UsersDao());
 diContainer.register(SERVICES.messagesDao, new MessagessDao());
 diContainer.register(SERVICES.sessionDao, new SessionDao());
 

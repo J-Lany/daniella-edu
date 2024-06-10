@@ -14,8 +14,10 @@ export function getSidebarStyle() {
           padding-top: 1rem;
           height: 100vh;
           width: 19rem;
+          position: relative;
+          z-index: 1;
        }
-
+      
        .avatar{
         max-width: 2rem;
         max-height: 2rem;

@@ -41,12 +41,11 @@ export class Sidebar extends HTMLElement {
 
   async #onSearch(event) {
     const inputValue = event.detail.value;
-    const sidebarBlock = this.shadowRoot.querySelector("sidebar-block");
+    const userList = this.shadowRoot.querySelector("user-list");
 
     if (inputValue === "") {
-      sidebarBlock.handleCustomEvent({
+      userList.handleCustomEvent({
         detail: null,
-        listType: LIST_TYPE.users,
       });
       return;
     }
@@ -54,17 +53,16 @@ export class Sidebar extends HTMLElement {
     const userId = event.detail.userId;
     const res = await this.#userService.searchUser(inputValue, userId);
 
-    sidebarBlock.handleCustomEvent({
-      detail: res.result,
-      listType: LIST_TYPE.users,
+    userList.handleCustomEvent({
+      detail: res,
     });
   }
 
-  render(inputValue) {
+  render() {
     this.#listeners.forEach(removeListeners.bind(this));
 
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createSidebarTemplate(inputValue);
+    templateElem.innerHTML = createSidebarTemplate();
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));

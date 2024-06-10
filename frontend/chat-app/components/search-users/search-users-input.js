@@ -24,6 +24,7 @@ export class SearchInput extends HTMLElement {
 
   #onInputChange(e) {
     const value = e.target.value;
+
     const { userId } = this.#userService.getCurrentUser();
 
     const searchEvent = new CustomEvent("search", {
