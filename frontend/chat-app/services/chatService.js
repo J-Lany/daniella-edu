@@ -35,9 +35,7 @@ export class ChatService {
 
   async getChatsByCurrnetUser() {
     const { userId } = this.#authService.getCurrentUser();
-    const token = this.#authService.getToken();
 
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
     const params = {
       authorId: userId,
       chatsPerPage: CHATS_PER_PAGE,
@@ -45,7 +43,7 @@ export class ChatService {
     };
     const chatsParams = new URLSearchParams(params).toString();
 
-    const chats = await this.#httpServise.get(`chats?${chatsParams}`, headers);
+    const chats = await this.#httpServise.get(`chats?${chatsParams}`);
 
     this.#chats = chats.result;
     this.notifyChatsSubscribers();
@@ -53,17 +51,13 @@ export class ChatService {
 
   async createChat(participantsIds) {
     const { userId } = this.#authService.getCurrentUser();
-    const token = this.#authService.getToken();
-
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
     const body = {
       authorId: userId,
       chatType: "p2p",
       participantsIds: [userId, ...participantsIds],
     };
 
-    await this.#httpServise.post(`chats`, body, headers);
+    await this.#httpServise.post(`chats`, body);
 
     await this.getChatsByCurrnetUser();
   }

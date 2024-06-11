@@ -46,16 +46,10 @@ export class UserService {
   }
 
   async getUserById(id) {
-    const token = this.#authService.getToken();
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
-    return await this.#httpServise.get(`users/${id}`, headers);
+    return await this.#httpServise.get(`users/${id}`);
   }
 
   async searchUser(search, userId) {
-    const token = this.#authService.getToken();
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
     const params = {
       search,
       userId,
@@ -66,8 +60,7 @@ export class UserService {
     const searchParams = new URLSearchParams(params).toString();
 
     const result = await this.#httpServise.get(
-      `users/search?${searchParams}`,
-      headers
+      `users/search?${searchParams}`
     );
     return result;
   }
