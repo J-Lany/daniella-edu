@@ -1,24 +1,25 @@
 import bcrypt from "bcrypt";
 import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
-import { convertToDTO } from "../utils/UserDTO.mjs";
+
+const ONE_WEEK = 7;
+const ONE_DAY = 1;
 
 export class AuthService {
   #userServise = diContainer.resolve(SERVICES.users);
   #configService = diContainer.resolve(SERVICES.config);
   #sessionService = diContainer.resolve(SERVICES.session);
 
-  async createToken(login, email) {
+  async createToken(login, email, limitation) {
     const hashData = `${login}${email}${this.#configService.secret}`;
     const saltRounds = 7;
-    const ONE_WEEK = 7;
     const expired = new Date();
-    expired.setDate(expired.getDate() + ONE_WEEK);
+    expired.setDate(expired.getDate() + limitation);
 
     try {
       const hash = bcrypt.hash(hashData, saltRounds);
       await this.#sessionService.setToken(hash, expired);
-      await this.#sessionService.getExpired(hash);
+
       return hash;
     } catch (err) {
       throw new Error("Ошибка в создании токена");
@@ -42,11 +43,13 @@ export class AuthService {
       if (!isPasswordCorrect) {
         throw new Error(401);
       }
-      const token = await this.createToken(email, user.login);
+      const accessToken = await this.createToken(email, user.login, ONE_DAY);
+      const refreshToken = await this.createToken(email, user.login, ONE_WEEK);
 
       return {
         user,
-        token,
+        accessToken,
+        refreshToken,
       };
     } catch (err) {
       throw err;
