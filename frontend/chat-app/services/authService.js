@@ -1,7 +1,8 @@
 import { diContainer } from "../di/di";
 import { SERVICES } from "../di/api";
 
-export const TOKEN = "token";
+export const ACCESS_TOKEN = "accessToken";
+export const REFRESH_TOKEN = "refreshToken";
 export const USER = "user";
 
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
   #token;
 
   constructor() {
-    this.#token = sessionStorage.getItem(TOKEN);
+    this.#token = sessionStorage.getItem(ACCESS_TOKEN);
     this.#currentUser = JSON.parse(sessionStorage.getItem(USER));
   }
 
@@ -82,11 +83,12 @@ export class AuthService {
           return;
         }
 
-        sessionStorage.setItem(TOKEN, res.content.token);
+        sessionStorage.setItem(ACCESS_TOKEN, res.content.accessToken);
+        sessionStorage.setItem(REFRESH_TOKEN, res.content.refreshToken);
         sessionStorage.setItem(USER, JSON.stringify(res.content.user));
 
         this.#currentUser = res.content.user;
-        this.#token = res.content.token;
+        this.#token = res.content.accessToken;
 
         this.notifySubscribers();
       })
@@ -102,7 +104,7 @@ export class AuthService {
   }
 
   logout() {
-    sessionStorage.removeItem(TOKEN);
+    sessionStorage.removeItem(ACCESS_TOKEN);
     sessionStorage.removeItem(USER);
 
     this.#currentUser = null;

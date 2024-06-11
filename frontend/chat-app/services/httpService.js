@@ -1,5 +1,6 @@
 import packageJson from "../../package.json";
-import { TOKEN } from "./authService";
+import { ACCESS_TOKEN } from "./authService";
+import { REFRESH_TOKEN } from "./authService";
 
 export function httpService(baseUrl = packageJson.baseUrl) {
   async function get(url) {
@@ -25,7 +26,7 @@ export function httpService(baseUrl = packageJson.baseUrl) {
   }
 
   function createAutoruzarionHeader() {
-    const token = sessionStorage.getItem(TOKEN);
+    const token = sessionStorage.getItem(ACCESS_TOKEN);
     return token ? { Authorization: `Bearer ${token}` } : {};
   }
 
