@@ -89,9 +89,9 @@ export function createAuthController(app) {
 
     /**
    * @swagger
-   * /login:
+   * /refresh-token:
    *   post:
-   *     summary: Авторизация в месседжере
+   *     summary: Обновление токена
    *     requestBody:
    *       content:
    *         application/json:

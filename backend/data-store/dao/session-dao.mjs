@@ -7,7 +7,7 @@ const ONE_WEEK = 7;
 const ONE_DAY = 1;
 
 export class SessionDao {
-  #filePath = FILE_PATHS.chats;
+  #filePath = FILE_PATHS.sessions;
   #storeServise = diContainer.resolve(SERVICES.store);
   #configService = diContainer.resolve(SERVICES.config);
   #usersDao = diContainer.resolve(SERVICES.usersDao);
@@ -19,7 +19,7 @@ export class SessionDao {
     expired.setDate(expired.getDate() + limitation);
 
     try {
-      const hash = bcrypt.hash(hashData, saltRounds);
+      const hash = await bcrypt.hash(hashData, saltRounds);
       await this.setToken(hash, expired);
 
       return hash;
@@ -31,6 +31,8 @@ export class SessionDao {
   async setToken(token, expired) {
     const tokens = await this.#storeServise.getData(this.#filePath);
     tokens[token] = expired;
+
+    await this.#storeServise.setData(this.#filePath, tokens);
   }
 
   async getExpired(token) {
@@ -41,9 +43,12 @@ export class SessionDao {
   async deleteToken(token) {
     const tokens = await this.#storeServise.getData(this.#filePath);
     delete tokens[token];
+
+    await this.#storeServise.setData(this.#filePath, tokens);
   }
 
   async refreshToken(oldRefreshToken, userId) {
+    const tokens = await this.#storeServise.getData(this.#filePath);
     const users = await this.#usersDao.getUserById(userId);
     const currentUser = users[userId];
 
@@ -63,6 +68,8 @@ export class SessionDao {
       currentUser.login,
       ONE_WEEK
     );
+
+    await this.#storeServise.setData(this.#filePath, tokens);
 
     return { accessToken, refreshToken };
   }

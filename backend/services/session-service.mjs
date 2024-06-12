@@ -18,11 +18,13 @@ export class SessionService {
 
   async isTokenValid(token) {
     const expired = await this.#sessionDao.getExpired(token);
-    return !expired || expired > new Date();
+    const expiredDate = new Date(expired);
+
+    return !expired || expiredDate > new Date();
   }
 
   async createToken(login, email, limitation) {
-   return await this.#sessionDao.createToken(login, email, limitation);
+    return await this.#sessionDao.createToken(login, email, limitation);
   }
 
   async refreshToken(refreshToken, userId) {
@@ -32,8 +34,6 @@ export class SessionService {
       throw new Error(401);
     }
 
-   return await this.#sessionDao.refreshToken(refreshToken, userId);
+    return await this.#sessionDao.refreshToken(refreshToken, userId);
   }
-
-
 }

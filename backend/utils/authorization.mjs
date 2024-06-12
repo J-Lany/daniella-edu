@@ -10,7 +10,9 @@ export async function authorization(req, res, next) {
     res.sendStatus(401);
   }
   const token = authorizationHeader.substring(7);
-  if (await authService.isAuth(token)) {
+  const isAuth = await authService.isAuth(token)
+  
+  if (isAuth) {
     next();
   } else {
     return res.sendStatus(401);
