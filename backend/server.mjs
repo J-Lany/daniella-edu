@@ -7,7 +7,7 @@ import { UserService } from "./services/user-service.mjs";
 import { SERVICES } from "./di/api.mjs";
 import { chatController } from "./controllers/chat-controller.mjs";
 import { createRegistrationController } from "./controllers/registration-controller.mjs";
-import { createLoginController } from "./controllers/login-controller.mjs";
+import { createAuthController } from "./controllers/auth-controller.mjs";
 import swaggerJSDoc from "swagger-jsdoc";
 import { AuthService } from "./services/auth-service.mjs";
 import { configService } from "./services/config-service.mjs";
@@ -68,7 +68,7 @@ app.get("/messages/:chatId", chatController);
 
 createChatsController(app);
 createRegistrationController(app);
-createLoginController(app);
+createAuthController(app);
 createUserController(app);
 createMessageController(app);
 

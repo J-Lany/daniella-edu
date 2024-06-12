@@ -2,7 +2,9 @@ import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
 import { ERRORS } from "../utils/chats-erorrs.mjs";
 
-export function createLoginController(app) {
+export function createAuthController(app) {
+  const authService = diContainer.resolve(SERVICES.auth);
+
   /**
    * @swagger
    * /login:
@@ -72,8 +74,7 @@ export function createLoginController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке авторизации
    */
-  const authService = diContainer.resolve(SERVICES.auth);
-
+ 
   app.post("/login", async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -85,4 +86,67 @@ export function createLoginController(app) {
         .json({ message: ERRORS.loginErrors[err.message] });
     }
   });
+
+    /**
+   * @swagger
+   * /login:
+   *   post:
+   *     summary: Авторизация в месседжере
+   *     requestBody:
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               refreshToken:
+   *                 type: string
+   *               userId:
+   *                 type: string
+   *     responses:
+   *       200:
+   *         description: Успешная авторизация
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 accessToken:
+   *                   type: string
+   *                   description: Токен доступа
+   *                 refreshToken:
+   *                   type: string
+   *                   description: Токен обновления
+   *       401:
+   *         description: Токен обновления неддействителен
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   *       500:
+   *         description: Ошибка авторизации
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 errorMessage:
+   *                   type: string
+   *                   description: Сообщение об ошибке авторизации
+   */
+ 
+    app.post("/refresh-token", async (req, res) => {
+      const { refreshToken, userId} = req.body;
+      try {
+        const result = await authService.refreshToken(refreshToken, userId);
+        return res.status(200).json(result);
+      } catch (err) {
+        return res
+          .status(parseInt(err.message))
+          .json({ message: ERRORS.tokenErrors[err.message] });
+      }
+    });
 }
