@@ -20,16 +20,27 @@ export function httpService(baseUrl = packageJson.baseUrl) {
 
   async function post(url, payload) {
     const autoruzarionHeader = createAutoruzarionHeader();
-    const response = await fetch(`${baseUrl}/${url}`, {
+    const requestOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         ...autoruzarionHeader,
       },
       body: JSON.stringify(payload),
-    });
+    };
 
-    return { status: response.status, content: await response.json() };
+    const response = await fetch(`${baseUrl}/${url}`, requestOptions);
+
+    if (response.status !== 405) {
+      return { status: response.status, content: await response.json() };
+    }
+
+    const isTokenRefreshed = await refreshToken();
+    if (isTokenRefreshed) {
+      const retryResponse = await fetch(`${baseUrl}/${url}`, requestOptions);
+
+      return await retryResponse.json();
+    }
   }
 
   function createAutoruzarionHeader() {
