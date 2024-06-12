@@ -2,7 +2,7 @@ import packageJson from "../../package.json";
 import { ACCESS_TOKEN, USER, REFRESH_TOKEN } from "./authService";
 
 export function httpService(baseUrl = packageJson.baseUrl) {
-  async function get(url) {
+  async function get(url, retryCount = 1) {
     const fullUrl = `${baseUrl}/${url}`;
     const headers = createAutoruzarionHeader();
     const response = await fetch(fullUrl, { headers });
@@ -12,13 +12,15 @@ export function httpService(baseUrl = packageJson.baseUrl) {
     }
 
     const isTokenRefreshed = await refreshToken();
-    if (isTokenRefreshed) {
-      const retryResponse = await fetch(fullUrl, { headers });
-      return await retryResponse.json();
+
+    if (isTokenRefreshed && retryCount > 0) {
+      return await post(url, payload, retryCount - 1);
+    } else {
+      throw new Error("Failed to refresh token");
     }
   }
 
-  async function post(url, payload) {
+  async function post(url, payload, retryCount = 1) {
     const autoruzarionHeader = createAutoruzarionHeader();
     const requestOptions = {
       method: "POST",
@@ -36,10 +38,11 @@ export function httpService(baseUrl = packageJson.baseUrl) {
     }
 
     const isTokenRefreshed = await refreshToken();
-    if (isTokenRefreshed) {
-      const retryResponse = await fetch(`${baseUrl}/${url}`, requestOptions);
 
-      return await retryResponse.json();
+    if (isTokenRefreshed && retryCount > 0) {
+      return await post(url, payload, retryCount - 1);
+    } else {
+      throw new Error("Failed to refresh token");
     }
   }
 
