@@ -11,10 +11,10 @@ export async function authorization(req, res, next) {
   }
   const token = authorizationHeader.substring(7);
   const isAuth = await authService.isAuth(token)
-  
+
   if (isAuth) {
     next();
   } else {
-    return res.sendStatus(401);
+    return res.sendStatus(405);
   }
 }
