@@ -27,13 +27,13 @@ export class SessionService {
     return await this.#sessionDao.createToken(login, email, limitation);
   }
 
-  async refreshToken(refreshToken, userId) {
+  async updateTokenPair(refreshToken, userId) {
     const isTokenValid = await this.isTokenValid(refreshToken);
 
     if (!isTokenValid) {
       throw new Error(401);
     }
 
-    return await this.#sessionDao.refreshToken(refreshToken, userId);
+    return await this.#sessionDao.updateTokenPair(refreshToken, userId);
   }
 }

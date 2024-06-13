@@ -4,6 +4,7 @@ import { ERRORS } from "../utils/chats-erorrs.mjs";
 
 export function createAuthController(app) {
   const authService = diContainer.resolve(SERVICES.auth);
+  const sessionService = diContainer.resolve(SERVICES.session);
 
   /**
    * @swagger
@@ -74,7 +75,7 @@ export function createAuthController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке авторизации
    */
- 
+
   app.post("/login", async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -87,7 +88,7 @@ export function createAuthController(app) {
     }
   });
 
-    /**
+  /**
    * @swagger
    * /refresh-token:
    *   post:
@@ -137,16 +138,16 @@ export function createAuthController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке авторизации
    */
- 
-    app.post("/refresh-token", async (req, res) => {
-      const { refreshToken, userId} = req.body;
-      try {
-        const result = await authService.refreshToken(refreshToken, userId);
-        return res.status(200).json(result);
-      } catch (err) {
-        return res
-          .status(parseInt(err.message))
-          .json({ message: ERRORS.tokenErrors[err.message] });
-      }
-    });
+
+  app.post("/refresh-token", async (req, res) => {
+    const { refreshToken, userId } = req.body;
+    try {
+      const result = await sessionService.updateTokenPair(refreshToken, userId);
+      return res.status(200).json(result);
+    } catch (err) {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.tokenErrors[err.message] });
+    }
+  });
 }
