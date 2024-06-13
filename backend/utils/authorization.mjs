@@ -2,6 +2,8 @@ import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
 
 const TOKEN_PREFIX = "Bearer ";
+const TOKEN_PREFIX_LENGTH = 7;
+
 export async function authorization(req, res, next) {
   const authService = diContainer.resolve(SERVICES.auth);
   const authorizationHeader = req.headers.authorization;
@@ -9,8 +11,8 @@ export async function authorization(req, res, next) {
   if (!authorizationHeader || !authorizationHeader.startsWith(TOKEN_PREFIX)) {
     res.sendStatus(401);
   }
-  const token = authorizationHeader.substring(7);
-  const isAuth = await authService.isAuth(token)
+  const token = authorizationHeader.substring(TOKEN_PREFIX_LENGTH);
+  const isAuth = await authService.isAuth(token);
 
   if (isAuth) {
     next();
