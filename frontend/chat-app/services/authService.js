@@ -1,5 +1,6 @@
 import { diContainer } from "../di/di";
 import { SERVICES } from "../di/api";
+import { authGuard } from "../guards/auth-guard";
 
 export const ACCESS_TOKEN = "accessToken";
 export const REFRESH_TOKEN = "refreshToken";
@@ -9,7 +10,7 @@ export class AuthService {
   #tokenSubscribers = new Set();
   #errorSubscribers = new Set();
   #currentUserSubscribers = new Set();
-  #httpServise = diContainer.resolve(SERVICES.http);
+  #httpServise = authGuard(diContainer.resolve(SERVICES.http));
   #currentUser;
   #token;
 
@@ -116,6 +117,38 @@ export class AuthService {
 
   getToken() {
     return this.#token;
+  }
+
+  async refreshToken() {
+    const token = sessionStorage.getItem(REFRESH_TOKEN);
+    const user = sessionStorage.getItem(USER);
+
+    const requestBody = {
+      userId: user.userId,
+      refreshToken: token,
+    };
+
+    const response = await this.#httpServise.post(`registration/`, requestBody);
+
+    if (response.status === 200) {
+      const content = await response.json();
+
+      sessionStorage.setItem(REFRESH_TOKEN, content.refreshToken);
+      sessionStorage.setItem(ACCESS_TOKEN, content.accessToken);
+
+      this.#token = content.accessToken;
+
+      return true;
+    }
+
+    this.logout();
+
+    return false;
+  }
+
+  createAutoruzarionHeader() {
+    const token = sessionStorage.getItem(ACCESS_TOKEN);
+    return token ? { Authorization: `Bearer ${token}` } : {};
   }
 
   getCurrentUser() {

@@ -27,8 +27,8 @@ import { ChatListComponent } from "./chat-app/components/chat-list/chat-list.js"
 import { UserListComponent } from "./chat-app/components/user-list/user-list.js";
 
 diContainer.register(SERVICES.http, httpService);
-diContainer.register(SERVICES.messages, new MessageService());
 diContainer.register(SERVICES.auth, new AuthService());
+diContainer.register(SERVICES.messages, new MessageService());
 diContainer.register(SERVICES.user, new UserService());
 diContainer.register(SERVICES.listener, new ListenerService());
 diContainer.register(SERVICES.chat, new ChatService());

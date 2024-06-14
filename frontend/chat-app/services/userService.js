@@ -1,11 +1,12 @@
 import { diContainer } from "../di/di";
 import { SERVICES } from "../di/api";
+import { authGuard } from "../guards/auth-guard";
 
 const USER_PER_PAGE = 10;
 const PAGE_NUMBER = 1;
 
 export class UserService {
-  #httpServise = diContainer.resolve(SERVICES.http);
+  #httpServise = authGuard(diContainer.resolve(SERVICES.http));
   #authService = diContainer.resolve(SERVICES.auth);
   #userSubscribers = new Map();
   #users = new Map();
@@ -46,7 +47,8 @@ export class UserService {
   }
 
   async getUserById(id) {
-    return await this.#httpServise.get(`users/${id}`);
+    const result = await this.#httpServise.get(`users/${id}`);
+    return result.content;
   }
 
   async searchUser(search, userId) {
@@ -59,9 +61,7 @@ export class UserService {
 
     const searchParams = new URLSearchParams(params).toString();
 
-    const result = await this.#httpServise.get(
-      `users/search?${searchParams}`
-    );
-    return result;
+    const result = await this.#httpServise.get(`users/search?${searchParams}`);
+    return result.content;
   }
 }

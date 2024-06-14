@@ -1,11 +1,12 @@
 import { diContainer } from "../di/di";
 import { SERVICES } from "../di/api";
+import { authGuard } from "../guards/auth-guard";
 
 const CHATS_PER_PAGE = 10;
 const PAGE_NUMBER = 1;
 
 export class ChatService {
-  #httpServise = diContainer.resolve(SERVICES.http);
+  #httpServise = authGuard(diContainer.resolve(SERVICES.http));
   #authService = diContainer.resolve(SERVICES.auth);
   #chatsSubscribers = new Set();
   #chats;
@@ -43,9 +44,9 @@ export class ChatService {
     };
     const chatsParams = new URLSearchParams(params).toString();
 
-    const chats = await this.#httpServise.get(`chats?${chatsParams}`);
+    const result = await this.#httpServise.get(`chats?${chatsParams}`);
 
-    this.#chats = chats.result;
+    this.#chats = result.content.result;
     this.notifyChatsSubscribers();
   }
 
