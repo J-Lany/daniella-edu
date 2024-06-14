@@ -5,7 +5,7 @@ export function createHeaderTemplate() {
     ${getHeaderComponentStyle()}
     <header class="header">
       <user-info-block class="user-info"></user-info-block>
-      <button class="logout">&#9212; Logout</button>
+      <logout-button class="logout"></logout-button>
     </header>
     `;
 }
