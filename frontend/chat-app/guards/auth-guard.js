@@ -4,7 +4,12 @@ import { SERVICES } from "../di/api";
 const handler = {
   get(target, prop) {
     const authService = diContainer.resolve(SERVICES.auth);
-    return async function proxiedRequest(url, body, retryCount = 1) {
+    return async function proxiedRequest(
+      url,
+      body,
+      retryCount = 1,
+      retryDelay = 200
+    ) {
       const headers = authService.createAutoruzarionHeader();
       const response = await target[prop](url, headers, body);
 
@@ -15,7 +20,9 @@ const handler = {
       const isTokenRefreshed = await authService.refreshToken();
 
       if (isTokenRefreshed && retryCount > 0) {
-        return await proxiedRequest(url, body, retryCount - 1);
+        setTimeout(async () => {
+          await proxiedRequest(url, body, retryCount - 1);
+        }, retryDelay);
       } else {
         throw new Error("Failed to refresh token");
       }
