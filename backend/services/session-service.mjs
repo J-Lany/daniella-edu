@@ -28,9 +28,9 @@ export class SessionService {
   }
 
   async updateTokenPair(refreshToken, userId) {
-    const isTokenValid = await this.isTokenValid(refreshToken);
+    const isTokenExist = await this.getExpired(refreshToken);
 
-    if (!isTokenValid) {
+    if (!isTokenExist) {
       throw new Error(401);
     }
 

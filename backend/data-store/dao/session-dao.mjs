@@ -49,8 +49,7 @@ export class SessionDao {
 
   async updateTokenPair(oldRefreshToken, userId) {
     const tokens = await this.#storeServise.getData(this.#filePath);
-    const users = await this.#usersDao.getUserById(userId);
-    const currentUser = users[userId];
+    const currentUser = await this.#usersDao.getUserById(userId);
 
     if (!currentUser) {
       return false;
