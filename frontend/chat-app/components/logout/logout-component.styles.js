@@ -6,17 +6,22 @@ const getLogoutComponentStyle = () => {
     @import url('../common.css');
 
     .logout {
-      border: none;
+      border-radius: 50%;
+      padding-left: 0.9rem;
+      padding-right: 0.9rem;
+      border: 1px solid var(--blue-background);
       color: var(--blue-background);
       font-size: 2.5rem;
       font-weight: 600;
-      transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;  
+      transition: transform 0.3s ease-in-out, color 0.3s ease-in-out, background-color 0.3s ease-in-out;  
     }
 
     .logout:hover {
       transform: scale(1.1); 
       cursor: pointer;
-      color: var(--light-blue-background);
+      color: var(--white-background);
+      background-color: var(--blue-background);
+      
     }
 
   </style>

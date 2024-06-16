@@ -5,8 +5,9 @@ export function httpService(baseUrl = packageJson.baseUrl) {
   async function get(url, autoruzarionHeader = {}) {
     const fullUrl = `${baseUrl}/${url}`;
     const response = await fetch(fullUrl, { headers: autoruzarionHeader });
+    const content = await response.json();
 
-    return { status: response.status, content: await response.json() };
+    return { status: response.status, content };
   }
 
   async function post(url, autoruzarionHeader, payload) {
