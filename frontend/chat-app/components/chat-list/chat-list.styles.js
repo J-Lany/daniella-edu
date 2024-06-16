@@ -9,6 +9,8 @@ export function getChatListStyle() {
           display: flex;
           flex-direction: column;
           height: 100vh;
+          z-index: 1;
+          position: relative;
        }
 
        .chat-list-empty {
