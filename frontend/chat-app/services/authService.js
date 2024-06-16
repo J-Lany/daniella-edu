@@ -121,14 +121,15 @@ export class AuthService {
 
   async refreshToken() {
     const token = sessionStorage.getItem(REFRESH_TOKEN);
-    const user = sessionStorage.getItem(USER);
+    const userJSON = sessionStorage.getItem(USER);
+    const user = JSON.parse(userJSON);
 
     const requestBody = {
       userId: user.userId,
       refreshToken: token,
     };
 
-    const response = await this.#httpServise.post(`registration/`, requestBody);
+    const response = await this.#httpServise.post(`refresh-token`, requestBody);
 
     if (response.status === 200) {
       const content = await response.json();

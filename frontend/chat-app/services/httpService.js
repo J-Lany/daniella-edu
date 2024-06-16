@@ -1,10 +1,13 @@
 import packageJson from "../../package.json";
-import { ACCESS_TOKEN, USER, REFRESH_TOKEN } from "./authService";
 
 export function httpService(baseUrl = packageJson.baseUrl) {
   async function get(url, autoruzarionHeader = {}) {
     const fullUrl = `${baseUrl}/${url}`;
     const response = await fetch(fullUrl, { headers: autoruzarionHeader });
+
+    if (response.status === 405) {
+      return { status: 405, content: "Token expired" };
+    }
     const content = await response.json();
 
     return { status: response.status, content };
@@ -21,6 +24,10 @@ export function httpService(baseUrl = packageJson.baseUrl) {
     };
 
     const response = await fetch(`${baseUrl}/${url}`, requestOptions);
+
+    if (response.status === 405) {
+      return { status: 405, content: "Token expired" };
+    }
 
     return { status: response.status, content: await response.json() };
   }
