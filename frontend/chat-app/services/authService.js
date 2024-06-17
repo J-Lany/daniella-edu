@@ -104,15 +104,25 @@ export class AuthService {
     });
   }
 
-  logout() {
-    sessionStorage.removeItem(ACCESS_TOKEN);
-    sessionStorage.removeItem(USER);
+  async logout() {
+    const accessToken = sessionStorage.getItem(ACCESS_TOKEN);
+    const refreshToken = sessionStorage.getItem(REFRESH_TOKEN);
 
-    this.#currentUser = null;
-    this.#token = null;
+    const result = await this.#httpServise.post("logout", {
+      accessToken,
+      refreshToken,
+    });
 
-    this.notifySubscribers();
-    this.notifyCurrentUserSubscribers();
+    if (result.status === 200) {
+      sessionStorage.removeItem(ACCESS_TOKEN);
+      sessionStorage.removeItem(USER);
+
+      this.#currentUser = null;
+      this.#token = null;
+
+      this.notifySubscribers();
+      this.notifyCurrentUserSubscribers();
+    }
   }
 
   getToken() {

@@ -14,8 +14,6 @@ export class HeaderComponent extends HTMLElement {
     this.render();
   }
 
-  disconnectedCallback() {}
-
   render() {
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createHeaderTemplate();
