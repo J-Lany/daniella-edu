@@ -44,6 +44,11 @@ export class AuthService {
     }
   }
 
+  async logout (refreshToken, accessToken){
+    await  this.#sessionService.deleteToken(refreshToken)
+    await this.#sessionService.deleteToken(accessToken)
+  }
+
   async isAuth(token) {
     return await this.#sessionService.isTokenValid(token);
   }

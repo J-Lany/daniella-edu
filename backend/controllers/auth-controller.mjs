@@ -150,4 +150,67 @@ export function createAuthController(app) {
         .json({ message: ERRORS.tokenErrors[err.message] });
     }
   });
+
+  /**
+   * @swagger
+   * /logout:
+   *   post:
+   *     summary: Выход из системы
+   *     requestBody:
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               refreshToken:
+   *                 type: string
+   *               accessToken:
+   *                 type: string
+   *     responses:
+   *       200:
+   *         description: Успешный выход из системы 
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 accessToken:
+   *                   type: string
+   *                   description: Токен доступа
+   *                 refreshToken:
+   *                   type: string
+   *                   description: Токен обновления
+   *       401:
+   *         description: Такого токена не существует
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   *       500:
+   *         description: Ошибка разлогина
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 errorMessage:
+   *                   type: string
+   *                   description: Сообщение об ошибке авторизации
+   */
+
+  app.post("/logout", async (req, res) => {
+    const { refreshToken, accessToken } = req.body;
+    try {
+      const result = await authService.logout(refreshToken, accessToken);
+      return res.status(200).json(result);
+    } catch (err) {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.tokenErrors[err.message] });
+    }
+  });
 }
