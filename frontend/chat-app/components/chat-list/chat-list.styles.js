@@ -22,6 +22,10 @@ export function getChatListStyle() {
           transition: background-color 0.2s ease-in-out;
        }
 
+       .selected {
+         background: var(--white-background);
+       }
+
        .chat-list__item:hover {
          background: var(--white-background);
          cursor: pointer;
