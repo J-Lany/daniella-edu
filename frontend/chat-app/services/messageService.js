@@ -1,40 +1,6 @@
 import { diContainer } from "../di/di.js";
 import { SERVICES } from "../di/api.js";
 
-const DEFAULT_CHAT_ID = 1;
-const MOC_MESSAGES = [
-  {
-    id: 1,
-    message: "Hello, Como estas",
-    time: "11:11",
-    authorId: 1,
-    content: {
-      type: "text",
-      data: "Hello, Como estas",
-    },
-  },
-  {
-    id: 2,
-    message: "Hello, Como estas",
-    time: "11:12",
-    authorId: 1,
-    content: {
-      type: "text",
-      data: "Hello, Estoy bien",
-    },
-  },
-  {
-    id: 3,
-    message: "Hello, Como estas",
-    time: "11:13",
-    authorId: 1,
-    content: {
-      type: "text",
-      data: "What's uuuuuup",
-    },
-  },
-];
-
 export class MessageService {
   #httpService = diContainer.resolve(SERVICES.http);
   #messagesSubscribers = new Set();
@@ -53,20 +19,12 @@ export class MessageService {
     if (this.#currentChatId) {
       messages = this.#messages.has(this.#currentChatId)
         ? this.#messages.get(this.#currentChatId)
-        : await this.#initMessages();
+        : await this.getMessagesByChatId(this.#currentChatId);
     }
 
     this.#messagesSubscribers.forEach((subscription) => {
       subscription(messages);
     });
-  }
-
-  async #initMessages() {
-    const response = await Promise.resolve(MOC_MESSAGES);
-    this.#currentChatId = response[0].id;
-    this.#messages.set(this.#currentChatId, response);
-
-    return this.#messages.get(this.#currentChatId);
   }
 
   unSubscribe(subs) {
@@ -79,6 +37,11 @@ export class MessageService {
   }
 
   async getMessagesByChatId(id) {
-    return await this.#httpService.get(`messages/${id}`);
+    const result = await this.#httpService.get(`messages/${id}`);
+
+    if (result.status === 200) {
+      this.#messages.set(this.#currentChatId, result.content);
+      return result.content;
+    }
   }
 }

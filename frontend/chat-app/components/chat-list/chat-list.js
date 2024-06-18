@@ -39,7 +39,7 @@ export class ChatListComponent extends HTMLElement {
       }
     });
 
-    // this.#messageService.setCurrentChatId(chatId);
+    this.#messageService.setCurrentChatId(chatId);
   }
 
   disconnectedCallback() {
