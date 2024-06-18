@@ -4,6 +4,7 @@ export class HeaderComponent extends HTMLElement {
   static get name() {
     return "header-component";
   }
+
   constructor() {
     super();
     this.attachShadow({ mode: "open" });

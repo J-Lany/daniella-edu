@@ -1,19 +1,21 @@
 import { diContainer } from "../di/di";
 import { SERVICES } from "../di/api";
+import { authGuard } from "../guards/auth-guard";
 
-export const TOKEN = "token";
+export const ACCESS_TOKEN = "accessToken";
+export const REFRESH_TOKEN = "refreshToken";
 export const USER = "user";
 
 export class AuthService {
   #tokenSubscribers = new Set();
   #errorSubscribers = new Set();
   #currentUserSubscribers = new Set();
-  #httpServise = diContainer.resolve(SERVICES.http);
+  #httpServise = authGuard(diContainer.resolve(SERVICES.http));
   #currentUser;
   #token;
 
   constructor() {
-    this.#token = sessionStorage.getItem(TOKEN);
+    this.#token = sessionStorage.getItem(ACCESS_TOKEN);
     this.#currentUser = JSON.parse(sessionStorage.getItem(USER));
   }
 
@@ -82,11 +84,12 @@ export class AuthService {
           return;
         }
 
-        sessionStorage.setItem(TOKEN, res.content.token);
+        sessionStorage.setItem(ACCESS_TOKEN, res.content.accessToken);
+        sessionStorage.setItem(REFRESH_TOKEN, res.content.refreshToken);
         sessionStorage.setItem(USER, JSON.stringify(res.content.user));
 
         this.#currentUser = res.content.user;
-        this.#token = res.content.token;
+        this.#token = res.content.accessToken;
 
         this.notifySubscribers();
       })
@@ -101,8 +104,62 @@ export class AuthService {
     });
   }
 
+  async logout() {
+    const accessToken = sessionStorage.getItem(ACCESS_TOKEN);
+    const refreshToken = sessionStorage.getItem(REFRESH_TOKEN);
+
+    const result = await this.#httpServise.post("logout", {
+      accessToken,
+      refreshToken,
+    });
+
+    if (result.status === 200) {
+      sessionStorage.removeItem(ACCESS_TOKEN);
+      sessionStorage.removeItem(USER);
+
+      this.#currentUser = null;
+      this.#token = null;
+
+      this.notifySubscribers();
+      this.notifyCurrentUserSubscribers();
+    }
+  }
+
   getToken() {
     return this.#token;
+  }
+
+  async refreshToken() {
+    const token = sessionStorage.getItem(REFRESH_TOKEN);
+    const userJSON = sessionStorage.getItem(USER);
+    const user = JSON.parse(userJSON);
+
+    const requestBody = {
+      userId: user.userId,
+      refreshToken: token,
+    };
+
+    const response = await this.#httpServise.post(`refresh-token`, requestBody);
+
+    if (response.status === 200) {
+      const content = await response.json();
+
+      sessionStorage.setItem(REFRESH_TOKEN, content.refreshToken);
+      sessionStorage.setItem(ACCESS_TOKEN, content.accessToken);
+
+      this.#token = content.accessToken;
+
+      return true;
+    }
+
+    this.logout();
+
+    return false;
+  }
+
+  createAutoruzarionHeader() {
+    const token = sessionStorage.getItem(ACCESS_TOKEN);
+    return token ? { Authorization: `Bearer ${token}` } : {};
   }
 
   getCurrentUser() {

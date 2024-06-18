@@ -18,6 +18,22 @@ export class SessionService {
 
   async isTokenValid(token) {
     const expired = await this.#sessionDao.getExpired(token);
-    return !expired || expired > new Date();
+    const expiredDate = new Date(expired);
+
+    return !expired || expiredDate > new Date();
+  }
+
+  async createToken(login, email, limitation) {
+    return await this.#sessionDao.createToken(login, email, limitation);
+  }
+
+  async updateTokenPair(refreshToken, userId) {
+    const isTokenExist = await this.getExpired(refreshToken);
+
+    if (!isTokenExist) {
+      throw new Error(401);
+    }
+
+    return await this.#sessionDao.updateTokenPair(refreshToken, userId);
   }
 }

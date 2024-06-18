@@ -1,11 +1,12 @@
 import { diContainer } from "../di/di";
 import { SERVICES } from "../di/api";
+import { authGuard } from "../guards/auth-guard";
 
 const CHATS_PER_PAGE = 10;
 const PAGE_NUMBER = 1;
 
 export class ChatService {
-  #httpServise = diContainer.resolve(SERVICES.http);
+  #httpServise = authGuard(diContainer.resolve(SERVICES.http));
   #authService = diContainer.resolve(SERVICES.auth);
   #chatsSubscribers = new Set();
   #chats;
@@ -35,9 +36,7 @@ export class ChatService {
 
   async getChatsByCurrnetUser() {
     const { userId } = this.#authService.getCurrentUser();
-    const token = this.#authService.getToken();
 
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
     const params = {
       authorId: userId,
       chatsPerPage: CHATS_PER_PAGE,
@@ -45,25 +44,21 @@ export class ChatService {
     };
     const chatsParams = new URLSearchParams(params).toString();
 
-    const chats = await this.#httpServise.get(`chats?${chatsParams}`, headers);
+    const result = await this.#httpServise.get(`chats?${chatsParams}`);
 
-    this.#chats = chats.result;
+    this.#chats = result.content.result;
     this.notifyChatsSubscribers();
   }
 
   async createChat(participantsIds) {
     const { userId } = this.#authService.getCurrentUser();
-    const token = this.#authService.getToken();
-
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
     const body = {
       authorId: userId,
       chatType: "p2p",
       participantsIds: [userId, ...participantsIds],
     };
 
-    await this.#httpServise.post(`chats`, body, headers);
+    await this.#httpServise.post(`chats`, body);
 
     await this.getChatsByCurrnetUser();
   }
