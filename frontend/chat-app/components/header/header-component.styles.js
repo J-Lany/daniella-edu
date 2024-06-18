@@ -9,7 +9,7 @@ const getHeaderComponentStyle = () => {
         background-color: var(--light-gray-background);
         padding-top: 1rem;
         padding-bottom: 1rem;
-        padding-right: 1rem;
+        padding-right: 5rem;
         display: grid;
         grid-template-columns: 1fr auto; 
         justify-content: space-between;

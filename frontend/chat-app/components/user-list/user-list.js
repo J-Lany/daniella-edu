@@ -66,7 +66,10 @@ export class UserListComponent extends HTMLElement {
     if (isClickOutsideModal) {
       modalElement.classList.remove("open");
       this.#isFirstRender = true;
-      this.updateList();
+      
+      setTimeout(() => {
+        this.updateList();
+      }, 500);
     }
   }
 
