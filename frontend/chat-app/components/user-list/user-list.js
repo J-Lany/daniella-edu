@@ -37,13 +37,25 @@ export class UserListComponent extends HTMLElement {
     if (this.#isFirstRender) {
       this.#isFirstRender = false;
       this.render(event.detail);
+
       const modalElement = this.shadowRoot.querySelector(".user-list");
+
       setTimeout(() => {
         modalElement.classList.add("open");
       }, 100);
-    } else {
-      this.updateList(event.detail);
+
+      return;
     }
+
+    if (!event.detail) {
+      const modalElement = this.shadowRoot.querySelector(".user-list");
+      modalElement.classList.remove("open");
+
+      this.updateListWithDelay();
+      return;
+    }
+
+    this.updateList(event.detail);
   }
 
   updateList(list) {
@@ -66,11 +78,15 @@ export class UserListComponent extends HTMLElement {
     if (isClickOutsideModal) {
       modalElement.classList.remove("open");
       this.#isFirstRender = true;
-      
-      setTimeout(() => {
-        this.updateList();
-      }, 500);
+
+      this.updateListWithDelay();
     }
+  }
+
+  updateListWithDelay() {
+    setTimeout(() => {
+      this.updateList();
+    }, 500);
   }
 
   async #onUserClick(event) {
