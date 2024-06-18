@@ -48,6 +48,8 @@ export class UserListComponent extends HTMLElement {
     }
 
     if (!event.detail) {
+      this.#isFirstRender = true;
+
       const modalElement = this.shadowRoot.querySelector(".user-list");
       modalElement.classList.remove("open");
 
