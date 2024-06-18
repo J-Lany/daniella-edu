@@ -1,8 +1,12 @@
 import { diContainer } from "../di/di.js";
 import { SERVICES } from "../di/api.js";
+import { authGuard } from "../guards/auth-guard";
+
+const MESSAGES_PER_PAGE = 10;
+const PAGE_NUMBER = 1;
 
 export class MessageService {
-  #httpService = diContainer.resolve(SERVICES.http);
+  #httpService = authGuard(diContainer.resolve(SERVICES.http));
   #messagesSubscribers = new Set();
   #messages = new Map();
   #currentChatId;
@@ -36,11 +40,23 @@ export class MessageService {
     this.notifySubscribers();
   }
 
-  async getMessagesByChatId(id) {
-    const result = await this.#httpService.get(`messages/${id}`);
+  async getMessagesByChatId(chatId) {
+    const params = {
+      chatId,
+      messagesPerPage: MESSAGES_PER_PAGE,
+      pageNumber: PAGE_NUMBER,
+    };
+
+    const getParams = new URLSearchParams(params).toString();
+
+    const result = await this.#httpService.get(`messages?${getParams}`);
+    console.log(result);
 
     if (result.status === 200) {
       this.#messages.set(this.#currentChatId, result.content);
+      return result.content;
+    }
+    if (result.status === 401) {
       return result.content;
     }
   }
