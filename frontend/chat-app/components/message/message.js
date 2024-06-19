@@ -10,10 +10,12 @@ const messageAttribute = {
   CHAT_ID: "chat-id",
 };
 export class Message extends HTMLElement {
+  #authService = diContainer.resolve(SERVICES.auth);
   #userId;
   #messageTime;
   #message;
   #displayMode;
+  #currentUserId;
   #chatId;
 
   #ATTRIBUTE_MAPPING = new Map([
@@ -37,9 +39,14 @@ export class Message extends HTMLElement {
   }
 
   connectedCallback() {
+    this.unsubscribeFromCurrentUser = this.#authService.subscribeCurrentUser(
+      this.setCurrentUserId.bind(this)
+    );
     this.render();
   }
-  disconnectedCallback() {}
+  disconnectedCallback() {
+    this.unsubscribeFromCurrentUser();
+  }
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue !== newValue) {
@@ -49,6 +56,10 @@ export class Message extends HTMLElement {
         this.render();
       }
     }
+  }
+
+  setCurrentUserId(userId) {
+    this.#currentUserId = userId;
   }
 
   setTime(newTime) {
@@ -77,7 +88,8 @@ export class Message extends HTMLElement {
       this.#message,
       this.#messageTime,
       this.#userId,
-      this.#displayMode
+      this.#displayMode,
+      this.#currentUserId
     );
 
     this.shadowRoot.innerHTML = "";
