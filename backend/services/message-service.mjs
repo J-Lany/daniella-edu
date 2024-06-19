@@ -10,6 +10,10 @@ export class MessageService {
   async getMessagesByChat(chatId, messagesPerPage, pageNumber) {
     const messagesList = await this.#messagesDao.getMessagesByChat(chatId);
 
+    if (!messagesList) {
+      throw new Error(401);
+    }
+
     return paginator(messagesPerPage, pageNumber, messagesList);
   }
 
