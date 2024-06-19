@@ -18,6 +18,7 @@ export class MessagesBlock extends HTMLElement {
       this.#messagesService.subscribeMessagesByCurrentChat(
         this.render.bind(this)
       );
+    this.render();
   }
 
   disconnectedCallback() {

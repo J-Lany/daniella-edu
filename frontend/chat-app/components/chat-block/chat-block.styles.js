@@ -19,6 +19,15 @@ export function getChatBlockStyle() {
     flex-direction: column;
     gap: 1rem;
   }
+
+  .messages-block {
+    flex-grow: 1;
+  }
+  
+  .messages-input {
+    flex-grow: 0;
+  }
+  
 </style>
   `;
 }

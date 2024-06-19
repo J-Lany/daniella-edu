@@ -11,8 +11,8 @@ export function createChatBlockTemplate(messages) {
   return `
   ${getChatBlockStyle()}
   <div class="chat chat-block">
-    <messages-block></messages-block>
-    <message-input></message-input>
+    <messages-block class="messages-block"></messages-block>
+    <message-input class="messages-input"></message-input>
   </div>
   `;
 }

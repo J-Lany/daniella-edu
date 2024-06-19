@@ -23,6 +23,7 @@ export class ChatBlock extends HTMLElement {
       this.#messagesService.subscribeMessagesByCurrentChat(
         this.render.bind(this)
       );
+      this.render();
   }
 
   disconnectedCallback() {

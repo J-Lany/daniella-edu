@@ -13,7 +13,6 @@ export class MessageService {
 
   subscribeMessagesByCurrentChat(subscribtion) {
     this.#messagesSubscribers.add(subscribtion);
-    this.notifySubscribers();
     return () => this.unSubscribe;
   }
 
