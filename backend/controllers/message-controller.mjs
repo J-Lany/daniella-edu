@@ -8,6 +8,79 @@ export function createMessageController(app) {
 
   /**
    * @swagger
+   * /moc-messages:
+   *   get:
+   *     summary: Получение массива замоканных сообщений по chatId
+   *     parameters:
+   *       - in: query
+   *         name: chatId
+   *         required: true
+   *         schema:
+   *           type: string
+   *       - name: messagesPerPage
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
+   *       - name: pageNumber
+   *         in: query
+   *         required: true
+   *         schema:
+   *           type: integer
+   *     responses:
+   *       200:
+   *         description: Массив сообщений чата
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 type: object
+   *                 properties:
+   *                   authorId:
+   *                     type: string
+   *                   messageId:
+   *                     type: string
+   *                   createDate:
+   *                     type: string
+   *                   messageBody:
+   *                     type: string
+   *       401:
+   *         description: У данного чата нет сообщений
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   *       500:
+   *         description: Ошибка при получении сообщений
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 errorMessage:
+   *                   type: string
+   *                   description: Сообщение об ошибке сервера
+   */
+
+  app.get("/moc-messages", authorization, async (req, res) => {
+    const chatId = req.query.chatId;
+    try {
+      const result = await messageService.getMocMessagesByChat(chatId);
+      return res.status(200).json(result);
+    } catch (err) {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.messageErrors[err.message] });
+    }
+  });
+
+  /**
+   * @swagger
    * /messages:
    *   post:
    *     summary: Создание сообщения
