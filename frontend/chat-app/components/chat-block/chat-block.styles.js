@@ -22,11 +22,12 @@ export function getChatBlockStyle() {
   }
 
   .messages-block {
-    flex-grow: 2;
+    flex-grow: 1;
   }
   
   .messages-input {
-    flex-grow: 1;
+    flex-grow: 0;
+    margin-bottom: 1rem;
   }
   
 </style>
