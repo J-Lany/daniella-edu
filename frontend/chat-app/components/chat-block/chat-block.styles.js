@@ -8,7 +8,8 @@ export function getChatBlockStyle() {
   .chat {
     background: var(--white-background);
     height: 100%;
-    padding: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
   .chat-empty {
     text-align: center;
@@ -21,11 +22,11 @@ export function getChatBlockStyle() {
   }
 
   .messages-block {
-    flex-grow: 1;
+    flex-grow: 2;
   }
   
   .messages-input {
-    flex-grow: 0;
+    flex-grow: 1;
   }
   
 </style>
