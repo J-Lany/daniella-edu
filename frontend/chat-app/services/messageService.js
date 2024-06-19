@@ -2,6 +2,19 @@ import { diContainer } from "../di/di.js";
 import { SERVICES } from "../di/api.js";
 import { authGuard } from "../guards/auth-guard";
 
+const MOC_MESSAGES = [
+  {
+    message: "Hello",
+    authorId: "7c6ae783-464b-4351-a083-1f72a5282e45",
+    time: "19:00",
+  },
+  {
+    message: "Bye",
+    authorId: "7c6ae783-464b-4351-a083-1f72a5282e45",
+    time: "19:10",
+  },
+];
+
 const MESSAGES_PER_PAGE = 10;
 const PAGE_NUMBER = 1;
 
@@ -54,7 +67,7 @@ export class MessageService {
       return result.content;
     }
     if (result.status === 401) {
-      return result.content;
+      return MOC_MESSAGES;
     }
   }
 }
