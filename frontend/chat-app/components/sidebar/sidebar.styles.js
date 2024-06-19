@@ -21,6 +21,7 @@ export function getSidebarStyle() {
 
        .chat-sidebar__content {
         overflow-y: auto;
+        scrollbar-width: none;
        }
       
        .avatar{

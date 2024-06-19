@@ -19,9 +19,6 @@ export function getChatComponentStyle() {
     overflow-y: hidden;
   }
   
-  .header {
-    flex-grow: 1;
-  }
   
  .sidebar {
   display: flex;
@@ -29,7 +26,7 @@ export function getChatComponentStyle() {
   }
   
   .chat-block {
-    flex-grow: 2;
+    flex-grow: 1;
   }
   
 </style>
