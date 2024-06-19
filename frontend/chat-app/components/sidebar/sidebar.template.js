@@ -1,6 +1,6 @@
 import { getSidebarStyle } from "./sidebar.styles";
 
-export function createSidebarTemplate(value) {
+export function createSidebarTemplate() {
   return `
     ${getSidebarStyle()}
     <div class="chat-sidebar">
