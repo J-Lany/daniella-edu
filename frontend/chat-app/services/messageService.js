@@ -2,29 +2,6 @@ import { diContainer } from "../di/di.js";
 import { SERVICES } from "../di/api.js";
 import { authGuard } from "../guards/auth-guard";
 
-function generateMockMessages(chatId) {
-  const messages = [];
-  const userId = "7c6ae783-464b-4351-a083-1f72a5282e45";
-  const interlocutorId = "fe7f2604-d508-454b-968f-da7b444bce55";
-  const messageCount = 5;
-
-  for (let i = 1; i <= messageCount; i++) {
-    const currentTime = new Date();
-    const hours = currentTime.getHours();
-    const minutes = currentTime.getMinutes();
-
-    const message = {
-      authorId: i % 2 === 0 ? interlocutorId : userId,
-      message: `Сообщение из чата ${chatId}, сообщение номер ${i}`,
-      time: `${hours}:${minutes}`,
-    };
-
-    messages.push(message);
-  }
-
-  return messages;
-}
-
 const MESSAGES_PER_PAGE = 10;
 const PAGE_NUMBER = 1;
 
@@ -70,14 +47,11 @@ export class MessageService {
     };
 
     const getParams = new URLSearchParams(params).toString();
-    const result = await this.#httpService.get(`messages?${getParams}`);
+    const result = await this.#httpService.get(`moc-messages?${getParams}`);
 
     if (result.status === 200) {
       this.#messages.set(this.#currentChatId, result.content);
       return result.content;
-    }
-    if (result.status === 401) {
-      return generateMockMessages(chatId);
     }
   }
 }
