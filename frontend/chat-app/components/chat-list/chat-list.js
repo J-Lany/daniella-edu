@@ -3,6 +3,9 @@ import { diContainer } from "../../di/di.js";
 import { createChatListTemplate } from "./chat-list.template.js";
 import { addListeners, removeListeners, select } from "../../utils/utils.js";
 
+export const CHAT_ID = "chat-id";
+export const SELECTED = "selected";
+
 export class ChatListComponent extends HTMLElement {
   #chatService = diContainer.resolve(SERVICES.chat);
   #messageService = diContainer.resolve(SERVICES.messages);
@@ -27,14 +30,16 @@ export class ChatListComponent extends HTMLElement {
   }
 
   #onChatClick(event) {
-    const chatId = event.target.getAttribute("chat-id");
+    const chatId = event.target.getAttribute(CHAT_ID);
     const chatItems = this.shadowRoot.querySelectorAll(".chat-list__item");
 
     chatItems.forEach((item) => {
-      if (item.getAttribute("chat-id") === chatId) {
-        item.classList.add("selected");
+      const isSelected = item.getAttribute(CHAT_ID) === chatId;
+
+      if (isSelected) {
+        item.classList.add(SELECTED);
       } else {
-        item.classList.remove("selected");
+        item.classList.remove(SELECTED);
       }
     });
 
