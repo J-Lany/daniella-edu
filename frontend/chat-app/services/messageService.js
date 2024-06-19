@@ -47,9 +47,7 @@ export class MessageService {
     };
 
     const getParams = new URLSearchParams(params).toString();
-
     const result = await this.#httpService.get(`messages?${getParams}`);
-    console.log(result);
 
     if (result.status === 200) {
       this.#messages.set(this.#currentChatId, result.content);
