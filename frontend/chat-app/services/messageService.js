@@ -2,18 +2,28 @@ import { diContainer } from "../di/di.js";
 import { SERVICES } from "../di/api.js";
 import { authGuard } from "../guards/auth-guard";
 
-const MOC_MESSAGES = [
-  {
-    message: "Hello",
-    authorId: "7c6ae783-464b-4351-a083-1f72a5282e45",
-    time: "19:00",
-  },
-  {
-    message: "Bye",
-    authorId: "7c6ae783-464b-4351-a083-1f72a5282e45",
-    time: "19:10",
-  },
-];
+function generateMockMessages() {
+  const messages = [];
+  const userId = "7c6ae783-464b-4351-a083-1f72a5282e45";
+  const interlocutorId = "fe7f2604-d508-454b-968f-da7b444bce55";
+  const messageCount = 5;
+
+  for (let i = 1; i <= messageCount; i++) {
+    const currentTime = new Date();
+    const hours = currentTime.getHours();
+    const minutes = currentTime.getMinutes();
+
+    const message = {
+      authorId: i % 2 === 0 ? interlocutorId : userId,
+      message: `Сообщение тестовое никому не нужное ${i}`,
+      time: `${hours}:${minutes}`,
+    };
+
+    messages.push(message);
+  }
+
+  return messages;
+}
 
 const MESSAGES_PER_PAGE = 10;
 const PAGE_NUMBER = 1;
@@ -67,7 +77,7 @@ export class MessageService {
       return result.content;
     }
     if (result.status === 401) {
-      return MOC_MESSAGES;
+      return generateMockMessages();
     }
   }
 }
