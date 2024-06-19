@@ -5,7 +5,7 @@ export function createMessagesBlockTemplate(messages) {
   ${getMessagesBlockStyle()}
   <div class="messages">
     ${
-      messages.message
+      messages?.message
         ? `<div>${messages.message}</div>`
         : messages.map(({ message, authorId, time }) => {
             return `

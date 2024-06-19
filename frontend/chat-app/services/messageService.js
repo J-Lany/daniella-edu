@@ -2,7 +2,7 @@ import { diContainer } from "../di/di.js";
 import { SERVICES } from "../di/api.js";
 import { authGuard } from "../guards/auth-guard";
 
-function generateMockMessages() {
+function generateMockMessages(chatId) {
   const messages = [];
   const userId = "7c6ae783-464b-4351-a083-1f72a5282e45";
   const interlocutorId = "fe7f2604-d508-454b-968f-da7b444bce55";
@@ -15,7 +15,7 @@ function generateMockMessages() {
 
     const message = {
       authorId: i % 2 === 0 ? interlocutorId : userId,
-      message: `Сообщение тестовое никому не нужное ${i}`,
+      message: `Сообщение из чата ${chatId}, сообщение номер ${i}`,
       time: `${hours}:${minutes}`,
     };
 
@@ -77,7 +77,7 @@ export class MessageService {
       return result.content;
     }
     if (result.status === 401) {
-      return generateMockMessages();
+      return generateMockMessages(chatId);
     }
   }
 }
