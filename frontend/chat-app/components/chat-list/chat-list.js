@@ -28,7 +28,6 @@ export class ChatListComponent extends HTMLElement {
 
   #onChatClick(event) {
     const chatId = event.target.getAttribute("chat-id");
-
     const chatItems = this.shadowRoot.querySelectorAll(".chat-list__item");
 
     chatItems.forEach((item) => {
