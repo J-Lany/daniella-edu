@@ -7,11 +7,13 @@ export function createMessagesBlockTemplate(messages) {
     ${
       messages?.message
         ? `<div>${messages.message}</div>`
-        : messages.map(({ message, authorId, time }) => {
-            return `
+        : messages
+            .map(({ message, authorId, time }) => {
+              return `
       <message-component user-id="${authorId}" time="${time}" message="${message}" display-mode="chat"></message-component>
       `;
-          })
+            })
+            .join("")
     }
   </div>`;
 }
