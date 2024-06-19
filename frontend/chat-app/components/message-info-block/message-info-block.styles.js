@@ -17,7 +17,7 @@ export function getMessageInfoBlockStyle() {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      width: 10rem;
+      max-width: 10rem;
   }
     }
     

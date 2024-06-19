@@ -12,10 +12,16 @@ export function getSidebarStyle() {
           gap: 1rem;
           background: var(--light-gray-background);
           padding-top: 1rem;
-          height: 100vh;
+          height: 100%;
           width: 19rem;
           position: relative;
           z-index: 1;
+          overflow-y: hiddeh;
+       }
+
+       .chat-sidebar__content {
+        overflow-y: auto;
+        scrollbar-width: none;
        }
       
        .avatar{

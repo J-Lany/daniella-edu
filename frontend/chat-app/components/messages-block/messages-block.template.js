@@ -4,10 +4,16 @@ export function createMessagesBlockTemplate(messages) {
   return `
   ${getMessagesBlockStyle()}
   <div class="messages">
-    ${messages.map(({ message, authorId, time }) => {
-      return `
+    ${
+      messages?.message
+        ? `<div>${messages.message}</div>`
+        : messages
+            .map(({ message, authorId, time }) => {
+              return `
       <message-component user-id="${authorId}" time="${time}" message="${message}" display-mode="chat"></message-component>
       `;
-    })}
+            })
+            .join("")
+    }
   </div>`;
 }

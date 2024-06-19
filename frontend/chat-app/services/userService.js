@@ -6,7 +6,7 @@ const USER_PER_PAGE = 10;
 const PAGE_NUMBER = 1;
 
 export class UserService {
-  #httpServise = authGuard(diContainer.resolve(SERVICES.http));
+  #httpService = authGuard(diContainer.resolve(SERVICES.http));
   #authService = diContainer.resolve(SERVICES.auth);
   #userSubscribers = new Map();
   #users = new Map();
@@ -47,7 +47,7 @@ export class UserService {
   }
 
   async getUserById(id) {
-    const result = await this.#httpServise.get(`users/${id}`);
+    const result = await this.#httpService.get(`users/${id}`);
     return result.content;
   }
 
@@ -61,7 +61,7 @@ export class UserService {
 
     const searchParams = new URLSearchParams(params).toString();
 
-    const result = await this.#httpServise.get(`users/search?${searchParams}`);
+    const result = await this.#httpService.get(`users/search?${searchParams}`);
     return result.content;
   }
 }

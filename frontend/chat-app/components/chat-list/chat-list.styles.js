@@ -8,7 +8,7 @@ export function getChatListStyle() {
        .chat-list {
           display: flex;
           flex-direction: column;
-          height: 100vh;
+          height: 100%;
           z-index: 1;
           position: relative;
        }
@@ -20,6 +20,10 @@ export function getChatListStyle() {
        .chat-list__item {
           padding: 1.25rem;
           transition: background-color 0.2s ease-in-out;
+       }
+
+       .selected {
+         background: var(--white-background);
        }
 
        .chat-list__item:hover {
