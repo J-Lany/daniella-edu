@@ -1,11 +1,11 @@
 import "../common.css";
 
-export function getMessageStyle(displayMode, position) {
-  const sizesByMode = {
-    fontSize: displayMode == "sidebar" ? "0.75rem" : "1rem",
-    gap: displayMode == "sidebar" ? "1rem" : "0.25rem",
-    alignItems: position === "left" ? "flex-start" : "flex-end",
-  };
+export function getMessageStyle(position) {
+  const alignItems = position === "left" ? "flex-start" : "flex-end";
+  const borderRadious =
+    position === "left"
+      ? "border-radius: 1rem 1rem 1rem 0"
+      : "border-radius: 1rem 1rem 0 1rem";
 
   return `
   <style>
@@ -16,19 +16,27 @@ export function getMessageStyle(displayMode, position) {
       gap: 1rem;
       align-items: center;
       font-family: inter;
-      font-size: ${sizesByMode.fontSize};
+      font-size: 1rem;
     }
 
     .message-block__body{
       display: flex;
       flex-direction: column;
-      align-items: ${sizesByMode.alignItems};
-      gap: ${sizesByMode.gap};
+      align-items: ${alignItems};
+      gap: 0.25rem;
       text-align: left;
     }
 
     .right {
       justify-self: flex-end;
+    }
+
+    .message-block__text {
+      background-color: var(--white-blue-background);
+      ${borderRadious};
+      padding: 0.4rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
     }
       
   </style>

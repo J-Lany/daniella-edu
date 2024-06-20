@@ -30,8 +30,8 @@ export function getAvatarStyles() {
       border-radius: 1rem;
     }
     .chat-avatar__img {
-      max-width: 2.375rem;
-      max-height: 2.375rem;
+      max-width: 1.5rem;
+      max-height: 1.5rem;
       border-radius: 1rem;
     }
 
@@ -40,7 +40,7 @@ export function getAvatarStyles() {
     }
 
     .chat-avatar__abb {
-      font-size: 1.375rem;
+      font-size: 1rem;
     }
 
     .avatar__abb {

@@ -19,15 +19,23 @@ export function getChatBlockStyle() {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+   
   }
 
   .messages-block {
-    flex-grow: 1;
+    flex-grow: 0;
+    overflow: auto;
+    scrollbar-width: none;
+    padding-left: 1rem;
+    padding-right: 5.6rem;
+    
   }
   
   .messages-input {
-    flex-grow: 0;
+    flex-grow: 1;
     margin-bottom: 1rem;
+    padding-right: 5.6rem;
+    background-color: var(--light-gray-background);
   }
   
 </style>
