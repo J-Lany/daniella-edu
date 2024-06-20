@@ -7,6 +7,11 @@ export class MessageService {
   #messagesDao = diContainer.resolve(SERVICES.messagesDao);
   #chatsDao = diContainer.resolve(SERVICES.chatsDao);
 
+  async getMocMessagesByChat(chatId) {
+    const partisipants = await this.#chatsDao.getParticipantsForMoc(chatId);
+    return generateMockMessages(chatId, partisipants);
+  }
+
   async getMessagesByChat(chatId, messagesPerPage, pageNumber) {
     const messagesList = await this.#messagesDao.getMessagesByChat(chatId);
 
@@ -83,4 +88,27 @@ export class MessageService {
 
     return chats.some((chat) => chat.participantsIds.includes(authorId));
   }
+}
+
+function generateMockMessages(chatId, partisipants) {
+  const messages = [];
+  const partisipantOne = partisipants[0];
+  const participantTwo = partisipants[1];
+  const messageCount = 5;
+
+  for (let i = 1; i <= messageCount; i++) {
+    const currentTime = new Date();
+    const hours = currentTime.getHours();
+    const minutes = currentTime.getMinutes();
+
+    const message = {
+      authorId: i % 2 === 0 ? partisipantOne : participantTwo,
+      message: `Сообщение из чата ${chatId}, сообщение номер ${i}`,
+      time: `${hours}:${minutes}`,
+    };
+
+    messages.push(message);
+  }
+
+  return messages;
 }

@@ -1,27 +1,26 @@
 import { createMessageTemplate } from "./message.template";
-import { diContainer } from "../../di/di";
-import { SERVICES } from "../../di/api";
 
 const messageAttribute = {
   USER_ID: "user-id",
   MESSAGE_TIME: "time",
   MESSAGE: "message",
   DISPLAY_MODE: "display-mode",
-  CHAT_ID: "chat-id",
+  IS_CURRENT_USER: "is-current-user",
 };
+
 export class Message extends HTMLElement {
   #userId;
   #messageTime;
   #message;
   #displayMode;
-  #chatId;
+  #isCurrentUser;
 
   #ATTRIBUTE_MAPPING = new Map([
     [messageAttribute.MESSAGE_TIME, this.setTime.bind(this)],
     [messageAttribute.USER_ID, this.setUserId.bind(this)],
     [messageAttribute.MESSAGE, this.setMessage.bind(this)],
     [messageAttribute.DISPLAY_MODE, this.setDisplayMode.bind(this)],
-    [messageAttribute.CHAT_ID, this.setChatId.bind(this)],
+    [messageAttribute.IS_CURRENT_USER, this.setIsCurrentUser.bind(this)],
   ]);
 
   static get name() {
@@ -39,7 +38,6 @@ export class Message extends HTMLElement {
   connectedCallback() {
     this.render();
   }
-  disconnectedCallback() {}
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue !== newValue) {
@@ -49,6 +47,10 @@ export class Message extends HTMLElement {
         this.render();
       }
     }
+  }
+
+  setIsCurrentUser(isCurrentUser) {
+    this.#isCurrentUser = isCurrentUser;
   }
 
   setTime(newTime) {
@@ -67,17 +69,14 @@ export class Message extends HTMLElement {
     this.#displayMode = newMode;
   }
 
-  setChatId(newChatId) {
-    this.#chatId = newChatId;
-  }
-
   render() {
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createMessageTemplate(
       this.#message,
       this.#messageTime,
       this.#userId,
-      this.#displayMode
+      this.#displayMode,
+      this.#isCurrentUser
     );
 
     this.shadowRoot.innerHTML = "";

@@ -11,6 +11,10 @@ export const getMessagesBlockStyle = () => {
     gap: 1.5rem;
   }
 
+  .right {
+    place-self: flex-end;
+  }
+
   </style>
   `;
 };

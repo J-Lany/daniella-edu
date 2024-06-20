@@ -28,6 +28,7 @@ export class UserInfoBlock extends HTMLElement {
     const templateElm = document.createElement("template");
     templateElm.innerHTML = createUserInfoBlockTemplate(user);
 
+    this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElm.content.cloneNode(true));
   }
 }
