@@ -1,5 +1,6 @@
 import { getMessageInfoBlockStyle } from "./message-info-block.styles";
 
+const UNDEFINED = "undefined";
 export function createMessageInfoTemplate(user, time, position) {
   const currentUser =
     user.lastName && user.firstName
@@ -7,21 +8,18 @@ export function createMessageInfoTemplate(user, time, position) {
       : user.login;
 
   const timeItem =
-    time !== "undefined" ? `<div class="message-info__time">${time}</div>` : "";
+    time !== UNDEFINED ? `<div class="message-info__time">${time}</div>` : "";
   const authorItem = `<div class="message-info__author">${currentUser}</div>`;
 
-  const createLayout = () => {
-    if (position === "left") {
-      return `${authorItem}${timeItem}`;
-    } else {
-      return `${timeItem}${authorItem}`;
-    }
-  };
+  const createLayout = (authorItem, timeItem, position) =>
+    position === "left"
+      ? `${authorItem}${timeItem}`
+      : `${timeItem}${authorItem}`;
 
   return `
     ${getMessageInfoBlockStyle()}
     <div class="message-info">
-       ${createLayout()}
+       ${createLayout(authorItem, timeItem, position)}
    </div>
   `;
 }

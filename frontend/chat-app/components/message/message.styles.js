@@ -24,7 +24,7 @@ export function getMessageStyle() {
  .right {
       justify-self: flex-end;
     }
-
+    
     .message-block__body {
       display: flex;
       flex-direction: column;
