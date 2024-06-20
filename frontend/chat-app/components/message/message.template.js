@@ -17,7 +17,7 @@ export function createMessageTemplate(
 
   const getMessageBody = () => {
     return ` <div class="message-block__body">
-              <message-info user-id="${authorId}" time="${time}"></message-info>
+              <message-info user-id="${authorId}" time="${time}" position="${position}"></message-info>
               <div class="message-block__text">${message}</div>
            </div>`;
   };

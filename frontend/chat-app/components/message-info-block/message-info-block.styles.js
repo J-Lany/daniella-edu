@@ -5,25 +5,24 @@ export function getMessageInfoBlockStyle() {
   <style>
     @import url('../common.css');
 
-    .message-info{
+    .message-info {
       display: flex;
       align-items: center;
       gap: 0.75rem;
     }
 
-    .message-info__author{
+    .message-info__author {
       font-weight: 500;
-      font-size: 0.85rem;
+      font-size: 1rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 10rem;
   }
-    }
     
-    .message-info__time{
+    .message-info__time {
       font-size: 0.75rem;
-      color:var(--gray-text-color);
+    font-style: italic;
     }
   </style>
 `;
