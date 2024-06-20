@@ -24,7 +24,7 @@ export function createMessageTemplate(
 
   const getLayout = () => {
     if (!withAvatarBool) {
-      return `${getMessageBody()}`;
+      return `<div class="message-block__text">${message}</div>`;
     }
     if (!isCurrentUserBool) {
       return `${getAvatar()}${getMessageBody()}`;
