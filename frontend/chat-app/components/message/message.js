@@ -1,29 +1,26 @@
 import { createMessageTemplate } from "./message.template";
-import { diContainer } from "../../di/di";
-import { SERVICES } from "../../di/api";
 
 const messageAttribute = {
   USER_ID: "user-id",
   MESSAGE_TIME: "time",
   MESSAGE: "message",
   DISPLAY_MODE: "display-mode",
-  CHAT_ID: "chat-id",
+  IS_CURRENT_USER: "is-current-user",
 };
+
 export class Message extends HTMLElement {
-  #authService = diContainer.resolve(SERVICES.auth);
   #userId;
   #messageTime;
   #message;
   #displayMode;
-  #currentUserId;
-  #chatId;
+  #isCurrentUser;
 
   #ATTRIBUTE_MAPPING = new Map([
     [messageAttribute.MESSAGE_TIME, this.setTime.bind(this)],
     [messageAttribute.USER_ID, this.setUserId.bind(this)],
     [messageAttribute.MESSAGE, this.setMessage.bind(this)],
     [messageAttribute.DISPLAY_MODE, this.setDisplayMode.bind(this)],
-    [messageAttribute.CHAT_ID, this.setChatId.bind(this)],
+    [messageAttribute.IS_CURRENT_USER, this.setIsCurrentUser.bind(this)],
   ]);
 
   static get name() {
@@ -39,13 +36,7 @@ export class Message extends HTMLElement {
   }
 
   connectedCallback() {
-    this.unsubscribeFromCurrentUser = this.#authService.subscribeCurrentUser(
-      this.setCurrentUserId.bind(this)
-    );
     this.render();
-  }
-  disconnectedCallback() {
-    this.unsubscribeFromCurrentUser();
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -58,8 +49,8 @@ export class Message extends HTMLElement {
     }
   }
 
-  setCurrentUserId(userId) {
-    this.#currentUserId = userId;
+  setIsCurrentUser(isCurrentUser) {
+    this.#isCurrentUser = isCurrentUser;
   }
 
   setTime(newTime) {
@@ -78,10 +69,6 @@ export class Message extends HTMLElement {
     this.#displayMode = newMode;
   }
 
-  setChatId(newChatId) {
-    this.#chatId = newChatId;
-  }
-
   render() {
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createMessageTemplate(
@@ -89,7 +76,7 @@ export class Message extends HTMLElement {
       this.#messageTime,
       this.#userId,
       this.#displayMode,
-      this.#currentUserId
+      this.#isCurrentUser
     );
 
     this.shadowRoot.innerHTML = "";
