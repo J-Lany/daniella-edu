@@ -15,10 +15,6 @@ export const getMessagesBlockStyle = () => {
     place-self: flex-end;
   }
 
-  .left {
-    
-  }
-
   </style>
   `;
 };
