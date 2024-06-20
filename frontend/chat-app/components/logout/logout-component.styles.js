@@ -9,8 +9,9 @@ const getLogoutComponentStyle = () => {
       border-radius: 50%;
       padding-left: 0.9rem;
       padding-right: 0.9rem;
-      border: 1px solid var(--blue-background);
-      color: var(--blue-background);
+      border: 1px solid var(--light-gray-background);
+      color: var(--gray-text-color);
+      background-color: var(--white-background);
       font-size: 2.5rem;
       font-weight: 600;
       transition: transform 0.3s ease-in-out, color 0.3s ease-in-out, background-color 0.3s ease-in-out;  
