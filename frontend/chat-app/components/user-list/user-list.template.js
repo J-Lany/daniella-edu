@@ -9,7 +9,7 @@ const layoutList = (list, className) => {
   return list
     ? list
         .map(({ userId }) => {
-          return `<message-component class="user-list__item ${className}" user-id="${userId}" display-mode="sidebar"></message-component> `;
+          return `<sidebar-item class="user-list__item ${className}" user-id="${userId}"></sidebar-item> `;
         })
         .join("")
     : "";

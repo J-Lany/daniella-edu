@@ -10,7 +10,7 @@ const layoutList = (chatList, currentUserId) => {
   return chatList
     .map(({ participantsIds, chatId }) => {
       const companionId = getCompanionId(participantsIds, currentUserId);
-      return `<message-component class="chat-list__item" user-id="${companionId}" chat-id="${chatId}" display-mode="sidebar"></message-component> `;
+      return `<sidebar-item class="chat-list__item" user-id="${companionId}" chat-id="${chatId}"></sidebar-item> `;
     })
     .join("");
 };
