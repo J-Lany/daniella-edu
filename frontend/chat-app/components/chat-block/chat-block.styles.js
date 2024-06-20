@@ -16,10 +16,9 @@ export function getChatBlockStyle() {
   }
 
   .chat-block {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: 1rem;
-   
+    padding-bottom: 1rem;
   }
 
   .messages-block {
@@ -28,7 +27,6 @@ export function getChatBlockStyle() {
     scrollbar-width: none;
     padding-left: 1rem;
     padding-right: 5.6rem;
-    
   }
   
   .messages-input {
@@ -36,6 +34,8 @@ export function getChatBlockStyle() {
     margin-bottom: 1rem;
     padding-right: 5.6rem;
     background-color: var(--light-gray-background);
+    max-height: 5.2rem;
+    align-self: flex-end;
   }
   
 </style>
