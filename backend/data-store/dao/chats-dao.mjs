@@ -19,6 +19,12 @@ export class ChatsDao {
   #usersDAO = diContainer.resolve(SERVICES.usersDao);
   #storeServise = diContainer.resolve(SERVICES.store);
 
+  async getParticipantsForMoc(chatId) {
+    const chats = await this.#storeServise.getData(this.#chatsFilePath);
+
+    return chats[chatId].participantsIds;
+  }
+
   async getChatsByUser(authorId) {
     const chatsIdsByUser = await this.getIdsChatsWhereUserParticipant(authorId);
     const chats = await this.getChats();
