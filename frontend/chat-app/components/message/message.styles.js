@@ -1,6 +1,7 @@
 import "../common.css";
 
-export function getMessageStyle(position) {
+export function getMessageStyle(position, withAvatar) {
+  const marginTop = withAvatar ? "1.5rem" : "0.2rem";
   const alignItems = position === "left" ? "flex-start" : "flex-end";
   const borderRadious =
     position === "left"
@@ -17,6 +18,7 @@ export function getMessageStyle(position) {
       align-items: center;
       font-family: inter;
       font-size: 1rem;
+      margin-top: ${marginTop}
     }
 
     .message-block__body{

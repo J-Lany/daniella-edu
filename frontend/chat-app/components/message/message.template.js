@@ -34,7 +34,7 @@ export function createMessageTemplate(
   };
 
   return `
-   ${getMessageStyle(position)}
+   ${getMessageStyle(position, withAvatarBool)}
     <div class="message-block ${position}">
       ${getLayout()}
     </div>

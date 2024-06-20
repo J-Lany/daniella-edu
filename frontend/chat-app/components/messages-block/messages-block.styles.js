@@ -8,7 +8,6 @@ export const getMessagesBlockStyle = () => {
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
     height: 100%;
   }
 
