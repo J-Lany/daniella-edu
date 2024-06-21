@@ -8,9 +8,9 @@ export function createMessageTemplate(
   withAvatar,
   isLast
 ) {
-  const isCurrentUserBool = isCurrentUser === "true" ? true : false;
+  const isCurrentUserBool = isCurrentUser === "true";
   const isLastClass = isLast === "true" ? "lastElement" : "";
-  const withAvatarBool = withAvatar === "true" ? true : false;
+  const withAvatarBool = withAvatar === "true";
   const position = isCurrentUserBool ? "right" : "left";
   const blockType = withAvatarBool ? "new-block" : "continue-block";
 

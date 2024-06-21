@@ -9,7 +9,7 @@ export function createMessagesByUserTemplate(messages, currentUser) {
   <div class="messages-by-user ${position}">
     ${messages
       .map(({ message, authorId, time }, index) => {
-        const withAvatarMessage = index === 0 ? true : false;
+        const withAvatarMessage = index === 0;
         const isCurrentUser = currentUser?.userId === authorId;
         const isLastMessage = index === messages.length - 1;
 
