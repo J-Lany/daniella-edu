@@ -92,9 +92,11 @@ export class MessageService {
 
 function generateMockMessages(chatId, partisipants) {
   const messages = [];
+  let messageBlock = [];
   const partisipantOne = partisipants[0];
   const participantTwo = partisipants[1];
-  const messageCount = 5;
+  const messageCount = 10;
+  let prevAuthorId;
 
   for (let i = 1; i <= messageCount; i++) {
     const currentTime = new Date();
@@ -102,12 +104,20 @@ function generateMockMessages(chatId, partisipants) {
     const minutes = currentTime.getMinutes();
 
     const message = {
-      authorId: i % 2 === 0 ? partisipantOne : participantTwo,
+      authorId: i % 3 === 0 ? partisipantOne : participantTwo,
       message: `Сообщение из чата ${chatId}, сообщение номер ${i}`,
       time: `${hours}:${minutes}`,
     };
 
-    messages.push(message);
+    const isNewBlock = prevAuthorId !== message.authorId;
+
+    if (isNewBlock && messageBlock.length > 0) {
+      messages.push(messageBlock);
+      messageBlock = [];
+    }
+
+    messageBlock.push(message);
+    prevAuthorId = message.authorId;
   }
 
   return messages;
