@@ -47,8 +47,12 @@ export class UserService {
   }
 
   async getUserById(id) {
+    if (this.#users.has(id)) {
+      return this.#users.get(id);
+    }
     const result = await this.#httpService.get(`users/${id}`);
-    return result.content;
+    this.#users.set(id, result.content);
+    return this.#users.get(id);
   }
 
   async searchUser(search, userId) {

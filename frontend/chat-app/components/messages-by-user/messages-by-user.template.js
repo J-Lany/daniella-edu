@@ -10,7 +10,7 @@ export function createMessagesByUserTemplate(messages, currentUser) {
     ${messages
       .map(({ message, authorId, time }, index) => {
         const withAvatarMessage = index === 0 ? true : false;
-        const isCurrentUser = currentUser.userId === authorId;
+        const isCurrentUser = currentUser?.userId === authorId;
         const isLastMessage = index === messages.length - 1;
 
         return `
