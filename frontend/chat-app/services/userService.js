@@ -16,8 +16,9 @@ export class UserService {
       this.#userSubscribers.get(userId).add(subscription);
     } else {
       this.#userSubscribers.set(userId, new Set([subscription]));
+      this.notifySubscribers(userId);
     }
-    this.notifySubscribers(userId);
+
     return () => this.unSubscribe(userId, subscription);
   }
 
