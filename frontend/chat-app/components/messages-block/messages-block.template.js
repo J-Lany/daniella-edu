@@ -1,7 +1,6 @@
 import { getMessagesBlockStyle } from "./messages-block.styles";
 
-export function createMessagesBlockTemplate(messages, currentUser) {
-  let prevUserId;
+export function createMessagesBlockTemplate(messages) {
   return `
   ${getMessagesBlockStyle()}
   <div class="messages">
@@ -9,15 +8,10 @@ export function createMessagesBlockTemplate(messages, currentUser) {
       messages?.message
         ? `<div>${messages.message}</div>`
         : messages
-            .map(({ message, authorId, time }) => {
-              const withAvatarMessage = prevUserId === authorId ? false : true;
-              const isCurrentUser = currentUser.userId === authorId;
-              const position = isCurrentUser ? "right" : "left";
-              
-              prevUserId = authorId
-
+            .map((messageBlock) => {
+              const messageBlockStr = JSON.stringify(messageBlock);
               return `
-                 <message-component class="${position}" user-id="${authorId}" time="${time}" is-current-user="${isCurrentUser}" message="${message}" with-avatar=${withAvatarMessage} display-mode="chat"></message-component>
+                 <messages-by-user  messages='${messageBlockStr}'></messages-by-user>
              `;
             })
             .join("")

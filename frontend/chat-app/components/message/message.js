@@ -6,6 +6,7 @@ const messageAttribute = {
   MESSAGE: "message",
   IS_CURRENT_USER: "is-current-user",
   WIHT_AVATAR: "with-avatar",
+  IS_LAST: "is-last",
 };
 
 export class Message extends HTMLElement {
@@ -14,6 +15,7 @@ export class Message extends HTMLElement {
   #message;
   #isCurrentUser;
   #withAvatar;
+  #isLast;
 
   #ATTRIBUTE_MAPPING = new Map([
     [messageAttribute.MESSAGE_TIME, this.setTime.bind(this)],
@@ -21,6 +23,7 @@ export class Message extends HTMLElement {
     [messageAttribute.MESSAGE, this.setMessage.bind(this)],
     [messageAttribute.IS_CURRENT_USER, this.setIsCurrentUser.bind(this)],
     [messageAttribute.WIHT_AVATAR, this.setWithAvatar.bind(this)],
+    [messageAttribute.IS_LAST, this.setIsLast.bind(this)],
   ]);
 
   static get name() {
@@ -69,6 +72,10 @@ export class Message extends HTMLElement {
     this.#withAvatar = newValue;
   }
 
+  setIsLast(newValue) {
+    this.#isLast = newValue;
+  }
+
   render() {
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createMessageTemplate(
@@ -76,7 +83,8 @@ export class Message extends HTMLElement {
       this.#messageTime,
       this.#userId,
       this.#isCurrentUser,
-      this.#withAvatar
+      this.#withAvatar,
+      this.#isLast
     );
 
     this.shadowRoot.innerHTML = "";

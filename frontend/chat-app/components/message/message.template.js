@@ -5,9 +5,11 @@ export function createMessageTemplate(
   time,
   authorId,
   isCurrentUser,
-  withAvatar
+  withAvatar,
+  isLast
 ) {
   const isCurrentUserBool = isCurrentUser === "true" ? true : false;
+  const isLastClass = isLast === "true" ? "lastElement" : "";
   const withAvatarBool = withAvatar === "true" ? true : false;
   const position = isCurrentUserBool ? "right" : "left";
   const blockType = withAvatarBool ? "new-block" : "continue-block";
@@ -19,14 +21,14 @@ export function createMessageTemplate(
   const getMessageBody = () => {
     return ` <div class="message-block__body ${position}">
                 <message-info user-id="${authorId}" time="${time}" position="${position}"></message-info>
-                <div class="message-block__text message-block__${position}">${message}</div>
+                <div class="message-block__text message-block__${position} ${isLastClass}">${message}</div>
            </div>`;
   };
 
   const getLayout = () => {
     if (!withAvatarBool) {
       return `
-      <div class="message-block__text next-message__${position}">${message}</div>
+      <div class="message-block__text next-message__${position} ${isLastClass}">${message}</div>
       `;
     }
     if (!isCurrentUserBool) {

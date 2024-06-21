@@ -24,7 +24,7 @@ export function getMessageStyle() {
  .right {
       justify-self: flex-end;
     }
-    
+
     .message-block__body {
       display: flex;
       flex-direction: column;
@@ -40,28 +40,25 @@ export function getMessageStyle() {
       align-items: flex-start;
     }
 
-    .message-block__right {
-      border-radius: 1rem 1rem 0 1rem;
-    }
-
-    .message-block__left {
-      border-radius: 1rem 1rem 1rem 0;
-    }
-
     .message-block__text {
       background-color: var(--white-blue-background);
       padding: 0.4rem;
       padding-left: 1rem;
       padding-right: 1rem;
+      border-radius: 1rem;
     }
 
-    .next-message__right {
+    .message-block__right.lastElement,
+    .next-message__right.lastElement  {
       border-radius: 1rem 0 1rem 1rem;
     }
 
-    .next-message__left {
+    .message-block__left.lastElement,
+    .next-message__left.lastElement {
       border-radius: 0 1rem 1rem 1rem;
     }
+
+   
       
   </style>
  `;
