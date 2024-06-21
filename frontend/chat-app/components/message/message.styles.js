@@ -49,28 +49,28 @@ export function getMessageStyle() {
     }
 
     .message-block__left {
-      border-radius: 1rem 1rem 1rem 0;
+      border-radius: 1rem 1rem 1rem 0.2rem;
     }
     .message-block__right {
-      border-radius: 1rem 1rem 0 1rem;
+      border-radius: 1rem 1rem 0.2rem 1rem;
     }
 
     .next-message__left {
-      border-radius: 0 1rem 1rem 0;
+      border-radius: 0.2rem 1rem 1rem 0.2rem;
     }
 
     .next-message__right {
-      border-radius: 1rem 0 0 1rem;
+      border-radius: 1rem 0.2rem 0.2rem 1rem;
     }
 
     .message-block__right.lastElement,
     .next-message__right.lastElement  {
-      border-radius: 1rem 0 1rem 1rem;
+      border-radius: 1rem 0.2rem 1rem 1rem;
     }
 
     .message-block__left.lastElement,
     .next-message__left.lastElement {
-      border-radius: 0 1rem 1rem 1rem;
+      border-radius: 0.2rem 1rem 1rem 1rem;
     }
 
    
