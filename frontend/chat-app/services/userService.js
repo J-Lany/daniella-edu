@@ -10,12 +10,14 @@ export class UserService {
   #authService = diContainer.resolve(SERVICES.auth);
   #userSubscribers = new Map();
   #users = new Map();
+  #usersRequest = new Map();
 
   subscribeUserById(userId, subscription) {
     if (this.#userSubscribers.has(userId)) {
       this.#userSubscribers.get(userId).add(subscription);
     } else {
       this.#userSubscribers.set(userId, new Set([subscription]));
+      this.#usersRequest.set(userId, this.getUserById(userId));
     }
     this.notifySubscribers(userId);
 
@@ -34,7 +36,7 @@ export class UserService {
         .get(userId)
         .forEach((subs) => subs(this.#users.get(userId)));
     } else {
-      const user = await this.getUserById(userId);
+      const user = await this.#usersRequest.get(userId);
 
       this.#users.set(userId, user);
       this.#userSubscribers.get(userId).forEach((subs) => {
@@ -51,8 +53,10 @@ export class UserService {
     if (this.#users.has(id)) {
       return this.#users.get(id);
     }
+
     const result = await this.#httpService.get(`users/${id}`);
-    this.#users.set(id, result.content);
+    const user = result.content;
+    this.#users.set(id, user);
     return this.#users.get(id);
   }
 
