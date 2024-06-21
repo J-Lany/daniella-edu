@@ -38,8 +38,6 @@ export class MessagesByUser extends HTMLElement {
     this.unsubscribeFromCurrentUser = this.#authService.subscribeCurrentUser(
       this.setCurrentUser.bind(this)
     );
-
-    this.render();
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
