@@ -104,7 +104,7 @@ function generateMockMessages(chatId, partisipants) {
     const minutes = currentTime.getMinutes();
 
     const message = {
-      authorId: i % 3 === 0 ? partisipantOne : participantTwo,
+      authorId: i % 4 !== 0 ? partisipantOne : participantTwo,
       message: `Сообщение из чата ${chatId}, сообщение номер ${i}`,
       time: `${hours}:${minutes}`,
     };

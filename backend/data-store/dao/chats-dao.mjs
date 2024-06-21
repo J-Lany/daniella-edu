@@ -49,7 +49,7 @@ export class ChatsDao {
     );
 
     return authorFriends.some((companionId) =>
-    companionIdsFromChat.includes(companionId)
+      companionIdsFromChat.includes(companionId)
     );
   }
 
@@ -128,7 +128,7 @@ export class ChatsDao {
     );
     const isP2pChat = chats[deleteChatId].chatType === CHAT_TYPES.p2p;
     const isChatExist = !!chats[deleteChatId];
-    const isAdmin = chats[deleteChatId].adminsId.includes(authorId);
+    const isAdmin = chats[deleteChatId].adminsIds.includes(authorId);
 
     if (!isChatExist) {
       return null;
@@ -164,7 +164,7 @@ export class ChatsDao {
       this.#chatsByUserFilePath
     );
     const isChatExist = !!chats[chatId];
-    const isAdmin = chats[chatId].adminsId.includes(authorId);
+    const isAdmin = chats[chatId].adminsIds.includes(authorId);
     const isUserExist = chatsByUser[toDeleteParticipantId].includes(chatId);
     const isChangeForbidden = !isChatExist || !isAdmin || !isUserExist;
 
@@ -192,7 +192,7 @@ export class ChatsDao {
     );
     const isP2pChat = chats[chatId].chatType === CHAT_TYPES.p2p;
     const isChatExist = !!chats[chatId];
-    const isAdmin = chats[chatId].adminsId.includes(authorId);
+    const isAdmin = chats[chatId].adminsIds.includes(authorId);
     const isChangeForbidden = !isChatExist || isP2pChat || !isAdmin;
 
     if (isChangeForbidden) {
@@ -230,7 +230,7 @@ export class ChatsDao {
     const chats = await this.#storeServise.getData(this.#chatsFilePath);
     const isP2pChat = chats[chatId].chatType === CHAT_TYPES.p2p;
     const isChatExist = !!chats[chatId];
-    const isAdmin = chats[chatId].adminsId.includes(authorId);
+    const isAdmin = chats[chatId].adminsIds.includes(authorId);
     const isChangeForbidden = !isChatExist || isP2pChat || !isAdmin;
 
     if (isChangeForbidden) {
@@ -238,9 +238,9 @@ export class ChatsDao {
     }
 
     if (role === SPECIAL_ROLES.admin) {
-      chats[chatId].adminsId.push(participantId);
+      chats[chatId].adminsIds.push(participantId);
     } else if (role === SPECIAL_ROLES.moderator) {
-      chats[chatId].moderatorsId.push(participantId);
+      chats[chatId].moderatorsIds.push(participantId);
     }
 
     await this.#storeServise.setData(this.#chatsFilePath, chats);
@@ -252,8 +252,8 @@ export class ChatsDao {
     const chats = await this.#storeServise.getData(this.#chatsFilePath);
     const isP2pChat = chats[chatId].chatType === CHAT_TYPES.p2p;
     const isChatExist = !!chats[chatId];
-    const isAdmin = chats[chatId].adminsId.includes(authorId);
-    const isModerator = chats[chatId].moderatorsId.includes(authorId);
+    const isAdmin = chats[chatId].adminsIds.includes(authorId);
+    const isModerator = chats[chatId].moderatorsIds.includes(authorId);
     const isChangeForbidden =
       isChatExist || isP2pChat || (!isAdmin && !isModerator);
 
@@ -261,7 +261,7 @@ export class ChatsDao {
       return null;
     }
 
-    chats[chatId].bannedId.push(participantId);
+    chats[chatId].bannedIds.push(participantId);
     await this.#storeServise.setData(this.#chatsFilePath, chats);
     return true;
   }
