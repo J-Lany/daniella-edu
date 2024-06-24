@@ -1,35 +1,79 @@
 import "../common.css";
 
-export function getMessageStyle(displayMode, position) {
-  const sizesByMode = {
-    fontSize: displayMode == "sidebar" ? "0.75rem" : "1rem",
-    gap: displayMode == "sidebar" ? "1rem" : "0.25rem",
-    alignItems: position === "left" ? "flex-start" : "flex-end",
-  };
-
+export function getMessageStyle() {
   return `
   <style>
     @import url('../common.css');
 
-    .message-block{
+    .message-block {
       display: flex;
       gap: 1rem;
       align-items: center;
       font-family: inter;
-      font-size: ${sizesByMode.fontSize};
+      font-size: 1rem;
     }
 
-    .message-block__body{
+    .new-block {
+      margin-top: 1.5rem;
+    }
+
+    .continue-block {
+      margin-top: 0.2rem;
+    }
+
+ .right {
+      justify-self: flex-end;
+    }
+
+    .message-block__body {
       display: flex;
       flex-direction: column;
-      align-items: ${sizesByMode.alignItems};
-      gap: ${sizesByMode.gap};
+      gap: 0.25rem;
       text-align: left;
     }
 
-    .right {
-      justify-self: flex-end;
+    .message-block__body.right {
+      align-items: flex-end;
     }
+
+    .message-block__body.left {
+      align-items: flex-start;
+    }
+
+    .message-block__text {
+      background-color: var(--white-blue-background);
+      padding: 0.4rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      border-radius: 1rem;
+    }
+
+    .message-block__left {
+      border-radius: 1rem 1rem 1rem 0.2rem;
+    }
+    .message-block__right {
+      border-radius: 1rem 1rem 0.2rem 1rem;
+    }
+
+    .next-message__left {
+      border-radius: 0.2rem 1rem 1rem 0.2rem;
+    }
+
+    .next-message__right {
+      border-radius: 1rem 0.2rem 0.2rem 1rem;
+    }
+
+    .message-block__right.lastElement,
+    .next-message__right.lastElement  {
+      border-radius: 1rem 0.2rem 1rem 1rem;
+    }
+
+    .message-block__left.lastElement,
+    .next-message__left.lastElement {
+      border-radius: 0.2rem 1rem 1rem 1rem;
+    }
+
+   
       
   </style>
  `;

@@ -17,9 +17,9 @@ export class ChatService {
       chatId,
       participantsIds,
       date,
-      adminsId: [authorId],
-      moderatorsId: [],
-      bannedId: [],
+      adminsIds: [authorId],
+      moderatorsIds: [],
+      bannedIds: [],
       chatType,
     };
     const isChatCreate = await this.#chatsDao.createChat(authorId, newChat);

@@ -4,24 +4,33 @@ export function createMessageTemplate(
   message,
   time,
   authorId,
-  displayMode,
-  isCurrentUser
+  isCurrentUser,
+  withAvatar,
+  isLast
 ) {
-  const isCurrentUserBool = isCurrentUser === "true" ? true : false;
+  const isCurrentUserBool = isCurrentUser === "true";
+  const isLastClass = isLast === "true" ? "lastElement" : "";
+  const withAvatarBool = withAvatar === "true";
   const position = isCurrentUserBool ? "right" : "left";
+  const blockType = withAvatarBool ? "new-block" : "continue-block";
 
   const getAvatar = () => {
-    return `<avatar-component display-mode=${displayMode} user-id="${authorId}"></avatar-component>`;
+    return `<avatar-component display-mode="chat" user-id="${authorId}"></avatar-component>`;
   };
 
   const getMessageBody = () => {
-    return ` <div class="message-block__body">
-    <message-info user-id="${authorId}" time="${time}"></message-info>
-    ${message ? ` <div class="message-block__body">${message}</div>` : ""}
-  </div>`;
+    return ` <div class="message-block__body ${position}">
+                <message-info user-id="${authorId}" time="${time}" position="${position}"></message-info>
+                <div class="message-block__text message-block__${position} ${isLastClass}">${message}</div>
+           </div>`;
   };
 
   const getLayout = () => {
+    if (!withAvatarBool) {
+      return `
+      <div class="message-block__text next-message__${position} ${isLastClass}">${message}</div>
+      `;
+    }
     if (!isCurrentUserBool) {
       return `${getAvatar()}${getMessageBody()}`;
     } else {
@@ -30,8 +39,8 @@ export function createMessageTemplate(
   };
 
   return `
-   ${getMessageStyle(displayMode, position)}
-    <div class="message-block ${position}">
+   ${getMessageStyle()}
+    <div class="message-block ${position} ${blockType}">
       ${getLayout()}
     </div>
 `;

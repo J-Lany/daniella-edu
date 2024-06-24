@@ -1,14 +1,13 @@
 import "../common.css";
-export const getMessagesBlockStyle = () => {
+export const getMessagesByUserStyle = () => {
   return `
   <style>
   @import url('../common.css');
 
-  .messages{
+  .messages-by-user {
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    height: 100%;
   }
 
   .right {

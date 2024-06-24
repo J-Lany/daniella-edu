@@ -4,23 +4,26 @@ const messageAttribute = {
   USER_ID: "user-id",
   MESSAGE_TIME: "time",
   MESSAGE: "message",
-  DISPLAY_MODE: "display-mode",
   IS_CURRENT_USER: "is-current-user",
+  WIHT_AVATAR: "with-avatar",
+  IS_LAST: "is-last",
 };
 
 export class Message extends HTMLElement {
   #userId;
   #messageTime;
   #message;
-  #displayMode;
   #isCurrentUser;
+  #withAvatar;
+  #isLast;
 
   #ATTRIBUTE_MAPPING = new Map([
     [messageAttribute.MESSAGE_TIME, this.setTime.bind(this)],
     [messageAttribute.USER_ID, this.setUserId.bind(this)],
     [messageAttribute.MESSAGE, this.setMessage.bind(this)],
-    [messageAttribute.DISPLAY_MODE, this.setDisplayMode.bind(this)],
     [messageAttribute.IS_CURRENT_USER, this.setIsCurrentUser.bind(this)],
+    [messageAttribute.WIHT_AVATAR, this.setWithAvatar.bind(this)],
+    [messageAttribute.IS_LAST, this.setIsLast.bind(this)],
   ]);
 
   static get name() {
@@ -65,8 +68,12 @@ export class Message extends HTMLElement {
     this.#message = newMessage;
   }
 
-  setDisplayMode(newMode) {
-    this.#displayMode = newMode;
+  setWithAvatar(newValue) {
+    this.#withAvatar = newValue;
+  }
+
+  setIsLast(newValue) {
+    this.#isLast = newValue;
   }
 
   render() {
@@ -75,8 +82,9 @@ export class Message extends HTMLElement {
       this.#message,
       this.#messageTime,
       this.#userId,
-      this.#displayMode,
-      this.#isCurrentUser
+      this.#isCurrentUser,
+      this.#withAvatar,
+      this.#isLast
     );
 
     this.shadowRoot.innerHTML = "";
