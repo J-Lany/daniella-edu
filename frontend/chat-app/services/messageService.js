@@ -47,11 +47,14 @@ export class MessageService {
     };
 
     const getParams = new URLSearchParams(params).toString();
-    const result = await this.#httpService.get(`moc-messages?${getParams}`);
+    const result = await this.#httpService.get(`messages?${getParams}`);
 
     if (result.status === 200) {
       this.#messages.set(this.#currentChatId, result.content);
       return result.content;
+    }
+    if(result.status === 404) {
+      this.#messages.set(this.#currentChatId, {message: "В данном чате нет сообщений"});
     }
   }
 }
