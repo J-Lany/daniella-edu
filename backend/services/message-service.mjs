@@ -80,7 +80,7 @@ export class MessageService {
   }
 
   async isPatrtisipant(authorId) {
-    const chats = await this.#chatsDao.getChatsByAuthor(authorId);
+    const chats = await this.#chatsDao.getChatsByUser(authorId);
 
     if (!chats) {
       return false;

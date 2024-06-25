@@ -13,9 +13,11 @@ export class MessagessDao {
 
   async addMessage(chatId, message) {
     const messages = await this.#storeServise.getData(this.#filePath);
-    if (!messages[chatId]) return null;
-
-    messages[chatId].push(message);
+    if (!messages[chatId]) {
+      messages[chatId] = [message];
+    } else {
+      messages[chatId].push(message);
+    }
 
     this.#storeServise.setData(this.#filePath, messages);
 
