@@ -2,10 +2,11 @@ import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
 import { ERRORS } from "../utils/chats-erorrs.mjs";
 import { authorization } from "../utils/authorization.mjs";
+import { roleGuard } from "../utils/role-guard.mjs";
+import { SPECIAL_ROLES } from "../data-store/dao/chats-dao.mjs";
 
 export function createChatsController(app) {
   const chatService = diContainer.resolve(SERVICES.chat);
-  const roleService = diContainer.resolve(SERVICES.role);
   /**
    * @swagger
    * /chats:
@@ -106,20 +107,24 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке при удален и чата
    */
-  app.delete("/chats", roleService.isAdmin, async (req, res) => {
-    const chatId = req.query.chatId;
-    const authorId = req.query.authorId;
+  app.delete(
+    "/chats",
+    authorization,
+    roleGuard(SPECIAL_ROLES.admin),
+    async (req, res) => {
+      const chatId = req.query.chatId;
+      const authorId = req.query.authorId;
 
-    try {
-      await chatService.deleteChat(authorId, chatId);
-
-      return res.status(200).json({ message: "Чат удален успешно" });
-    } catch (err) {
-      return res
-        .status(parseInt(err.message))
-        .json({ message: ERRORS.chatErrors[err.message] });
+      try {
+        await chatService.deleteChat(authorId, chatId);
+        return res.status(200).json({ message: "Чат удален успешно" });
+      } catch (err) {
+        return res
+          .status(parseInt(err.message))
+          .json({ message: ERRORS.chatErrors[err.message] });
+      }
     }
-  });
+  );
 
   /**
    * @swagger
@@ -259,7 +264,7 @@ export function createChatsController(app) {
   app.get(
     "/chats/:chatId",
     authorization,
-    roleService.isParticipant,
+    roleGuard(SPECIAL_ROLES.participant),
     async (req, res) => {
       const chatId = req.params.chatId;
 
@@ -332,7 +337,7 @@ export function createChatsController(app) {
   app.patch(
     "/chats/delete-participants/:chatId",
     authorization,
-    roleService.isAdmin,
+    roleGuard(SPECIAL_ROLES.admin),
     async (req, res) => {
       const chatId = req.params.chatId;
       const { toDeleteParticipateId } = req.body;
@@ -407,7 +412,7 @@ export function createChatsController(app) {
   app.patch(
     "/chat/add-participants/:chatId",
     authorization,
-    roleService.isAdmin,
+    roleGuard(SPECIAL_ROLES.admin),
     async (req, res) => {
       const chatId = req.params.chatId;
       const { participantsId } = req.body;
@@ -483,7 +488,7 @@ export function createChatsController(app) {
   app.patch(
     "/chat/set-role/:chatId",
     authorization,
-    roleService.isAdmin,
+    roleGuard(SPECIAL_ROLES.admin),
     async (req, res) => {
       const chatId = req.params.chatId;
       const { participantId, role } = req.body;
@@ -557,7 +562,7 @@ export function createChatsController(app) {
   app.patch(
     "/chat/set-ban/:chatId",
     authorization,
-    roleService.isModerator,
+    roleGuard(SPECIAL_ROLES.moderator),
     async (req, res) => {
       const chatId = req.params.chatId;
       const { participantId } = req.body;

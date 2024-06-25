@@ -10,6 +10,7 @@ export const CHAT_TYPES = {
 export const SPECIAL_ROLES = {
   admin: "admin",
   moderator: "moderator",
+  participant: "participant",
 };
 
 export class ChatsDao {
@@ -135,6 +136,7 @@ export class ChatsDao {
 
     if (isP2pChat) {
       const companionId = this.getCompanionIdFromPartisipants(
+        authorId,
         chats[deleteChatId].participantsIds
       );
       this.#usersDAO.deleteFriends(authorId, ...companionId);

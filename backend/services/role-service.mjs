@@ -3,66 +3,54 @@ import { diContainer } from "../di/di.mjs";
 import { CHAT_TYPES } from "../data-store/dao/chats-dao.mjs";
 
 export class RoleService {
-  async isAdmin(req, res, next) {
-    const chatsDao = diContainer.resolve(SERVICES.chatsDao);
-    const chats = await chatsDao.getChats();
-    const chatId = req.query.chatId || req.params.chatId;
-    const authorId = req.query.authorId || req.body.authorId;
+  #chatsDao = diContainer.resolve(SERVICES.chatsDao);
+
+  async isAdmin(chatId, authorId) {
+    const chats = await this.#chatsDao.getChats();
 
     if (!chats[chatId]) {
-      res.sendStatus(404);
-      return;
+      throw new Error(404);
     }
 
     const isAdmin = chats[chatId].adminsIds.includes(authorId);
     const isP2pChat = chats[chatId].chatType === CHAT_TYPES.p2p;
 
     if (!isAdmin && !isP2pChat) {
-      res.sendStatus(403);
-      return;
+      throw new Error(403);
     }
 
-    next();
+    return true;
   }
 
-  async isModerator(req, res, next) {
-    const chatsDao = diContainer.resolve(SERVICES.chatsDao);
-    const chats = await chatsDao.getChats();
-    const chatId = req.params.chatId;
-    const authorId = req.body.authorId;
+  async isModerator(chatId, authorId) {
+    const chats = await this.#chatsDao.getChats();
 
     if (!chats[chatId]) {
-      res.sendStatus(404);
-      return;
+      throw new Error(404);
     }
 
     const isModerator = chats[chatId].moderatorsIds.includes(authorId);
     const isP2pChat = chats[chatId].chatType === CHAT_TYPES.p2p;
 
     if (!isModerator && !isP2pChat) {
-      res.sendStatus(403);
-      return;
+      throw new Error(403);
     }
 
-    next();
+    return true;
   }
 
-  async isParticipant(req, res, next) {
-    const chatsDao = diContainer.resolve(SERVICES.chatsDao);
-    const chats = await chatsDao.getChats();
-    const authorId = req.query.authorId;
-    const chatId = req.params.chatId;
+  async isParticipant(chatId, authorId) {
+    const chats = await this.#chatsDao.getChats();
 
     if (!chats[chatId]) {
-      res.sendStatus(404);
-      return;
+      throw new Error(404);
     }
     const isParticipant = chats[chatId].participantsIds.includes(authorId);
 
     if (!isParticipant) {
-      res.sendStatus(403);
-      return;
+      throw new Error(403);
     }
-    next();
+
+    return true;
   }
 }
