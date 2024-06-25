@@ -3,13 +3,14 @@ import { diContainer } from "../../di/di.mjs";
 import { FILE_PATHS } from "../data/data-file-paths.mjs";
 import { convertChatIdsToChatsList } from "../../mappers/mappers.mjs";
 
-const CHAT_TYPES = {
+export const CHAT_TYPES = {
   p2p: "p2p",
   group: "group",
 };
-const SPECIAL_ROLES = {
+export const SPECIAL_ROLES = {
   admin: "admin",
   moderator: "moderator",
+  participant: "participant",
 };
 
 export class ChatsDao {
@@ -128,7 +129,6 @@ export class ChatsDao {
     );
     const isP2pChat = chats[deleteChatId].chatType === CHAT_TYPES.p2p;
     const isChatExist = !!chats[deleteChatId];
-    const isAdmin = chats[deleteChatId].adminsIds.includes(authorId);
 
     if (!isChatExist) {
       return null;
@@ -136,44 +136,39 @@ export class ChatsDao {
 
     if (isP2pChat) {
       const companionId = this.getCompanionIdFromPartisipants(
+        authorId,
         chats[deleteChatId].participantsIds
       );
-
       this.#usersDAO.deleteFriends(authorId, ...companionId);
     }
 
-    if (isP2pChat || isAdmin) {
-      chats[deleteChatId].participantsIds.forEach((participantsId) => {
-        chatsByUser[participantsId] = chatsByUser[participantsId].filter(
-          (chatId) => chatId !== deleteChatId
-        );
-      });
+    chats[deleteChatId].participantsIds.forEach((participantId) => {
+      chatsByUser[participantId] = chatsByUser[participantId].filter(
+        (chatId) => chatId !== deleteChatId
+      );
+    });
 
-      delete chats[deleteChatId];
+    delete chats[deleteChatId];
 
-      await this.#storeServise.setData(this.#chatsFilePath, chats);
-      await this.#storeServise.setData(this.#chatsByUserFilePath, chatsByUser);
+    await this.#storeServise.setData(this.#chatsFilePath, chats);
+    await this.#storeServise.setData(this.#chatsByUserFilePath, chatsByUser);
 
-      return true;
-    }
+    return true;
   }
 
-  async deleteChatParticipants(authorId, chatId, toDeleteParticipantId) {
+  async deleteChatParticipants(chatId, toDeleteParticipantId) {
     const chats = await this.#storeServise.getData(this.#chatsFilePath);
     const chatsByUser = await this.#storeServise.getData(
       this.#chatsByUserFilePath
     );
-    const isChatExist = !!chats[chatId];
-    const isAdmin = chats[chatId].adminsIds.includes(authorId);
     const isUserExist = chatsByUser[toDeleteParticipantId].includes(chatId);
-    const isChangeForbidden = !isChatExist || !isAdmin || !isUserExist;
 
-    if (isChangeForbidden) {
+    if (!isUserExist) {
       return null;
     }
 
     chats[chatId].participantsIds = chats[chatId].participantsIds.filter(
-      (participantsId) => participantsId !== toDeleteParticipantId
+      (participantId) => participantId !== toDeleteParticipantId
     );
     chatsByUser[toDeleteParticipantId] = chatsByUser[
       toDeleteParticipantId
@@ -185,19 +180,11 @@ export class ChatsDao {
     return true;
   }
 
-  async setParticipants(authorId, chatId, participantsId) {
+  async setParticipants(chatId, participantsId) {
     const chats = await this.#storeServise.getData(this.#chatsFilePath);
     const chatsByUser = await this.#storeServise.getData(
       this.#chatsByUserFilePath
     );
-    const isP2pChat = chats[chatId].chatType === CHAT_TYPES.p2p;
-    const isChatExist = !!chats[chatId];
-    const isAdmin = chats[chatId].adminsIds.includes(authorId);
-    const isChangeForbidden = !isChatExist || isP2pChat || !isAdmin;
-
-    if (isChangeForbidden) {
-      return null;
-    }
 
     chats[chatId].participantsIds.push(...participantsId);
     participantsId.forEach((participantId) => {
@@ -214,28 +201,13 @@ export class ChatsDao {
     return true;
   }
 
-  async getParticipants(chatId, authorId) {
+  async getParticipants(chatId) {
     const chats = await this.#storeServise.getData(this.#chatsFilePath);
-    const isChatExist = !!chats[chatId];
-    const isParticipant = chats[chatId].participantsIds.includes(authorId);
-
-    if (!isChatExist || !isParticipant) {
-      return null;
-    }
-
     return chats[chatId].participantsIds;
   }
 
-  async setSpesialRole(authorId, participantId, chatId, role) {
+  async setSpesialRole(participantId, chatId, role) {
     const chats = await this.#storeServise.getData(this.#chatsFilePath);
-    const isP2pChat = chats[chatId].chatType === CHAT_TYPES.p2p;
-    const isChatExist = !!chats[chatId];
-    const isAdmin = chats[chatId].adminsIds.includes(authorId);
-    const isChangeForbidden = !isChatExist || isP2pChat || !isAdmin;
-
-    if (isChangeForbidden) {
-      return null;
-    }
 
     if (role === SPECIAL_ROLES.admin) {
       chats[chatId].adminsIds.push(participantId);
@@ -248,18 +220,8 @@ export class ChatsDao {
     return true;
   }
 
-  async setBan(authorId, participantId, chatId) {
+  async setBan(participantId, chatId) {
     const chats = await this.#storeServise.getData(this.#chatsFilePath);
-    const isP2pChat = chats[chatId].chatType === CHAT_TYPES.p2p;
-    const isChatExist = !!chats[chatId];
-    const isAdmin = chats[chatId].adminsIds.includes(authorId);
-    const isModerator = chats[chatId].moderatorsIds.includes(authorId);
-    const isChangeForbidden =
-      isChatExist || isP2pChat || (!isAdmin && !isModerator);
-
-    if (!isChangeForbidden) {
-      return null;
-    }
 
     chats[chatId].bannedIds.push(participantId);
     await this.#storeServise.setData(this.#chatsFilePath, chats);

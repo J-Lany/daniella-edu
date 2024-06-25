@@ -35,7 +35,7 @@ export class ChatService {
     const chatsList = await this.#chatsDao.getChatsByUser(authorId);
 
     if (!chatsList) {
-      throw new Error(401);
+      throw new Error(403);
     }
 
     return paginator(chatsPerPage, pageNumber, chatsList);
@@ -49,19 +49,41 @@ export class ChatService {
     );
 
     if (!result) {
-      throw new Error(401);
+      throw new Error(500);
     }
   }
 
   async deleteChat(authorId, deleteChatId) {
-    await this.#chatsDao.deleteChat(authorId, deleteChatId);
+    const result = await this.#chatsDao.deleteChat(authorId, deleteChatId);
+
+    if (!result) {
+      throw new Error(500);
+    }
   }
 
-  async setParticipants(authorId, chatId, participantsId) {
-    const result = await this.#chatsDao.setParticipants(
-      authorId,
+  async setParticipants(chatId, participantsId) {
+    const result = await this.#chatsDao.setParticipants(chatId, participantsId);
+
+    if (!result) {
+      throw new Error(500);
+    }
+  }
+
+  async getParticipants(chatId) {
+    const result = await this.#chatsDao.getParticipants(chatId);
+
+    if (!result) {
+      throw new Error(500);
+    }
+
+    return result;
+  }
+
+  async setSpesialRole(participantId, chatId, role) {
+    const result = await this.#chatsDao.setSpesialRole(
+      participantId,
       chatId,
-      participantsId
+      role
     );
 
     if (!result) {
@@ -69,34 +91,11 @@ export class ChatService {
     }
   }
 
-  async getParticipants(chatId, authorId) {
-    const result = await this.#chatsDao.getParticipants(chatId, authorId);
+  async setBan(participantId, chatId) {
+    const result = await this.#chatsDao.setBan(participantId, chatId);
 
     if (!result) {
-      throw new Error(401);
-    }
-
-    return result;
-  }
-
-  async setSpesialRole(authorId, participantId, chatId, role) {
-    const result = await this.#chatsDao.setSpesialRole(
-      authorId,
-      participantId,
-      chatId,
-      role
-    );
-
-    if (!result) {
-      throw new Error(401);
-    }
-  }
-
-  async setBan(authorId, participantId, chatId) {
-    const result = await this.#chatsDao.setBan(authorId, participantId, chatId);
-
-    if (!result) {
-      throw new Error(401);
+      throw new Error(500);
     }
   }
 }

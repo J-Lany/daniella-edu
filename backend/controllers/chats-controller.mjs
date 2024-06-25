@@ -2,10 +2,11 @@ import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
 import { ERRORS } from "../utils/chats-erorrs.mjs";
 import { authorization } from "../utils/authorization.mjs";
+import { roleGuard } from "../utils/role-guard.mjs";
+import { SPECIAL_ROLES } from "../data-store/dao/chats-dao.mjs";
 
 export function createChatsController(app) {
   const chatService = diContainer.resolve(SERVICES.chat);
-
   /**
    * @swagger
    * /chats:
@@ -106,19 +107,24 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке при удален и чата
    */
-  app.delete("/chats", authorization, async (req, res) => {
-    const chatId = req.query.chatId;
-    const authorId = req.query.authorId;
+  app.delete(
+    "/chats",
+    authorization,
+    roleGuard(SPECIAL_ROLES.admin),
+    async (req, res) => {
+      const chatId = req.query.chatId;
+      const authorId = req.query.authorId;
 
-    try {
-      await chatService.deleteChat(authorId, chatId);
-      return res.status(200).json({ message: "Чат удален успешно" });
-    } catch (err) {
-      return res
-        .status(parseInt(err.message))
-        .json({ message: ERRORS.chatErrors[err.message] });
+      try {
+        await chatService.deleteChat(authorId, chatId);
+        return res.status(200).json({ message: "Чат удален успешно" });
+      } catch (err) {
+        return res
+          .status(parseInt(err.message))
+          .json({ message: ERRORS.chatErrors[err.message] });
+      }
     }
-  });
+  );
 
   /**
    * @swagger
@@ -255,19 +261,24 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке сервера
    */
-  app.get("/chats/:chatId", authorization, async (req, res) => {
-    const authorId = req.query.authorId;
-    const chatId = req.params.chatId;
+  app.get(
+    "/chats/:chatId",
+    authorization,
+    roleGuard(SPECIAL_ROLES.participant),
+    async (req, res) => {
+      const chatId = req.params.chatId;
 
-    try {
-      const result = await chatService.getParticipants(chatId, authorId);
-      return res.status(200).json(result);
-    } catch (err) {
-      return res
-        .status(parseInt(err.message))
-        .json({ message: ERRORS.getChatErrors[err.message] });
+      try {
+        const result = await chatService.getParticipants(chatId);
+
+        return res.status(200).json(result);
+      } catch (err) {
+        return res
+          .status(parseInt(err.message))
+          .json({ message: ERRORS.getChatErrors[err.message] });
+      }
     }
-  });
+  );
 
   /**
    * @swagger
@@ -326,16 +337,13 @@ export function createChatsController(app) {
   app.patch(
     "/chats/delete-participants/:chatId",
     authorization,
+    roleGuard(SPECIAL_ROLES.admin),
     async (req, res) => {
       const chatId = req.params.chatId;
-      const { authorId, toDeleteParticipateId } = req.body;
+      const { toDeleteParticipateId } = req.body;
 
       try {
-        await chatService.deleteParticipants(
-          authorId,
-          chatId,
-          toDeleteParticipateId
-        );
+        await chatService.deleteParticipants(chatId, toDeleteParticipateId);
         return res.status(200).json({ message: "Участник удален успешно" });
       } catch (err) {
         return res
@@ -404,17 +412,19 @@ export function createChatsController(app) {
   app.patch(
     "/chat/add-participants/:chatId",
     authorization,
+    roleGuard(SPECIAL_ROLES.admin),
     async (req, res) => {
       const chatId = req.params.chatId;
-      const { authorId, participantsId } = req.body;
+      const { participantsId } = req.body;
 
       try {
-        await chatService.setParticipants(authorId, chatId, participantsId);
+        await chatService.setParticipants(chatId, participantsId);
+
         return res.status(200).json({ message: "Участник добавлен успешно" });
       } catch (err) {
         return res
           .status(parseInt(err.message))
-          .json({ message: ERRORS.defaultChatErrors[err.message] });
+          .json({ message: ERRORS.chatErrors[err.message] });
       }
     }
   );
@@ -475,19 +485,25 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке
    */
-  app.patch("/chat/set-role/:chatId", authorization, async (req, res) => {
-    const chatId = req.params.chatId;
-    const { authorId, participantId, role } = req.body;
+  app.patch(
+    "/chat/set-role/:chatId",
+    authorization,
+    roleGuard(SPECIAL_ROLES.admin),
+    async (req, res) => {
+      const chatId = req.params.chatId;
+      const { participantId, role } = req.body;
 
-    try {
-      await chatService.setSpesialRole(authorId, participantId, chatId, role);
-      return res.status(200).json({ message: "Роль добавлена успешно" });
-    } catch (err) {
-      return res
-        .status(parseInt(err.message))
-        .json({ message: ERRORS.chatErrors[err.message] });
+      try {
+        await chatService.setSpesialRole(participantId, chatId, role);
+
+        return res.status(200).json({ message: "Роль добавлена успешно" });
+      } catch (err) {
+        return res
+          .status(parseInt(err.message))
+          .json({ message: ERRORS.chatErrors[err.message] });
+      }
     }
-  });
+  );
 
   /**
    * @swagger
@@ -543,17 +559,25 @@ export function createChatsController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке
    */
-  app.patch("/chat/set-ban/:chatId", authorization, async (req, res) => {
-    const chatId = req.params.chatId;
-    const { authorId, participantId } = req.body;
+  app.patch(
+    "/chat/set-ban/:chatId",
+    authorization,
+    roleGuard(SPECIAL_ROLES.moderator),
+    async (req, res) => {
+      const chatId = req.params.chatId;
+      const { participantId } = req.body;
 
-    try {
-      await chatService.setBan(authorId, participantId, chatId);
-      return res.status(200).json({ message: "Пользователь забанен успешно" });
-    } catch (err) {
-      return res
-        .status(parseInt(err.message))
-        .json({ message: ERRORS.chatErrors[err.message] });
+      try {
+        await chatService.setBan(participantId, chatId);
+
+        return res
+          .status(200)
+          .json({ message: "Пользователь забанен успешно" });
+      } catch (err) {
+        return res
+          .status(parseInt(err.message))
+          .json({ message: ERRORS.chatErrors[err.message] });
+      }
     }
-  });
+  );
 }
