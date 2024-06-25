@@ -5,7 +5,7 @@ import { authorization } from "../utils/authorization.mjs";
 
 export function createChatsController(app) {
   const chatService = diContainer.resolve(SERVICES.chat);
-
+  const roleService = diContainer.resolve(SERVICES.role);
   /**
    * @swagger
    * /chats:
@@ -111,7 +111,9 @@ export function createChatsController(app) {
     const authorId = req.query.authorId;
 
     try {
+      await roleService.isAdmin(chatId, authorId);
       await chatService.deleteChat(authorId, chatId);
+
       return res.status(200).json({ message: "Чат удален успешно" });
     } catch (err) {
       return res
@@ -260,7 +262,9 @@ export function createChatsController(app) {
     const chatId = req.params.chatId;
 
     try {
-      const result = await chatService.getParticipants(chatId, authorId);
+      await roleService.isParticipant(chatId, authorId);
+      const result = await chatService.getParticipants(chatId);
+
       return res.status(200).json(result);
     } catch (err) {
       return res
@@ -331,11 +335,8 @@ export function createChatsController(app) {
       const { authorId, toDeleteParticipateId } = req.body;
 
       try {
-        await chatService.deleteParticipants(
-          authorId,
-          chatId,
-          toDeleteParticipateId
-        );
+        await roleService.isAdmin(chatId, authorId);
+        await chatService.deleteParticipants(chatId, toDeleteParticipateId);
         return res.status(200).json({ message: "Участник удален успешно" });
       } catch (err) {
         return res
@@ -409,7 +410,9 @@ export function createChatsController(app) {
       const { authorId, participantsId } = req.body;
 
       try {
+        await roleService.isAdmin();
         await chatService.setParticipants(authorId, chatId, participantsId);
+
         return res.status(200).json({ message: "Участник добавлен успешно" });
       } catch (err) {
         return res
@@ -480,7 +483,9 @@ export function createChatsController(app) {
     const { authorId, participantId, role } = req.body;
 
     try {
-      await chatService.setSpesialRole(authorId, participantId, chatId, role);
+      await roleService.isAdmin(chatId, authorId);
+      await chatService.setSpesialRole(participantId, chatId, role);
+
       return res.status(200).json({ message: "Роль добавлена успешно" });
     } catch (err) {
       return res
@@ -548,7 +553,9 @@ export function createChatsController(app) {
     const { authorId, participantId } = req.body;
 
     try {
-      await chatService.setBan(authorId, participantId, chatId);
+      await roleService.isModerator(chatId, authorId);
+      await chatService.setBan(participantId, chatId);
+
       return res.status(200).json({ message: "Пользователь забанен успешно" });
     } catch (err) {
       return res
