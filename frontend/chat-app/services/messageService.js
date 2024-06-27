@@ -8,17 +8,29 @@ export class MessageService {
   #httpService = authGuard(diContainer.resolve(SERVICES.http));
   #authService = diContainer.resolve(SERVICES.auth);
   #messagesSubscribers = new Set();
+  #currentChatIdSubscribers = new Set();
   #messages = new Map();
   #currentChatId;
   #startIndex = 0;
 
+  subscribeCurrentChatId(subscribtion) {
+    this.#currentChatIdSubscribers.add(subscribtion);
+    return () => this.unSubscribeFromCurrentChatId();
+  }
+
   subscribeMessagesByCurrentChat(subscribtion) {
     this.#messagesSubscribers.add(subscribtion);
     this.startPooling();
-    return () => this.unSubscribe;
+    return () => this.unSubscribeFromMessage();
   }
 
-  async notifySubscribers() {
+  notifyCurrentChatIdSubscribers() {
+    this.#currentChatIdSubscribers.forEach((subscription) => {
+      subscription(this.#currentChatId);
+    });
+  }
+
+  async notifyMessagesSubscribers() {
     let messages;
 
     if (this.#currentChatId) {
@@ -32,16 +44,19 @@ export class MessageService {
     });
   }
 
-  unSubscribe(subs) {
+  unSubscribeFromMessage(subs) {
     this.#messagesSubscribers.delete(subs);
-    if (this.#messagesSubscribers.size === 0) {
-      this.stopPooling();
-    }
+    this.stopPooling();
+  }
+
+  unSubscribeFromCurrentChatId(subs) {
+    this.#currentChatIdSubscribers.delete(subs);
   }
 
   setCurrentChatId(id) {
     this.#currentChatId = id;
-    this.notifySubscribers();
+    this.notifyCurrentChatIdSubscribers();
+    this.notifyMessagesSubscribers();
   }
 
   async getMessagesByChatId(chatId) {
@@ -72,7 +87,7 @@ export class MessageService {
 
   updateMessages(chatId, messages) {
     this.#messages.set(chatId, messages);
-    this.notifySubscribers();
+    this.notifyMessagesSubscribers();
   }
 
   async sendMessage(message) {

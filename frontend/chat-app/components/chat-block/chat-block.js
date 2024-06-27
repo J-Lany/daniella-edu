@@ -19,15 +19,13 @@ export class ChatBlock extends HTMLElement {
   }
 
   connectedCallback() {
-    this.unSubscribeFromMessages =
-      this.#messagesService.subscribeMessagesByCurrentChat(
-        this.render.bind(this)
-      );
-      this.render();
+    this.unSubscribeFromCurrentChatId =
+      this.#messagesService.subscribeCurrentChatId(this.render.bind(this));
+    this.render();
   }
 
   disconnectedCallback() {
-    this.unSubscribeFromMessages();
+    this.unSubscribeFromCurrentChatId();
   }
 
   #onPlusClick(event) {
