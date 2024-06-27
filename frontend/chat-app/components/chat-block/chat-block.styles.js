@@ -12,7 +12,20 @@ export function getChatBlockStyle() {
     padding-bottom: 1rem;
   }
   .chat-empty {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+  .chat-empty__img {
+    max-width: 15rem;
+    filter: opacity(0.5);
+  }
+
+  .chat-empty__text {
+    color: var(--gray-text-color);
     text-align: center;
+    font-style: italic;
   }
 
   .chat-block {

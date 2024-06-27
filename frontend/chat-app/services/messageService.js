@@ -2,17 +2,19 @@ import { diContainer } from "../di/di.js";
 import { SERVICES } from "../di/api.js";
 import { authGuard } from "../guards/auth-guard";
 
-const MESSAGES_PER_PAGE = 10;
-const PAGE_NUMBER = 1;
+const LIMIT = 10;
 
 export class MessageService {
   #httpService = authGuard(diContainer.resolve(SERVICES.http));
+  #authService = diContainer.resolve(SERVICES.auth);
   #messagesSubscribers = new Set();
   #messages = new Map();
   #currentChatId;
+  #startIndex = 0;
 
   subscribeMessagesByCurrentChat(subscribtion) {
     this.#messagesSubscribers.add(subscribtion);
+    this.startPooling();
     return () => this.unSubscribe;
   }
 
@@ -32,6 +34,9 @@ export class MessageService {
 
   unSubscribe(subs) {
     this.#messagesSubscribers.delete(subs);
+    if (this.#messagesSubscribers.size === 0) {
+      this.stopPooling();
+    }
   }
 
   setCurrentChatId(id) {
@@ -42,19 +47,56 @@ export class MessageService {
   async getMessagesByChatId(chatId) {
     const params = {
       chatId,
-      messagesPerPage: MESSAGES_PER_PAGE,
-      pageNumber: PAGE_NUMBER,
+      startIndex: this.#startIndex,
+      limit: LIMIT,
     };
 
     const getParams = new URLSearchParams(params).toString();
     const result = await this.#httpService.get(`messages?${getParams}`);
 
     if (result.status === 200) {
-      this.#messages.set(this.#currentChatId, result.content);
+      const messages = result.content.result;
+      this.#startIndex = result.content.newMessageIndex;
+
+      this.updateMessages(chatId, messages);
       return result.content;
     }
-    if(result.status === 404) {
-      this.#messages.set(this.#currentChatId, {message: "В данном чате нет сообщений"});
+
+    if (result.status === 404) {
+      this.#messages.set(this.#currentChatId, {
+        message: "В данном чате нет сообщений",
+      });
+      return;
     }
+  }
+
+  updateMessages(chatId, messages) {
+    this.#messages.set(chatId, messages);
+    this.notifySubscribers();
+  }
+
+  async sendMessage(message) {
+    const currentUser = this.#authService.getCurrentUser();
+    const body = {
+      authorId: currentUser.userId,
+      messageBody: message,
+      chatId: this.#currentChatId,
+    };
+    const result = await this.#httpService.post(`messages`, body);
+    if (result.status === 200) {
+      console.log(200);
+    }
+  }
+
+  startPooling() {
+    this.poolingInterval = setInterval(() => {
+      if (this.#currentChatId) {
+        this.getMessagesByChatId(this.#currentChatId);
+      }
+    }, 5000);
+  }
+
+  stopPooling() {
+    clearInterval(this.poolingInterval);
   }
 }
