@@ -23,6 +23,8 @@ export const getMessagesBlockStyle = () => {
   }
 
   .empty-chat__text {
+    padding-left: 1rem;
+    padding-right: 1rem;
     color: var(--gray-text-color);
     text-align: center;
     font-style: italic;

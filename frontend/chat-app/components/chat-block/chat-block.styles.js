@@ -26,6 +26,8 @@ export function getChatBlockStyle() {
     color: var(--gray-text-color);
     text-align: center;
     font-style: italic;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
   .chat-block {
