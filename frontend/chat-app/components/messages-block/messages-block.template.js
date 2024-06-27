@@ -6,7 +6,7 @@ export function createMessagesBlockTemplate(messages) {
   ${getMessagesBlockStyle()}
   <div class="messages">
     ${
-      messages?.message
+     !messages || messages?.message
         ? `<div class="empty-chat">
          <img class="empty-chat__img" src=${emptyChatImg} alt"emptyChat" />
          <p class="empty-chat__text">Начните разговор и отправьте первое сообщение, чтобы запустить интересный диалог!</p>
