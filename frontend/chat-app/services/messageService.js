@@ -98,6 +98,7 @@ export class MessageService {
       chatId: this.#currentChatId,
     };
     const result = await this.#httpService.post(`messages`, body);
+    
     if (result.status === 200) {
       console.log(200);
     }
