@@ -88,9 +88,9 @@ export class MessageService {
 
   updateMessages(chatId, newMessages) {
     const existingMessages = this.#messages.get(chatId);
-    const isMessagesChanged = existingMessages && JSON.stringify(existingMessages) === JSON.stringify(newMessages)
+    const areMessagesUnchanged = existingMessages && JSON.stringify(existingMessages) === JSON.stringify(newMessages)
 
-    if (isMessagesChanged) {
+    if (areMessagesUnchanged) {
       return;
     }
 

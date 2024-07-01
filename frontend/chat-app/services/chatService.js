@@ -13,6 +13,7 @@ export class ChatService {
 
   subscribeChats(subscription) {
     this.#chatsSubscribers.add(subscription);
+    this.startPooling();
 
     if (this.#chats) {
       this.notifyChatsSubscribers();
@@ -24,6 +25,7 @@ export class ChatService {
 
   unSubscribeChats(subs) {
     this.#chatsSubscribers.delete(subs);
+    this.stopPooling();
   }
 
   notifyChatsSubscribers() {
@@ -46,8 +48,19 @@ export class ChatService {
 
     const result = await this.#httpServise.get(`chats?${chatsParams}`);
 
-    this.#chats = result.content.result;
-    this.notifyChatsSubscribers();
+    this.updateChatsByCurrnetUser(result.content.result) 
+  
+  }
+
+  updateChatsByCurrnetUser(newChats){
+   const  areChatsUnchanged =  this.#chats && JSON.stringify(this.#chats) === JSON.stringify(newChats)
+
+   if(areChatsUnchanged) {
+    return
+   }
+
+   this.#chats = newChats
+   this.notifyChatsSubscribers();
   }
 
   async createChat(participantsIds) {
@@ -61,5 +74,15 @@ export class ChatService {
     await this.#httpServise.post(`chats`, body);
 
     await this.getChatsByCurrnetUser();
+  }
+
+  startPooling() {
+    this.poolingInterval = setInterval(() => {
+        this.getChatsByCurrnetUser();
+    }, 200);
+  }
+
+  stopPooling() {
+    clearInterval(this.poolingInterval);
   }
 }
