@@ -15,7 +15,7 @@ export class MessageInput extends HTMLElement {
     [
       select.bind(this, ".message-input__img"),
       "click",
-      this.#onInputChange.bind(this),
+      this.#onSubmit.bind(this),
     ],
   ];
 
@@ -33,11 +33,17 @@ export class MessageInput extends HTMLElement {
   }
 
   #onInputChange(e) {
-    if (e.key === KEYS.ENTER || e.type === KEYS.CLICK) {
+    if (e.key === KEYS.ENTER) {
       this.#messageService.sendMessage(e.target.value);
       e.target.value = "";
     }
   }
+
+  #onSubmit(e) {
+    this.#messageService.sendMessage(e.target.value);
+    e.target.value = "";
+  }
+
 
   disconnectedCallback() {
     this.#listeners.forEach(removeListeners.bind(this));
