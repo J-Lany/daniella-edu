@@ -33,15 +33,23 @@ export class MessageInput extends HTMLElement {
   }
 
   #onInputChange(e) {
-    if (e.key === KEYS.ENTER) {
+    isMessageEmpty = e.target.value === "";
+   
+    if (e.key === KEYS.ENTER && !isMessageEmpty) {
       this.#messageService.sendMessage(e.target.value);
       e.target.value = "";
     }
   }
 
   #onSubmit(e) {
-    this.#messageService.sendMessage(e.target.value);
-    e.target.value = "";
+    isMessageEmpty = e.target.value === "";
+
+    if (!isMessageEmpty) {
+      this.#messageService.sendMessage(e.target.value);
+      e.target.value = "";
+    }
+
+   
   }
 
 
