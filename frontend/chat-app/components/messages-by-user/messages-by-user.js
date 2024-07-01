@@ -30,8 +30,6 @@ export class MessagesByUser extends HTMLElement {
   }
 
   connectedCallback() {
-
-
     this.unsubscribeFromCurrentUser = this.#authService.subscribeCurrentUser(
       this.setCurrentUser.bind(this)
     );
@@ -53,10 +51,10 @@ export class MessagesByUser extends HTMLElement {
 
   setCurrentUser(user) {
     this.#currentUser = user;
+    this.render();
   }
 
   disconnectedCallback() {
-  
     this.unsubscribeFromCurrentUser();
   }
   render() {
