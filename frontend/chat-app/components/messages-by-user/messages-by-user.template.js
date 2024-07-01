@@ -8,10 +8,12 @@ export function createMessagesByUserTemplate(messages, currentUser) {
   ${getMessagesByUserStyle()}
   <div class="messages-by-user ${position}">
     ${messages
-      .map(({ message, authorId, time }, index) => {
+      .map(({ messageBody, authorId, createDate }, index) => {
         const withAvatarMessage = index === 0;
         const isCurrentUser = currentUser?.userId === authorId;
         const isLastMessage = index === messages.length - 1;
+        const date = new Date(createDate);
+        const time = `${date.getHours()}:${date.getMinutes()}`;
 
         return `
                  <message-component 
@@ -19,7 +21,7 @@ export function createMessagesByUserTemplate(messages, currentUser) {
                   user-id="${authorId}" 
                   time="${time}"
                   is-current-user="${isCurrentUser}" 
-                  message="${message}" 
+                  message="${messageBody}" 
                   with-avatar="${withAvatarMessage}" 
                   display-mode="chat"
                   is-last="${isLastMessage}">

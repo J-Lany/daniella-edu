@@ -1,7 +1,6 @@
 import { SERVICES } from "../di/api.mjs";
 import { diContainer } from "../di/di.mjs";
 import { v4 as uuidv4 } from "uuid";
-import { paginator } from "../utils/paginator.mjs";
 
 export class MessageService {
   #messagesDao = diContainer.resolve(SERVICES.messagesDao);
@@ -12,14 +11,22 @@ export class MessageService {
     return generateMockMessages(chatId, partisipants);
   }
 
-  async getMessagesByChat(chatId, messagesPerPage, pageNumber) {
+  async getMessagesByChat(chatId, startIndex, limit) {
     const messagesList = await this.#messagesDao.getMessagesByChat(chatId);
+    const startIndexNum = Number(startIndex);
 
     if (!messagesList) {
       throw new Error(404);
     }
 
-    return paginator(messagesPerPage, pageNumber, messagesList);
+    const totalMessages = messagesList.length;
+    const endIndex = startIndexNum || totalMessages;
+    const startSliceIndex = Math.max(endIndex - limit, 0);
+    const result = messagesList.slice(startSliceIndex, endIndex);
+
+    const newMessageIndex = startSliceIndex;
+
+    return { result, newMessageIndex };
   }
 
   async addMessage(authorId, chatId, messageBody) {
@@ -31,7 +38,7 @@ export class MessageService {
 
     const messageId = uuidv4();
     const createDate = new Date();
-    const result = await this.#messagesDao.addMessage(chatId, {
+    const result = await this.#messagesDao.addMessage(authorId, chatId, {
       authorId,
       messageId,
       createDate,
@@ -80,7 +87,7 @@ export class MessageService {
   }
 
   async isPatrtisipant(authorId) {
-    const chats = await this.#chatsDao.getChatsByAuthor(authorId);
+    const chats = await this.#chatsDao.getChatsByUser(authorId);
 
     if (!chats) {
       return false;

@@ -139,12 +139,12 @@ export function createMessageController(app) {
    *         required: true
    *         schema:
    *           type: string
-   *       - name: messagesPerPage
+   *       - name: startIndex
    *         in: query
    *         required: true
    *         schema:
    *           type: integer
-   *       - name: pageNumber
+   *       - name: limit
    *         in: query
    *         required: true
    *         schema:
@@ -191,14 +191,14 @@ export function createMessageController(app) {
 
   app.get("/messages", authorization, async (req, res) => {
     const chatId = req.query.chatId;
-    const messagesPerPage = req.query.messagesPerPage;
-    const pageNumber = req.query.pageNumber;
+    const startIndex = req.query.startIndex;
+    const limit = req.query.limit;
 
     try {
       const result = await messageService.getMessagesByChat(
         chatId,
-        messagesPerPage,
-        pageNumber
+        startIndex,
+        limit
       );
       return res.status(200).json(result);
     } catch (err) {
