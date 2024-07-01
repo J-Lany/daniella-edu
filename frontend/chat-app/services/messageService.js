@@ -97,11 +97,8 @@ export class MessageService {
       messageBody: message,
       chatId: this.#currentChatId,
     };
-    const result = await this.#httpService.post(`messages`, body);
-    
-    if (result.status === 200) {
-      console.log(200);
-    }
+    return await this.#httpService.post(`messages`, body);
+
   }
 
   startPooling() {
@@ -109,7 +106,7 @@ export class MessageService {
       if (this.#currentChatId) {
         this.getMessagesByChatId(this.#currentChatId);
       }
-    }, 5000);
+    }, 200);
   }
 
   stopPooling() {
