@@ -12,6 +12,7 @@ export class MessageService {
   #messages = new Map();
   #currentChatId;
   #startIndex = 0;
+  poolingInterval;
 
   subscribeCurrentChatId(subscribtion) {
     this.#currentChatIdSubscribers.add(subscribtion);
@@ -85,8 +86,15 @@ export class MessageService {
     }
   }
 
-  updateMessages(chatId, messages) {
-    this.#messages.set(chatId, messages);
+  updateMessages(chatId, newMessages) {
+    const existingMessages = this.#messages.get(chatId);
+    const isMessagesChanged = existingMessages && JSON.stringify(existingMessages) === JSON.stringify(newMessages)
+
+    if (isMessagesChanged) {
+      return;
+    }
+
+    this.#messages.set(chatId, newMessages);
     this.notifyMessagesSubscribers();
   }
 
