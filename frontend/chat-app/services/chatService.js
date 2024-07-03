@@ -23,8 +23,8 @@ export class ChatService {
     return () => this.unSubscribeChats(subscription);
   }
 
-  unSubscribeChats(subs) {
-    this.#chatsSubscribers.delete(subs);
+  unSubscribeChats(subscription) {
+    this.#chatsSubscribers.delete(subscription);
     this.stopPooling();
   }
 
@@ -48,12 +48,12 @@ export class ChatService {
 
     const result = await this.#httpServise.get(`chats?${chatsParams}`);
 
-    this.updateChatsByCurrnetUser(result.content.result) 
+    this.updateChatsByCurrnetUser(result.content.result);
   
   }
 
-  updateChatsByCurrnetUser(newChats){
-   const  areChatsUnchanged =  this.#chats && JSON.stringify(this.#chats) === JSON.stringify(newChats)
+  updateChatsByCurrnetUser(newChats) {
+   const  areChatsUnchanged = this.#chats && JSON.stringify(this.#chats) === JSON.stringify(newChats)
 
    if(areChatsUnchanged) {
     return
