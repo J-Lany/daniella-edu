@@ -1,12 +1,23 @@
 import { createMessageInputTemplate } from "./message-input.template";
 import { addListeners, removeListeners, select } from "../../utils/utils.js";
+import { diContainer } from "../../di/di.js";
+import { SERVICES } from "../../di/api.js";
 
 const KEYS = {
   ENTER: "Enter",
+  CLICK: "click",
 };
 
 export class MessageInput extends HTMLElement {
-  #listeners = [[select.bind(this, "#message"), "keyup", this.#onInputChange]];
+  #messageService = diContainer.resolve(SERVICES.messages);
+  #listeners = [
+    [select.bind(this, "#message"), "keyup", this.#onInputChange.bind(this)],
+    [
+      select.bind(this, ".message-input__img"),
+      "click",
+      this.#onSubmit.bind(this),
+    ],
+  ];
 
   static get name() {
     return "message-input";
@@ -22,10 +33,24 @@ export class MessageInput extends HTMLElement {
   }
 
   #onInputChange(e) {
-    if (e.key === KEYS.ENTER) {
-      console.log(e.target);
+    const isMessageEmpty = e.target.value === "";
+   
+    if (e.key === KEYS.ENTER && !isMessageEmpty) {
+      this.#messageService.sendMessage(e.target.value);
+      e.target.value = "";
     }
   }
+
+  #onSubmit(e) {
+    const isMessageEmpty = e.target.value === "";
+
+    if (!isMessageEmpty) {
+      this.#messageService.sendMessage(e.target.value);
+      e.target.value = "";
+    }
+
+  }
+
 
   disconnectedCallback() {
     this.#listeners.forEach(removeListeners.bind(this));
