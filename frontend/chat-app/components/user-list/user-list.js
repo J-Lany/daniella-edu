@@ -80,6 +80,7 @@ export class UserListComponent extends HTMLElement {
     if (isClickOutsideModal) {
       modalElement.classList.remove("open");
       this.#isFirstRender = true;
+      this.dispatchEvent(new Event("create-chat"));
 
       this.updateListWithDelay();
     }
@@ -104,7 +105,6 @@ export class UserListComponent extends HTMLElement {
 
     const modalElement = this.shadowRoot.querySelector(".user-list");
     modalElement.classList.remove("open");
-    this.dispatchEvent(new Event("create-chat"));
   }
 
   #onChatClick() {
