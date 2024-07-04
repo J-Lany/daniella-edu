@@ -30,7 +30,7 @@ export const getMessageInputStyle = () => {
   }
 
   .message-input__button:hover {
-    background-color: var(--mid-light-gray-background);
+    background-color: var(--blue-background);
   }
   </style>
   `;
