@@ -48,6 +48,9 @@ export function getAvatarStyles() {
       color: white;
       border-radius: 1rem;
       padding: 1rem;
+      min-width: 1.33rem;
+      min-height: 1.33rem;
+      text-align: center;
     }
       
     @media screen and (max-width: 600px) {
