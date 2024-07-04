@@ -27,6 +27,7 @@ export const getMessageInputStyle = () => {
     background-color: var(--white-background);
     border-top-right-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
+    max-height: 1.129rem;
     padding: 1rem;
     border-left: solid 2px var(--light-gray-background);
     cursor: pointer;
