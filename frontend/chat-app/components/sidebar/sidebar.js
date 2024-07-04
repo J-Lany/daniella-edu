@@ -19,6 +19,10 @@ export class Sidebar extends HTMLElement {
       select.bind(this, "search-input"),
       "search",
       this.#debauncedSearch.bind(this),
+    ],   [
+      select.bind(this, "user-list"),
+      "create-chat",
+      this.#cleanInput.bind(this),
     ],
   ];
 
@@ -56,6 +60,11 @@ export class Sidebar extends HTMLElement {
     userList.handleCustomEvent({
       detail: res,
     });
+  }
+
+  #cleanInput(){
+    const searchInput = this.shadowRoot.querySelector("search-input");
+    searchInput.cleanInput()
   }
 
   render() {

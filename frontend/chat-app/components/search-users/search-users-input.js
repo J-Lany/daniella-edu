@@ -41,6 +41,11 @@ export class SearchInput extends HTMLElement {
     this.#listeners.forEach(removeListeners.bind(this));
   }
 
+  cleanInput(){
+    const searchInput = this.shadowRoot.querySelector("#search");
+    searchInput.value = "";
+  }
+
   render() {
     this.#listeners.forEach(removeListeners.bind(this));
 
