@@ -7,7 +7,7 @@ export function createMessageInputTemplate() {
   <div class="message-input__block">
     <input class="message-input__input type="text" id="message" placeholder="Type something...">
     <div class="message-input__button">
-    <img src=${airplaneImg} alt"airplane" class="message-input__img" />
+      <img src=${airplaneImg} alt"airplane" class="message-input__img" />
     </div>
   </div>`;
 }

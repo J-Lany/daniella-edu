@@ -104,6 +104,7 @@ export class UserListComponent extends HTMLElement {
 
     const modalElement = this.shadowRoot.querySelector(".user-list");
     modalElement.classList.remove("open");
+    this.dispatchEvent(new Event("create-chat"));
   }
 
   #onChatClick() {
