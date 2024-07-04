@@ -19,6 +19,10 @@ export const getMessageInputStyle = () => {
     width: 100%;
   }
 
+  .message-input__img {
+    transition: filter 0.2s ease-in-out;
+  }
+
   .message-input__button {
     background-color: var(--white-background);
     border-top-right-radius: 0.5rem;
@@ -32,6 +36,11 @@ export const getMessageInputStyle = () => {
   .message-input__button:hover {
     background-color: var(--blue-background);
   }
+
+  .message-input__button:hover .message-input__img {
+    filter: invert(1);
+  }
+
   </style>
   `;
 };
