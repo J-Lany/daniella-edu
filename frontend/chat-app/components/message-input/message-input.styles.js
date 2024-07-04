@@ -10,7 +10,7 @@ export const getMessageInputStyle = () => {
     padding: 1rem;
   }
   
-  .message-input__input{
+  .message-input__input {
     font-size: 1rem;
     border: none;
     padding: 1rem;
@@ -19,12 +19,18 @@ export const getMessageInputStyle = () => {
     width: 100%;
   }
 
-  .message-input__button{
-    background-color: white;
+  .message-input__button {
+    background-color: var(--white-background);
     border-top-right-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
     padding: 1rem;
     border-left: solid 2px var(--light-gray-background);
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  .message-input__button:hover {
+    background-color: var(--mid-light-gray-background);
   }
   </style>
   `;
