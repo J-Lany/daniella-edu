@@ -13,7 +13,7 @@ export class MessageInput extends HTMLElement {
   #listeners = [
     [select.bind(this, "#message"), "keyup", this.#onInputChange.bind(this)],
     [
-      select.bind(this, ".message-input__img"),
+      select.bind(this, ".message-input__button"),
       "click",
       this.#onSubmit.bind(this),
     ],
@@ -42,11 +42,12 @@ export class MessageInput extends HTMLElement {
   }
 
   #onSubmit(e) {
-    const isMessageEmpty = e.target.value === "";
+    const messageInput = this.shadowRoot.querySelector("#message");
+    const inputValue = messageInput.value;
 
-    if (!isMessageEmpty) {
-      this.#messageService.sendMessage(e.target.value);
-      e.target.value = "";
+    if (inputValue) {
+      this.#messageService.sendMessage(inputValue);
+      messageInput.value = "";
     }
 
   }

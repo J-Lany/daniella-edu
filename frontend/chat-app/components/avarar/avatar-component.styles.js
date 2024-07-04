@@ -40,7 +40,7 @@ export function getAvatarStyles() {
     }
 
     .chat-avatar__abb {
-      font-size: 0.8rem;
+      font-size: 1rem;
     }
 
     .avatar__abb {
