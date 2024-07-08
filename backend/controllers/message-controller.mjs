@@ -1,7 +1,9 @@
-import { diContainer } from "../di/di.mjs";
-import { SERVICES } from "../di/api.mjs";
-import { ERRORS } from "../utils/chats-erorrs.mjs";
-import { authorization } from "../utils/authorization.mjs";
+import { diContainer } from '../di/di.mjs';
+import { SERVICES } from '../di/api.mjs';
+import { ERRORS } from '../utils/chats-erorrs.mjs';
+import { authorization } from '../utils/authorization.mjs';
+
+const UNDEFINED = 'undefined';
 
 export function createMessageController(app) {
   const messageService = diContainer.resolve(SERVICES.messages);
@@ -67,7 +69,7 @@ export function createMessageController(app) {
    *                   description: Сообщение об ошибке сервера
    */
 
-  app.get("/moc-messages", authorization, async (req, res) => {
+  app.get('/moc-messages', authorization, async (req, res) => {
     const chatId = req.query.chatId;
     try {
       const result = await messageService.getMocMessagesByChat(chatId);
@@ -111,7 +113,7 @@ export function createMessageController(app) {
    *         description: Ошибка при создании чата
    */
 
-  app.post("/messages", authorization, async (req, res) => {
+  app.post('/messages', authorization, async (req, res) => {
     const { authorId, messageBody, chatId } = req.body;
 
     try {
@@ -189,7 +191,7 @@ export function createMessageController(app) {
    *                   description: Сообщение об ошибке сервера
    */
 
-  app.get("/messages", authorization, async (req, res) => {
+  app.get('/messages', authorization, async (req, res) => {
     const chatId = req.query.chatId;
     const startIndex = req.query.startIndex;
     const limit = req.query.limit;
@@ -266,7 +268,7 @@ export function createMessageController(app) {
    *                   description: Сообщение об ошибке
    */
 
-  app.patch("/messages/:messageId", authorization, async (req, res) => {
+  app.patch('/messages/:messageId', authorization, async (req, res) => {
     const messageId = req.params.messageId;
     const { chatId, messageBody } = req.body;
     try {
@@ -327,12 +329,12 @@ export function createMessageController(app) {
    *                   type: string
    *                   description: Сообщение об ошибке при удален и чата
    */
-  app.delete("/messages", authorization, async (req, res) => {
+  app.delete('/messages', authorization, async (req, res) => {
     const chatId = req.query.chatId;
     const messageId = req.query.messageId;
     try {
       await messageService.deleteMessage(chatId, messageId);
-      return res.status(200).json({ message: "Чат удален успешно" });
+      return res.status(200).json({ message: 'Чат удален успешно' });
     } catch (err) {
       return res
         .status(parseInt(err.message))

@@ -1,6 +1,6 @@
-import { SERVICES } from "../di/api.mjs";
-import { diContainer } from "../di/di.mjs";
-import { v4 as uuidv4 } from "uuid";
+import { SERVICES } from '../di/api.mjs';
+import { diContainer } from '../di/di.mjs';
+import { v4 as uuidv4 } from 'uuid';
 
 export class MessageService {
   #messagesDao = diContainer.resolve(SERVICES.messagesDao);
@@ -42,7 +42,7 @@ export class MessageService {
       authorId,
       messageId,
       createDate,
-      messageBody,
+      messageBody
     });
 
     if (!result) {
@@ -113,7 +113,7 @@ function generateMockMessages(chatId, partisipants) {
     const message = {
       authorId: i % 4 !== 0 ? partisipantOne : participantTwo,
       message: `Сообщение из чата ${chatId}, сообщение номер ${i}`,
-      time: `${hours}:${minutes}`,
+      time: `${hours}:${minutes}`
     };
 
     const isNewBlock = prevAuthorId !== message.authorId;
