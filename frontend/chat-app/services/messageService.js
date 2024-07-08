@@ -1,6 +1,6 @@
-import { diContainer } from '../di/di.js';
-import { SERVICES } from '../di/api.js';
-import { authGuard } from '../guards/auth-guard';
+import { diContainer } from "../di/di.js";
+import { SERVICES } from "../di/api.js";
+import { authGuard } from "../guards/auth-guard";
 
 const LIMIT = 10;
 
@@ -10,6 +10,7 @@ export class MessageService {
   #messagesSubscribers = new Set();
   #currentChatIdSubscribers = new Set();
   #messages = new Map();
+  #historyMessages = new Map();
   #currentChatId;
   #startIndex = 0;
   poolingInterval;
@@ -60,7 +61,7 @@ export class MessageService {
     this.notifyMessagesSubscribers();
   }
 
-  async fetchMessages(params, chatId) {
+  async fetchMessages(params) {
     const getParams = new URLSearchParams(params).toString();
     const result = await this.#httpService.get(`messages?${getParams}`);
 
@@ -68,13 +69,12 @@ export class MessageService {
       const messages = result.content.result;
       this.#startIndex = result.content.newMessageIndex;
 
-      this.updateMessages(chatId, messages);
-      return result.content;
+      return messages;
     }
 
     if (result.status === 404) {
       this.#messages.set(this.#currentChatId, {
-        message: 'В данном чате нет сообщений'
+        message: "В данном чате нет сообщений"
       });
       return;
     }
@@ -87,7 +87,7 @@ export class MessageService {
       limit: LIMIT
     };
 
-    const messages = await this.fetchMessages(params, chatId);
+    const messages = await this.fetchMessages(params);
 
     if (messages) {
       this.updateMessages(chatId, messages);
@@ -95,42 +95,34 @@ export class MessageService {
     return messages;
   }
 
-  async getMessagesOnScroll(chatId) {
+  async loadMoreMessages() {
     const params = {
-      chatId,
+      chatId: this.#currentChatId,
       startIndex: this.#startIndex,
       limit: LIMIT
     };
 
-    const messages = await this.fetchMessages(params, chatId);
+    const messages = await this.fetchMessages(params);
 
     if (messages) {
-      this.updateMessages(chatId, messages);
+      this.#historyMessages.set(this.#currentChatId, [
+        ...(this.#historyMessages.get(this.#currentChatId) || []),
+        ...messages
+      ]);
     }
-    return messages;
+    return this.#historyMessages.get(this.#currentChatId);
   }
 
   updateMessages(chatId, newMessages) {
-    const existingMessages = this.#messages.get(chatId) || [];
+    const existingMessages = this.#messages.get(chatId);
+    const areMessagesUnchanged = existingMessages && JSON.stringify(existingMessages) === JSON.stringify(newMessages)
 
-    let hasNewMessages = false;
-    
-    newMessages.forEach((newMessage) => {
-      const existingMessageIndex = existingMessages.findIndex(
-        (existingMessage) => existingMessage.messageId === newMessage.messageId
-      );
-      if (existingMessageIndex !== -1) {
-        existingMessages[existingMessageIndex] = newMessage;
-      } else {
-        existingMessages.push(newMessage);
-        hasNewMessages = true;
-      }
-    });
-
-    if (hasNewMessages) {
-      this.#messages.set(chatId, existingMessages);
-      this.notifyMessagesSubscribers();
+    if (areMessagesUnchanged) {
+      return
     }
+
+    this.#messages.set(chatId, newMessages);
+    this.notifyMessagesSubscribers();
   }
 
   async sendMessage(message) {

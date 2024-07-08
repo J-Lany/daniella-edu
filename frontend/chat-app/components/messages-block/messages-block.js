@@ -5,9 +5,6 @@ import { SERVICES } from "../../di/api";
 
 export class MessagesBlock extends HTMLElement {
   #messagesService = diContainer.resolve(SERVICES.messages);
-  #listeners = [
-    [select.bind(this, ".messages"), "scroll", this.#onScroll.bind(this)]
-  ];
 
   static get name() {
     return "messages-block";
@@ -24,25 +21,28 @@ export class MessagesBlock extends HTMLElement {
       );
   }
 
-  #onScroll(e) {
-    const messageBlock = this.shadowRoot.querySelector(".messages");
-    if (messageBlock.scrollTop === 0) {
-      console.log("load more");
-    }
-  }
-
   disconnectedCallback() {
     this.unSubscribeFromMessages();
   }
-  render(messages) {
-    this.#listeners.forEach(removeListeners.bind(this));
 
+  async loadMoreMessages() {
+    const messages = await this.#messagesService.loadMoreMessages();
+    
+    messages.forEach((message) => {
+      const messageStr = JSON.stringify(message);
+      const messageElem = document.createElement("messages-by-user");
+
+      messageElem.setAttribute("messages", messageStr);
+
+      this.shadowRoot.prepend(messageElem);
+    });
+  }
+
+  render(messages) {
     const templateElem = document.createElement("template");
     templateElem.innerHTML = createMessagesBlockTemplate(messages);
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
-
-    this.#listeners.forEach(addListeners.bind(this));
   }
 }
