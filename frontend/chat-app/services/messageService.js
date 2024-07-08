@@ -1,6 +1,6 @@
-import { diContainer } from "../di/di.js";
-import { SERVICES } from "../di/api.js";
-import { authGuard } from "../guards/auth-guard";
+import { diContainer } from '../di/di.js';
+import { SERVICES } from '../di/api.js';
+import { authGuard } from '../guards/auth-guard';
 
 const LIMIT = 10;
 
@@ -60,13 +60,7 @@ export class MessageService {
     this.notifyMessagesSubscribers();
   }
 
-  async getMessagesByChatId(chatId) {
-    const params = {
-      chatId,
-      startIndex: this.#startIndex,
-      limit: LIMIT,
-    };
-
+  async fetchMessages(params, chatId) {
     const getParams = new URLSearchParams(params).toString();
     const result = await this.#httpService.get(`messages?${getParams}`);
 
@@ -80,22 +74,63 @@ export class MessageService {
 
     if (result.status === 404) {
       this.#messages.set(this.#currentChatId, {
-        message: "В данном чате нет сообщений",
+        message: 'В данном чате нет сообщений'
       });
       return;
     }
   }
 
-  updateMessages(chatId, newMessages) {
-    const existingMessages = this.#messages.get(chatId);
-    const areMessagesUnchanged = existingMessages && JSON.stringify(existingMessages) === JSON.stringify(newMessages)
+  async getMessagesByChatId(chatId) {
+    const params = {
+      chatId,
+      startIndex: 0,
+      limit: LIMIT
+    };
 
-    if (areMessagesUnchanged) {
-      return;
+    const messages = await this.fetchMessages(params, chatId);
+
+    if (messages) {
+      this.updateMessages(chatId, messages);
     }
+    return messages;
+  }
 
-    this.#messages.set(chatId, newMessages);
-    this.notifyMessagesSubscribers();
+  async getMessagesOnScroll(chatId) {
+    const params = {
+      chatId,
+      startIndex: this.#startIndex,
+      limit: LIMIT
+    };
+
+    const messages = await this.fetchMessages(params, chatId);
+
+    if (messages) {
+      this.updateMessages(chatId, messages);
+    }
+    return messages;
+  }
+
+  updateMessages(chatId, newMessages) {
+    const existingMessages = this.#messages.get(chatId) || [];
+
+    let hasNewMessages = false;
+    
+    newMessages.forEach((newMessage) => {
+      const existingMessageIndex = existingMessages.findIndex(
+        (existingMessage) => existingMessage.messageId === newMessage.messageId
+      );
+      if (existingMessageIndex !== -1) {
+        existingMessages[existingMessageIndex] = newMessage;
+      } else {
+        existingMessages.push(newMessage);
+        hasNewMessages = true;
+      }
+    });
+
+    if (hasNewMessages) {
+      this.#messages.set(chatId, existingMessages);
+      this.notifyMessagesSubscribers();
+    }
   }
 
   async sendMessage(message) {
@@ -103,10 +138,9 @@ export class MessageService {
     const body = {
       authorId: currentUser.userId,
       messageBody: message,
-      chatId: this.#currentChatId,
+      chatId: this.#currentChatId
     };
     return await this.#httpService.post(`messages`, body);
-
   }
 
   startPooling() {
