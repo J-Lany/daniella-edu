@@ -26,7 +26,9 @@ export class MessagesBlock extends HTMLElement {
   }
 
   async loadMoreMessages() {
-    const messages = await this.#messagesService.loadMoreMessages();
+    const chatId  =  this.#messagesService.getCurrentChatId()
+    const startIndex = this.#messagesService.getStartIndex()
+    const messages = await this.#messagesService.loadMoreMessages(chatId, );
 
     messages.forEach((message) => {
       const messageStr = JSON.stringify(message);
@@ -44,13 +46,5 @@ export class MessagesBlock extends HTMLElement {
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
-
-    const messageBlock = this.shadowRoot.querySelector(".messages");
-
-    // Установка фокуса на последнее добавленное сообщение
-    const lastMessage = messageBlock.lastElementChild;
-    if (lastMessage) {
-      lastMessage.focus();
-    }
   }
 }
