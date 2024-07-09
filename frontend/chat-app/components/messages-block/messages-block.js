@@ -38,6 +38,7 @@ export class MessagesBlock extends HTMLElement {
     }
 
     for (let i = messages.length - 1; i >= 0; i--) {
+      const firstChild = this.shadowRoot.firstChild; 
       const message = messages[i];
       const messageStr = JSON.stringify(message);
       const messageElem = document.createElement("messages-by-user");
