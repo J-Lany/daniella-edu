@@ -38,7 +38,7 @@ export class MessagesBlock extends HTMLElement {
     }
 
     for (let i = messages.length - 1; i >= 0; i--) {
-      const messageBlock = this.shadowRoot.children[1]
+      const messageBlock = this.shadowRoot.children[1];
 
       const message = messages[i];
       const messageStr = JSON.stringify(message);
@@ -47,9 +47,12 @@ export class MessagesBlock extends HTMLElement {
       messageElem.setAttribute("messages", messageStr);
 
       messageBlock.prepend(messageElem);
-
-  
     }
+
+    const messageBlock = this.shadowRoot.children[1];
+    console.log(messageBlock.scrollHeight, messageBlock.scrollTop);
+    messageBlock.scrollY = messageBlock.scrollHeight;
+    console.log(messageBlock.scrollHeight, messageBlock.scrollTop);
   }
 
   render(messages) {
