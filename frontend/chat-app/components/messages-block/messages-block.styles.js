@@ -4,12 +4,26 @@ export const getMessagesBlockStyle = () => {
   <style>
   @import url('../common.css');
 
-  .messages{
+  @keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+  }
+
+  .message-appear {
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+  }
+
+  .messages {
     padding: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    height: 100%;
+    min-height: 100%;
   }
 
   .empty-chat {
