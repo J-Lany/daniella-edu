@@ -51,8 +51,10 @@ export class MessagesBlock extends HTMLElement {
 
     const messageBlock = this.shadowRoot.children[1];
     console.log(messageBlock.scrollHeight, messageBlock.scrollTop);
-    messageBlock.scrollY = messageBlock.scrollHeight;
-    console.log(messageBlock.scrollHeight, messageBlock.scrollTop);
+    setTimeout(() => {
+      messageBlock.scrollTop = messageBlock.scrollHeight;
+      console.log(messageBlock.scrollHeight, messageBlock.scrollTop);
+  }, 0);
   }
 
   render(messages) {
