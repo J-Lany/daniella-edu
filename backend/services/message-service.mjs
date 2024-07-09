@@ -1,6 +1,6 @@
-import { SERVICES } from '../di/api.mjs';
-import { diContainer } from '../di/di.mjs';
-import { v4 as uuidv4 } from 'uuid';
+import { SERVICES } from "../di/api.mjs";
+import { diContainer } from "../di/di.mjs";
+import { v4 as uuidv4 } from "uuid";
 
 export class MessageService {
   #messagesDao = diContainer.resolve(SERVICES.messagesDao);
@@ -14,6 +14,7 @@ export class MessageService {
   async getMessagesByChat(chatId, startIndex, limit) {
     const messagesList = await this.#messagesDao.getMessagesByChat(chatId);
     const startIndexNum = Number(startIndex);
+    const limitNum = Number(limit);
 
     if (!messagesList) {
       throw new Error(404);
@@ -21,7 +22,7 @@ export class MessageService {
 
     const totalMessages = messagesList.length;
     const endIndex = startIndexNum || totalMessages;
-    const startSliceIndex = Math.max(endIndex - limit, 0);
+    const startSliceIndex = Math.max(endIndex - limitNum, 0);
     const result = messagesList.slice(startSliceIndex, endIndex);
 
     const newMessageIndex = startSliceIndex;
