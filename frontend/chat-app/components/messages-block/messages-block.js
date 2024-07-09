@@ -33,18 +33,17 @@ export class MessagesBlock extends HTMLElement {
       startIndex
     );
 
-    if(!messages) {
-      return
+    if (!messages) {
+      return;
     }
 
-    messages.forEach((message) => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const message = messages[i];
       const messageStr = JSON.stringify(message);
       const messageElem = document.createElement("messages-by-user");
-
       messageElem.setAttribute("messages", messageStr);
-
-      this.shadowRoot.prepend(messageElem);
-    });
+      this.shadowRoot.appendChild(messageElem);
+    }
   }
 
   render(messages) {

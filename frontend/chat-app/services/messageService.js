@@ -41,16 +41,13 @@ export class MessageService {
   }
 
   async notifyMessagesSubscribers() {
-    let messages;
-
-    if (this.#currentChatId) {
-      messages = this.#messages.has(this.#currentChatId)
-        ? this.#messages.get(this.#currentChatId)
-        : await this.getMessagesByChatId(this.#currentChatId);
+    if (!this.#messages.has(this.#currentChatId)) {
+      const startIndex = await this.getMessagesByChatId(this.#currentChatId);
+      this.#startIndex = startIndex;
     }
 
     this.#messagesSubscribers.forEach((subscription) => {
-      subscription(messages);
+      subscription(this.#messages.get(this.#currentChatId));
     });
   }
 
@@ -75,9 +72,9 @@ export class MessageService {
 
     if (result.status === 200) {
       const messages = result.content.result;
-      this.#startIndex = result.content.newMessageIndex;
+      const startIndex = result.content.newMessageIndex;
 
-      return messages;
+      return { messages, startIndex };
     }
 
     if (result.status === 404) {
@@ -95,12 +92,13 @@ export class MessageService {
       limit: LIMIT
     };
 
-    const messages = await this.fetchMessages(params);
+    const result = await this.fetchMessages(params);
 
-    if (messages) {
-      this.updateMessages(chatId, messages);
+    if (result.messages) {
+      this.updateMessages(chatId, result);
     }
-    return messages;
+
+    return result.startIndex;
   }
 
   async loadMoreMessages(chatId, startIndex) {
@@ -113,21 +111,25 @@ export class MessageService {
       limit: LIMIT
     };
 
-    const messages = await this.fetchMessages(params);
+    const result = await this.fetchMessages(params);
 
-    if (!messages) {
+    if (!result.messages) {
       return;
     }
 
     this.#historyMessages.set(this.#currentChatId, [
       ...(this.#historyMessages.get(this.#currentChatId) || []),
-      ...messages
+      ...result.messages
     ]);
+
+    this.#startIndex = result.startIndex;
 
     return this.#historyMessages.get(this.#currentChatId);
   }
 
-  updateMessages(chatId, newMessages) {
+  updateMessages(chatId, result) {
+    const startIndex = result.startIndex;
+    const newMessages = result.messages;
     const existingMessages = this.#messages.get(chatId);
 
     if (!existingMessages || existingMessages.message) {
@@ -146,7 +148,7 @@ export class MessageService {
     if (areMessagesUnchanged) {
       return;
     }
-
+    this.#startIndex = startIndex;
     this.setAndNotifyMessages(chatId, newMessages);
   }
 
