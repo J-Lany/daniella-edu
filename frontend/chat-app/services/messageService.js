@@ -104,6 +104,9 @@ export class MessageService {
   }
 
   async loadMoreMessages(chatId, startIndex) {
+    if (!startIndex) {
+      return;
+    }
     const params = {
       chatId,
       startIndex,
@@ -112,19 +115,22 @@ export class MessageService {
 
     const messages = await this.fetchMessages(params);
 
-    if (messages) {
-      this.#historyMessages.set(this.#currentChatId, [
-        ...(this.#historyMessages.get(this.#currentChatId) || []),
-        ...messages
-      ]);
+    if (!messages) {
+      return;
     }
+
+    this.#historyMessages.set(this.#currentChatId, [
+      ...(this.#historyMessages.get(this.#currentChatId) || []),
+      ...messages
+    ]);
+
     return this.#historyMessages.get(this.#currentChatId);
   }
 
   updateMessages(chatId, newMessages) {
     const existingMessages = this.#messages.get(chatId);
 
-    if (!existingMessages) {
+    if (!existingMessages || existingMessages.message) {
       this.setAndNotifyMessages(chatId, newMessages);
       return;
     }
@@ -140,6 +146,7 @@ export class MessageService {
     if (areMessagesUnchanged) {
       return;
     }
+
     this.setAndNotifyMessages(chatId, newMessages);
   }
 

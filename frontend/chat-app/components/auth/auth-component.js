@@ -3,7 +3,7 @@ import { createAuthComponent } from "./auth-component.template";
 
 export const viewTypes = {
   REGISTRATION: "registration",
-  LOGIN: "login",
+  LOGIN: "login"
 };
 
 export class AuthComponent extends HTMLElement {
@@ -12,18 +12,18 @@ export class AuthComponent extends HTMLElement {
     [
       select.bind(this, "login-component"),
       "registration",
-      this.#onRegistrationClick.bind(this),
+      this.#onRegistrationClick.bind(this)
     ],
     [
       select.bind(this, "registration-component"),
       "sucsess-reg",
-      this.#onSucsessRegistratiom.bind(this),
+      this.#onSucsessRegistratiom.bind(this)
     ],
     [
       select.bind(this, "registration-component"),
       "login",
-      this.#onLoginClick.bind(this),
-    ],
+      this.#onLoginClick.bind(this)
+    ]
   ];
 
   static get name() {

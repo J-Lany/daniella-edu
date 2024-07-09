@@ -26,9 +26,16 @@ export class MessagesBlock extends HTMLElement {
   }
 
   async loadMoreMessages() {
-    const chatId  =  this.#messagesService.getCurrentChatId()
-    const startIndex = this.#messagesService.getStartIndex()
-    const messages = await this.#messagesService.loadMoreMessages(chatId, );
+    const chatId = this.#messagesService.getCurrentChatId();
+    const startIndex = this.#messagesService.getStartIndex();
+    const messages = await this.#messagesService.loadMoreMessages(
+      chatId,
+      startIndex
+    );
+
+    if(!messages) {
+      return
+    }
 
     messages.forEach((message) => {
       const messageStr = JSON.stringify(message);
