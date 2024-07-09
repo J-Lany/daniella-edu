@@ -45,8 +45,10 @@ export class MessagesBlock extends HTMLElement {
 
       const messageElem = document.createElement("messages-by-user");
       messageElem.setAttribute("messages", messageStr);
-      
+
       messageBlock.prepend(messageElem);
+
+  
     }
   }
 

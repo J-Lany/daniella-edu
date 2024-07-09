@@ -4,20 +4,6 @@ export const getMessagesBlockStyle = () => {
   <style>
   @import url('../common.css');
 
-  @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-  }
-
-  .message-appear {
-    opacity: 0;
-    animation: fadeIn 1s ease forwards;
-  }
-
   .messages {
     padding: 1rem;
     display: flex;
