@@ -42,7 +42,7 @@ export class MessagesBlock extends HTMLElement {
       const messageStr = JSON.stringify(message);
       const messageElem = document.createElement("messages-by-user");
       messageElem.setAttribute("messages", messageStr);
-      this.shadowRoot.appendChild(messageElem);
+      this.shadowRoot.insertBefore(messageElem, firstChild);
     }
   }
 
