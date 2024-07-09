@@ -15,12 +15,12 @@ export class MessageService {
   #startIndex = 0;
   poolingInterval;
 
-  getCurrentChatId(){
-    return this.#currentChatId
+  getCurrentChatId() {
+    return this.#currentChatId;
   }
 
-  getStartIndex(){
-    return this.#startIndex
+  getStartIndex() {
+    return this.#startIndex;
   }
 
   subscribeCurrentChatId(subscribtion) {
@@ -123,14 +123,27 @@ export class MessageService {
 
   updateMessages(chatId, newMessages) {
     const existingMessages = this.#messages.get(chatId);
+
+    if (!existingMessages) {
+      this.setAndNotifyMessages(chatId, newMessages);
+      return;
+    }
+
+    const lastBlockOld = existingMessages[existingMessages.length - 1];
+    const lastMessageOld = lastBlockOld[lastBlockOld.length - 1];
+    const lastBlockNew = newMessages[newMessages.length - 1];
+    const lastMessageNew = lastBlockNew[lastBlockNew.length - 1];
+
     const areMessagesUnchanged =
-      existingMessages &&
-      JSON.stringify(existingMessages) === JSON.stringify(newMessages);
+      existingMessages && lastMessageOld.messageId === lastMessageNew.messageId;
 
     if (areMessagesUnchanged) {
       return;
     }
+    this.setAndNotifyMessages(chatId, newMessages);
+  }
 
+  setAndNotifyMessages(chatId, newMessages) {
     this.#messages.set(chatId, newMessages);
     this.notifyMessagesSubscribers();
   }
