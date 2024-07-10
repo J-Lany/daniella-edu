@@ -28,6 +28,7 @@ import { UserListComponent } from "./chat-app/components/user-list/user-list.js"
 import { LogoutButton } from "./chat-app/components/logout/logout-component.js";
 import { SidebarItem } from "./chat-app/components/sidebar-item/sidebar-item.js";
 import { MessagesByUser } from "./chat-app/components/messages-by-user/messages-by-user.js";
+import { VirtualScroll } from "./chat-app/components/virtual-scroll/virtual-scroll.js";
 
 diContainer.register(SERVICES.http, httpService);
 diContainer.register(SERVICES.auth, new AuthService());
@@ -58,6 +59,7 @@ diContainer.register(SERVICES.chat, new ChatService());
   ChatListComponent,
   UserListComponent,
   LogoutButton,
+  VirtualScroll
 ].map((component) => customElements.define(component.name, component));
 
 document.querySelector("#app").innerHTML = `<app-component></app-component>`;
