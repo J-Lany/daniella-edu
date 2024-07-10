@@ -3,7 +3,7 @@ import { diContainer } from "../../di/di";
 import { SERVICES } from "../../di/api";
 
 const messagesAttribute = {
-  MESSAGES: "messages",
+  MESSAGES: "messages"
 };
 
 export class MessagesByUser extends HTMLElement {
@@ -13,7 +13,7 @@ export class MessagesByUser extends HTMLElement {
   #messages;
 
   #ATTRIBUTE_MAPPING = new Map([
-    [messagesAttribute.MESSAGES, this.setMessages.bind(this)],
+    [messagesAttribute.MESSAGES, this.setMessages.bind(this)]
   ]);
 
   static get name() {

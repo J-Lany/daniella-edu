@@ -14,6 +14,7 @@ export class MessageService {
   async getMessagesByChat(chatId, startIndex, limit) {
     const messagesList = await this.#messagesDao.getMessagesByChat(chatId);
     const startIndexNum = Number(startIndex);
+    const limitNum = Number(limit);
 
     if (!messagesList) {
       throw new Error(404);
@@ -21,7 +22,7 @@ export class MessageService {
 
     const totalMessages = messagesList.length;
     const endIndex = startIndexNum || totalMessages;
-    const startSliceIndex = Math.max(endIndex - limit, 0);
+    const startSliceIndex = Math.max(endIndex - limitNum, 0);
     const result = messagesList.slice(startSliceIndex, endIndex);
 
     const newMessageIndex = startSliceIndex;
@@ -42,7 +43,7 @@ export class MessageService {
       authorId,
       messageId,
       createDate,
-      messageBody,
+      messageBody
     });
 
     if (!result) {
@@ -113,7 +114,7 @@ function generateMockMessages(chatId, partisipants) {
     const message = {
       authorId: i % 4 !== 0 ? partisipantOne : participantTwo,
       message: `Сообщение из чата ${chatId}, сообщение номер ${i}`,
-      time: `${hours}:${minutes}`,
+      time: `${hours}:${minutes}`
     };
 
     const isNewBlock = prevAuthorId !== message.authorId;

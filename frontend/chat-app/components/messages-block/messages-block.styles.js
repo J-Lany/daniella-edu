@@ -4,11 +4,12 @@ export const getMessagesBlockStyle = () => {
   <style>
   @import url('../common.css');
 
-  .messages{
+  .messages {
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    justify-content: flex-end;
+    min-height: 100%;
   }
 
   .empty-chat {

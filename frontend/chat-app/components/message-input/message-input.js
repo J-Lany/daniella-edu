@@ -5,7 +5,7 @@ import { SERVICES } from "../../di/api.js";
 
 const KEYS = {
   ENTER: "Enter",
-  CLICK: "click",
+  CLICK: "click"
 };
 
 export class MessageInput extends HTMLElement {
@@ -15,8 +15,8 @@ export class MessageInput extends HTMLElement {
     [
       select.bind(this, ".message-input__button"),
       "click",
-      this.#onSubmit.bind(this),
-    ],
+      this.#onSubmit.bind(this)
+    ]
   ];
 
   static get name() {
@@ -34,7 +34,7 @@ export class MessageInput extends HTMLElement {
 
   #onInputChange(e) {
     const isMessageEmpty = e.target.value === "";
-   
+
     if (e.key === KEYS.ENTER && !isMessageEmpty) {
       this.#messageService.sendMessage(e.target.value);
       e.target.value = "";
@@ -49,9 +49,7 @@ export class MessageInput extends HTMLElement {
       this.#messageService.sendMessage(inputValue);
       messageInput.value = "";
     }
-
   }
-
 
   disconnectedCallback() {
     this.#listeners.forEach(removeListeners.bind(this));
