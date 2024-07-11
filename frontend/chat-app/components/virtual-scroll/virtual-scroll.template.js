@@ -1,10 +1,10 @@
 import { getVSComponentStyle } from "./virtual-scroll.styles";
 
-export function createToastComponentTemplate() {
+export function createVSComponentTemplate() {
   return `
   ${getVSComponentStyle()}
-  <div>
-    
+  <div class="container">
+
   </div>
   `;
 }
