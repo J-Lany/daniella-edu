@@ -2,13 +2,18 @@ import { createVSComponentTemplate } from "./virtual-scroll.template.js";
 import { addListeners, removeListeners, select } from "../../utils/utils.js";
 
 const scrollAttribute = {
-  PROPS: "props"
+  PROPS: "props",
+  COMPONENT: "component"
 };
 export class VirtualScroll extends HTMLElement {
   #visibleItemCount = 5;
   #props;
+  #component;
 
-  #ATTRIBUTE_MAPPING = new Map([[scrollAttribute.PROPS, this.setProps.bind(this)]]);
+  #ATTRIBUTE_MAPPING = new Map([
+    [scrollAttribute.PROPS, this.setProps.bind(this)],
+    [scrollAttribute.COMPONENT, this.setComponent.bind(this)]
+  ]);
 
   static get name() {
     return "virtual-scroll";
@@ -24,7 +29,8 @@ export class VirtualScroll extends HTMLElement {
   }
 
   connectedCallback() {
-
+    this.render();
+    this.renderItems();
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -33,6 +39,7 @@ export class VirtualScroll extends HTMLElement {
       if (callback) {
         callback(newValue);
         this.render();
+        this.renderItems();
       }
     }
   }
@@ -43,18 +50,25 @@ export class VirtualScroll extends HTMLElement {
     this.#props = JSON.parse(newProps);
   }
 
-  renderItems() {
-    const content = this.shadowRoot.querySelector(".container");
-    content.innerHTML = "";
-    const children = this.#props;
-    console.log(children);
-    const childrenCount = children.length;
+  setComponent(newComponent) {
+    this.#component = newComponent;
+  }
 
-    for (let i = childrenCount; i < Math.max(0, childrenCount - this.#visibleItemCount); i--) {
-      component = children[i].component;
-      payload = children[i].payload
-      const child = `<${component} payload="${JSON.stringify(payload)}"></${component}>`
-      content.prepend(child);
+  renderItems() {
+    if (this.#component && this.#props) {
+      const content = this.shadowRoot.querySelector(".container");
+      content.innerHTML = "";
+      const children = this.#props;
+      const childrenCount = children.length;
+
+      for (let i = childrenCount - 1; i > Math.max(0, childrenCount - this.#visibleItemCount); i--) {
+        
+        const payload = children[i];
+        const childElm= document.createElement(this.#component);
+        childElm.setAttribute("payload", JSON.stringify(payload));
+ 
+        content.prepend(childElm);
+      }
     }
   }
 
@@ -64,7 +78,5 @@ export class VirtualScroll extends HTMLElement {
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElm.content.cloneNode(true));
-
-    this.renderItems();
   }
 }
