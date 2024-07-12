@@ -142,8 +142,7 @@ export class MessageService {
     const lastBlockNew = newMessages[newMessages.length - 1];
     const lastMessageNew = lastBlockNew[lastBlockNew.length - 1];
 
-    const areMessagesUnchanged =
-      existingMessages && lastMessageOld.messageId === lastMessageNew.messageId;
+    const areMessagesUnchanged = existingMessages && lastMessageOld.messageId === lastMessageNew.messageId;
 
     if (areMessagesUnchanged) {
       return;

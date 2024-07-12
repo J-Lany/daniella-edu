@@ -1,19 +1,28 @@
 import { createVSComponentTemplate } from "./virtual-scroll.template.js";
 import { addListeners, removeListeners, select } from "../../utils/utils.js";
+import { diContainer } from "../../di/di";
+import { SERVICES } from "../../di/api";
+import { debounce } from "../../utils/debounce.js";
+
 
 const scrollAttribute = {
   PROPS: "props",
   COMPONENT: "component"
 };
+
+const ROW_SIZE = 111
+const DELAY = 200;
 export class VirtualScroll extends HTMLElement {
-  #visibleItemCount = 5;
+  #messagesService = diContainer.resolve(SERVICES.messages);
+  #debauncedScroll = debounce(this.handleScroll.bind(this), DELAY);
+  #visibleItemCount = 10
   #props;
   #component;
   #startIndex;
   #viewportHeight;
-  #rowHeight;
+  #rowHeight = ROW_SIZE
 
-  #listeners = [[select.bind(this, ".container"), "scroll", this.handleScroll.bind(this)]];
+  #listeners = [[select.bind(this, ".container"), "scroll", this.#debauncedScroll.bind(this)]];
 
   #ATTRIBUTE_MAPPING = new Map([
     [scrollAttribute.PROPS, this.setProps.bind(this)],
@@ -33,10 +42,7 @@ export class VirtualScroll extends HTMLElement {
     this.attachShadow({ mode: "open" });
   }
 
-  connectedCallback() {
-    this.render();
-    this.renderItems();
-  }
+  connectedCallback() {}
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue !== newValue) {
@@ -44,7 +50,6 @@ export class VirtualScroll extends HTMLElement {
       if (callback) {
         callback(newValue);
         this.render();
-        this.renderItems();
       }
     }
   }
@@ -59,22 +64,42 @@ export class VirtualScroll extends HTMLElement {
   setComponent(newComponent) {
     this.#component = newComponent;
   }
+  async loadMoreMessages() {
+    const chatId = this.#messagesService.getCurrentChatId();
+    const startIndex = this.#messagesService.getStartIndex();
+    const messages = await this.#messagesService.loadMoreMessages(chatId, startIndex);
 
-  handleScroll(scrollTop, lastScrollPosition) {
+    if (!messages) {
+      return;
+    }
+    this.#props = [...messages, ...this.#props];
+    this.#startIndex = this.#props.length - this.#startIndex;
+
+    requestAnimationFrame(this.renderItems.bind(this));
+  }
+
+  async handleScroll(scrollTop, lastScrollPosition) {
     const changeTo = Math.ceil(scrollTop / this.#rowHeight);
-    this.#startIndex = scrollTop > lastScrollPosition ? changeTo + this.#startIndex : this.#startIndex - changeTo;
+    this.#startIndex = scrollTop >= lastScrollPosition ? changeTo + this.#startIndex : this.#startIndex - changeTo;
 
-    if (this.#startIndex < this.#visibleItemCount || this.#startIndex > this.#props.length - 1) {
+    if (this.#startIndex > this.#props.length - 1) {
       return;
     }
 
-    this.renderItems();
+    if (this.#startIndex < this.#visibleItemCount) {
+      await this.loadMoreMessages();
+      return;
+    }
+    requestAnimationFrame(this.renderItems.bind(this));
   }
 
   renderItems() {
     if (this.#component && this.#props) {
       const content = this.shadowRoot.querySelector(".container");
       const children = this.#props;
+
+
+    
 
       content.innerHTML = "";
 
@@ -85,9 +110,7 @@ export class VirtualScroll extends HTMLElement {
 
         content.prepend(childElm);
       }
-
       this.#viewportHeight = content.getBoundingClientRect().height;
-      this.#rowHeight = Math.ceil(this.#viewportHeight / this.#visibleItemCount);
     }
   }
 
@@ -101,5 +124,7 @@ export class VirtualScroll extends HTMLElement {
     this.shadowRoot.appendChild(templateElm.content.cloneNode(true));
 
     this.#listeners.forEach(addListeners.bind(this));
+
+    this.renderItems();
   }
 }

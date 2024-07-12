@@ -25,32 +25,9 @@ export class MessagesBlock extends HTMLElement {
     this.dispatchEvent(new Event("messsages-loaded"));
   }
 
-  async loadMoreMessages(scrollTop, lastScrollPosition) {
+  loadMoreMessages(scrollTop, lastScrollPosition) {
     const virtualScroll = this.shadowRoot.querySelector("virtual-scroll");
     virtualScroll.handleScroll(scrollTop, lastScrollPosition);
-
-    // const chatId = this.#messagesService.getCurrentChatId();
-    // const startIndex = this.#messagesService.getStartIndex();
-    // const messages = await this.#messagesService.loadMoreMessages(
-    //   chatId,
-    //   startIndex
-    // );
-
-    // if (!messages) {
-    //   return;
-    // }
-
-    // for (let i = messages.length - 1; i >= 0; i--) {
-    //   const messageBlock = this.shadowRoot.children[1];
-
-    //   const message = messages[i];
-    //   const messageStr = JSON.stringify(message);
-
-    //   const messageElem = document.createElement("messages-by-user");
-    //   messageElem.setAttribute("messages", messageStr);
-
-    //   messageBlock.prepend(messageElem);
-    // }
   }
 
   render(messages) {

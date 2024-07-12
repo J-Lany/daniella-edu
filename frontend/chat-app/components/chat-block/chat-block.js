@@ -35,6 +35,10 @@ export class ChatBlock extends HTMLElement {
     const messageBlock = this.shadowRoot.querySelector("messages-block");
     const scrollTop = e.target.scrollTop;
 
+    if(scrollTop === 0) {
+      return
+    }
+
     messageBlock.loadMoreMessages(scrollTop, this.#lastScrollPosition);
 
     this.#lastScrollPosition = scrollTop;
