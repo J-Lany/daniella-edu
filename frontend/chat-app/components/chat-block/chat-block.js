@@ -10,6 +10,7 @@ export class ChatBlock extends HTMLElement {
     [select.bind(this, ".messages-block"), "messsages-loaded", this.#onMessagesLoaded.bind(this)]
   ];
   #lastScrollPosition;
+  #isFirstTechnicalScroll = true;
 
   static get name() {
     return "chat-block";
@@ -26,6 +27,11 @@ export class ChatBlock extends HTMLElement {
   }
 
   #onScroll(e) {
+    if (this.#isFirstTechnicalScroll) {
+      this.#isFirstTechnicalScroll = false;
+      return;
+    }
+
     const messageBlock = this.shadowRoot.querySelector("messages-block");
     const scrollTop = e.target.scrollTop;
 
@@ -36,10 +42,9 @@ export class ChatBlock extends HTMLElement {
 
   #onMessagesLoaded(e) {
     const messageBlock = this.shadowRoot.querySelector("messages-block");
-    const scrollHeight = messageBlock.scrollHeight
-
-    messageBlock.scrollTop = scrollHeight
-    this.#lastScrollPosition = scrollHeight
+    const scrollHeight = messageBlock.scrollHeight;
+    this.#lastScrollPosition = scrollHeight;
+    messageBlock.scrollTop = scrollHeight;
   }
 
   disconnectedCallback() {

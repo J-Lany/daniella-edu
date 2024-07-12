@@ -61,10 +61,10 @@ export class VirtualScroll extends HTMLElement {
   }
 
   handleScroll(scrollTop, lastScrollPosition) {
-    const changeTo = Math.floor(scrollTop / this.#rowHeight);
-    this.#startIndex += changeTo;
+    const changeTo = Math.ceil(scrollTop / this.#rowHeight);
+    this.#startIndex = scrollTop > lastScrollPosition ? changeTo + this.#startIndex : this.#startIndex - changeTo;
 
-    if (this.#startIndex < this.#visibleItemCount || this.#startIndex > this.#props.length) {
+    if (this.#startIndex < this.#visibleItemCount || this.#startIndex > this.#props.length - 1) {
       return;
     }
 
