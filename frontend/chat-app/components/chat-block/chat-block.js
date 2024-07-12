@@ -6,8 +6,10 @@ import { SERVICES } from "../../di/api";
 export class ChatBlock extends HTMLElement {
   #messagesService = diContainer.resolve(SERVICES.messages);
   #listeners = [
-    [select.bind(this, ".messages-block"), "scroll", this.#onScroll.bind(this)]
+    [select.bind(this, ".messages-block"), "scroll", this.#onScroll.bind(this)],
+    [select.bind(this, ".messages-block"), "messsages-loaded", this.#onMessagesLoaded.bind(this)]
   ];
+  #lastScrollPosition;
 
   static get name() {
     return "chat-block";
@@ -19,17 +21,25 @@ export class ChatBlock extends HTMLElement {
   }
 
   connectedCallback() {
-    this.unSubscribeFromCurrentChatId =
-      this.#messagesService.subscribeCurrentChatId(this.render.bind(this));
+    this.unSubscribeFromCurrentChatId = this.#messagesService.subscribeCurrentChatId(this.render.bind(this));
     this.render();
   }
 
   #onScroll(e) {
     const messageBlock = this.shadowRoot.querySelector("messages-block");
+    const scrollTop = e.target.scrollTop;
 
-    if (messageBlock.scrollTop === 0) {
-      messageBlock.loadMoreMessages();
-    }
+    messageBlock.loadMoreMessages(scrollTop, this.#lastScrollPosition);
+
+    this.#lastScrollPosition = scrollTop;
+  }
+
+  #onMessagesLoaded(e) {
+    const messageBlock = this.shadowRoot.querySelector("messages-block");
+    const scrollHeight = messageBlock.scrollHeight
+
+    messageBlock.scrollTop = scrollHeight
+    this.#lastScrollPosition = scrollHeight
   }
 
   disconnectedCallback() {

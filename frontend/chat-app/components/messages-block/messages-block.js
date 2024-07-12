@@ -1,5 +1,4 @@
 import { createMessagesBlockTemplate } from "./messages-block.template";
-import { addListeners, removeListeners, select } from "../../utils/utils.js";
 import { diContainer } from "../../di/di";
 import { SERVICES } from "../../di/api";
 
@@ -15,40 +14,43 @@ export class MessagesBlock extends HTMLElement {
   }
 
   connectedCallback() {
-    this.unSubscribeFromMessages =
-      this.#messagesService.subscribeMessagesByCurrentChat(
-        this.render.bind(this)
-      );
+    this.unSubscribeFromMessages = this.#messagesService.subscribeMessagesByCurrentChat(this.render.bind(this));
   }
 
   disconnectedCallback() {
     this.unSubscribeFromMessages();
   }
 
-  async loadMoreMessages() {
-    const chatId = this.#messagesService.getCurrentChatId();
-    const startIndex = this.#messagesService.getStartIndex();
-    const messages = await this.#messagesService.loadMoreMessages(
-      chatId,
-      startIndex
-    );
+  onLoad() {
+    this.dispatchEvent(new Event("messsages-loaded"));
+  }
 
-    if (!messages) {
-      return;
-    }
+  async loadMoreMessages(scrollTop, lastScrollPosition) {
+    const virtualScroll = this.shadowRoot.querySelector("virtual-scroll");
+    virtualScroll.handleScroll(scrollTop, lastScrollPosition);
 
-    for (let i = messages.length - 1; i >= 0; i--) {
-      const messageBlock = this.shadowRoot.children[1];
+    // const chatId = this.#messagesService.getCurrentChatId();
+    // const startIndex = this.#messagesService.getStartIndex();
+    // const messages = await this.#messagesService.loadMoreMessages(
+    //   chatId,
+    //   startIndex
+    // );
 
-      const message = messages[i];
-      const messageStr = JSON.stringify(message);
+    // if (!messages) {
+    //   return;
+    // }
 
-      const messageElem = document.createElement("messages-by-user");
-      messageElem.setAttribute("messages", messageStr);
+    // for (let i = messages.length - 1; i >= 0; i--) {
+    //   const messageBlock = this.shadowRoot.children[1];
 
-      messageBlock.prepend(messageElem);
-    }
- 
+    //   const message = messages[i];
+    //   const messageStr = JSON.stringify(message);
+
+    //   const messageElem = document.createElement("messages-by-user");
+    //   messageElem.setAttribute("messages", messageStr);
+
+    //   messageBlock.prepend(messageElem);
+    // }
   }
 
   render(messages) {
@@ -57,5 +59,7 @@ export class MessagesBlock extends HTMLElement {
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
+
+    this.onLoad();
   }
 }

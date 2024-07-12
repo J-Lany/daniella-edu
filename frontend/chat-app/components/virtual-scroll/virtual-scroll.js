@@ -9,6 +9,11 @@ export class VirtualScroll extends HTMLElement {
   #visibleItemCount = 5;
   #props;
   #component;
+  #startIndex;
+  #viewportHeight;
+  #rowHeight;
+
+  #listeners = [[select.bind(this, ".container"), "scroll", this.handleScroll.bind(this)]];
 
   #ATTRIBUTE_MAPPING = new Map([
     [scrollAttribute.PROPS, this.setProps.bind(this)],
@@ -48,35 +53,53 @@ export class VirtualScroll extends HTMLElement {
 
   setProps(newProps) {
     this.#props = JSON.parse(newProps);
+    this.#startIndex = this.#props.length - 1;
   }
 
   setComponent(newComponent) {
     this.#component = newComponent;
   }
 
+  handleScroll(scrollTop, lastScrollPosition) {
+    const changeTo = Math.floor(scrollTop / this.#rowHeight);
+    this.#startIndex += changeTo;
+
+    if (this.#startIndex < this.#visibleItemCount || this.#startIndex > this.#props.length) {
+      return;
+    }
+
+    this.renderItems();
+  }
+
   renderItems() {
     if (this.#component && this.#props) {
       const content = this.shadowRoot.querySelector(".container");
-      content.innerHTML = "";
       const children = this.#props;
-      const childrenCount = children.length;
 
-      for (let i = childrenCount - 1; i > Math.max(0, childrenCount - this.#visibleItemCount); i--) {
-        
+      content.innerHTML = "";
+
+      for (let i = this.#startIndex; i > Math.max(0, this.#startIndex - this.#visibleItemCount); i--) {
         const payload = children[i];
-        const childElm= document.createElement(this.#component);
+        const childElm = document.createElement(this.#component);
         childElm.setAttribute("payload", JSON.stringify(payload));
- 
+
         content.prepend(childElm);
       }
+
+      this.#viewportHeight = content.getBoundingClientRect().height;
+      this.#rowHeight = Math.ceil(this.#viewportHeight / this.#visibleItemCount);
     }
   }
 
   render() {
+    this.#listeners.forEach(removeListeners.bind(this));
+
     const templateElm = document.createElement("template");
     templateElm.innerHTML = createVSComponentTemplate();
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElm.content.cloneNode(true));
+
+    this.#listeners.forEach(addListeners.bind(this));
   }
 }

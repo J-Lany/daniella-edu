@@ -9,6 +9,7 @@ const getVSComponentStyle = () => {
   .container {
     overflow-y: auto;
   }
+
    </style>
   `;
 };
