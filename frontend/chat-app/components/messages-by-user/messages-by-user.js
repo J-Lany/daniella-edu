@@ -3,7 +3,7 @@ import { diContainer } from "../../di/di";
 import { SERVICES } from "../../di/api";
 
 const messagesAttribute = {
-  MESSAGES: "payload"
+  MESSAGES: "messages"
 };
 
 export class MessagesByUser extends HTMLElement {
@@ -47,7 +47,7 @@ export class MessagesByUser extends HTMLElement {
 
   setMessages(newMessages) {
     const messages = JSON.parse(newMessages);
-    this.#messages = messages.payload;
+    this.#messages = messages;
   }
 
   setCurrentUser(user) {

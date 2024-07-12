@@ -26,8 +26,7 @@ export class MessagesBlock extends HTMLElement {
   }
 
   loadMoreMessages(scrollTop, lastScrollPosition) {
-    const virtualScroll = this.shadowRoot.querySelector("virtual-scroll");
-    virtualScroll.handleScroll(scrollTop, lastScrollPosition);
+    console.log("Load")
   }
 
   render(messages) {

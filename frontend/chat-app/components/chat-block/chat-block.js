@@ -7,7 +7,7 @@ export class ChatBlock extends HTMLElement {
   #messagesService = diContainer.resolve(SERVICES.messages);
   #listeners = [
     [select.bind(this, ".messages-block"), "scroll", this.#onScroll.bind(this)],
-    [select.bind(this, ".messages-block"), "messsages-loaded", this.#onMessagesLoaded.bind(this)]
+
   ];
   #lastScrollPosition;
   #isFirstTechnicalScroll = true;
@@ -44,12 +44,6 @@ export class ChatBlock extends HTMLElement {
     this.#lastScrollPosition = scrollTop;
   }
 
-  #onMessagesLoaded(e) {
-    const messageBlock = this.shadowRoot.querySelector("messages-block");
-    const scrollHeight = messageBlock.scrollHeight;
-    this.#lastScrollPosition = scrollHeight;
-    messageBlock.scrollTop = scrollHeight;
-  }
 
   disconnectedCallback() {
     this.unSubscribeFromCurrentChatId();
