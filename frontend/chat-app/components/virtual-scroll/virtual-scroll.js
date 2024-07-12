@@ -4,23 +4,22 @@ import { diContainer } from "../../di/di";
 import { SERVICES } from "../../di/api";
 import { debounce } from "../../utils/debounce.js";
 
-
 const scrollAttribute = {
   PROPS: "props",
   COMPONENT: "component"
 };
 
-const ROW_SIZE = 111
+const ROW_SIZE = 111;
 const DELAY = 200;
 export class VirtualScroll extends HTMLElement {
   #messagesService = diContainer.resolve(SERVICES.messages);
   #debauncedScroll = debounce(this.handleScroll.bind(this), DELAY);
-  #visibleItemCount = 10
+  #visibleItemCount = 10;
   #props;
   #component;
   #startIndex;
   #viewportHeight;
-  #rowHeight = ROW_SIZE
+  #rowHeight = ROW_SIZE;
 
   #listeners = [[select.bind(this, ".container"), "scroll", this.#debauncedScroll.bind(this)]];
 
@@ -49,7 +48,12 @@ export class VirtualScroll extends HTMLElement {
       const callback = this.#ATTRIBUTE_MAPPING.get(name);
       if (callback) {
         callback(newValue);
-        this.render();
+        const allAttributesSet = this.#props && this.#component;
+
+        if (allAttributesSet) {
+          this.render();
+        }
+        
       }
     }
   }
@@ -97,9 +101,6 @@ export class VirtualScroll extends HTMLElement {
     if (this.#component && this.#props) {
       const content = this.shadowRoot.querySelector(".container");
       const children = this.#props;
-
-
-    
 
       content.innerHTML = "";
 

@@ -36,7 +36,11 @@ export class MessagesByUser extends HTMLElement {
       const callback = this.#ATTRIBUTE_MAPPING.get(name);
       if (callback) {
         callback(newValue);
-        this.render();
+        const allAttributesSet = this.#currentUser && this.#messages;
+
+        if (allAttributesSet) {
+          this.render();
+        }
       }
     }
   }
@@ -48,7 +52,11 @@ export class MessagesByUser extends HTMLElement {
 
   setCurrentUser(user) {
     this.#currentUser = user;
-    this.render();
+    const allAttributesSet = this.#currentUser && this.#messages;
+
+    if (allAttributesSet) {
+      this.render();
+    }
   }
 
   disconnectedCallback() {

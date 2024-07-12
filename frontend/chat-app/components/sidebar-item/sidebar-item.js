@@ -3,7 +3,7 @@ import { createSidebarItemTemplate } from "./sidebar-item.template";
 const sidebarItemAttribute = {
   USER_ID: "user-id",
   MESSAGE_TIME: "time",
-  MESSAGE: "message",
+  MESSAGE: "message"
 };
 
 export class SidebarItem extends HTMLElement {
@@ -14,7 +14,7 @@ export class SidebarItem extends HTMLElement {
   #ATTRIBUTE_MAPPING = new Map([
     [sidebarItemAttribute.MESSAGE_TIME, this.setTime.bind(this)],
     [sidebarItemAttribute.USER_ID, this.setUserId.bind(this)],
-    [sidebarItemAttribute.MESSAGE, this.setMessage.bind(this)],
+    [sidebarItemAttribute.MESSAGE, this.setMessage.bind(this)]
   ]);
 
   static get name() {
@@ -38,7 +38,11 @@ export class SidebarItem extends HTMLElement {
       const callback = this.#ATTRIBUTE_MAPPING.get(name);
       if (callback) {
         callback(newValue);
-        this.render();
+        const allAttributesSet = this.#message && this.#messageTime && this.#userId;
+
+        if (allAttributesSet) {
+          this.render();
+        }
       }
     }
   }
@@ -57,11 +61,7 @@ export class SidebarItem extends HTMLElement {
 
   render() {
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createSidebarItemTemplate(
-      this.#message,
-      this.#messageTime,
-      this.#userId
-    );
+    templateElem.innerHTML = createSidebarItemTemplate(this.#message, this.#messageTime, this.#userId);
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
