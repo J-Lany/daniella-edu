@@ -25,13 +25,13 @@ export class MessageService {
 
   subscribeCurrentChatId(subscribtion) {
     this.#currentChatIdSubscribers.add(subscribtion);
-    return () => this.unSubscribeFromCurrentChatId();
+    return () => this.unSubscribeFromCurrentChatId(subscribtion);
   }
 
   subscribeMessagesByCurrentChat(subscribtion) {
     this.#messagesSubscribers.add(subscribtion);
     this.startPooling();
-    return () => this.unSubscribeFromMessage();
+    return () => this.unSubscribeFromMessage(subscribtion);
   }
 
   notifyCurrentChatIdSubscribers() {
@@ -44,6 +44,7 @@ export class MessageService {
     if (!this.#messages.has(this.#currentChatId)) {
       const startIndex = await this.getMessagesByChatId(this.#currentChatId);
       this.#startIndex = startIndex;
+      return;
     }
 
     this.#messagesSubscribers.forEach((subscription) => {
@@ -51,13 +52,13 @@ export class MessageService {
     });
   }
 
-  unSubscribeFromMessage(subs) {
-    this.#messagesSubscribers.delete(subs);
+  unSubscribeFromMessage(subscribtion) {
+    this.#messagesSubscribers.delete(subscribtion);
     this.stopPooling();
   }
 
-  unSubscribeFromCurrentChatId(subs) {
-    this.#currentChatIdSubscribers.delete(subs);
+  unSubscribeFromCurrentChatId(subscribtion) {
+    this.#currentChatIdSubscribers.delete(subscribtion);
   }
 
   setCurrentChatId(id) {
