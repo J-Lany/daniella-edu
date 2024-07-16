@@ -6,12 +6,10 @@ export class VirtualScroll extends HTMLElement {
   #container;
   #initialNodeList;
   #nodeList = [];
-  #containerHeight;
+  #buffer = 10;
+  #observeElement;
   #currentListEndIndex;
   #currentListStartIndex;
-  #currentListHeight;
-  #lastScrollPosition;
-  #isFirstRender = true;
 
   #listeners = [
     [select.bind(this, ".container"), "scroll", this.handleScroll.bind(this)],
@@ -35,71 +33,11 @@ export class VirtualScroll extends HTMLElement {
 
   handleScroll(event) {
     const { scrollTop } = event.target;
-    this.updateList(scrollTop, this.#lastScrollPosition);
-  }
-
-  updateList(newScrollPosition, lastScrollPosition) {
-    const scrolledElements = this.countScrolledElements(newScrollPosition, lastScrollPosition);
-
-    if (scrolledElements === 0) {
-      return;
-    }
-    if (newScrollPosition < lastScrollPosition) {
-      this.scrollUp(scrolledElements);
-      return;
-    }
-    if (newScrollPosition > lastScrollPosition) {
-      this.scrollDown(scrolledElements);
-      return;
-    }
-  }
-
-  countScrolledElements(newScrollPosition, lastScrollPosition) {
-    const scrolledPX = newScrollPosition - lastScrollPosition;
-    const currentNumberOfElements = this.#list.childElementCount;
-
-    const scrolledElements = Math.ceil(Math.abs(scrolledPX) / (this.#currentListHeight / currentNumberOfElements));
-
-    return scrolledElements;
-  }
-
-  scrollUp(scrolledElements) {
-    for (let i = 1; i <= scrolledElements; i++) {
-      const isIndexOutOfRange = this.#currentListEndIndex - i < 0;
-
-      if (isIndexOutOfRange) {
-        this.#lastScrollPosition = this.#container.scrollTop;
-        this.loadMoreItems();
-        return;
-      }
-
-      this.#list.prepend(this.#nodeList[this.#currentListEndIndex - i].cloneNode(true));
-      this.#list.removeChild(this.#list.lastElementChild);
-    }
-    this.#currentListEndIndex -= scrolledElements;
-    this.#currentListStartIndex -= scrolledElements;
-    this.#lastScrollPosition = this.#container.scrollTop;
-  }
-
-  scrollDown(scrolledElements) {
-    for (let i = 1; i <= scrolledElements; i++) {
-      const isIndexOutOfRange = this.#currentListStartIndex + i > this.#nodeList.length - 1;
-
-      if (isIndexOutOfRange) {
-        this.#lastScrollPosition = this.#container.scrollTop;
-        return;
-      }
-
-      this.#list.appendChild(this.#nodeList[this.#currentListStartIndex + i].cloneNode(true));
-      this.#list.removeChild(this.#list.firstElementChild);
-    }
-    this.#currentListEndIndex += scrolledElements;
-    this.#currentListStartIndex += scrolledElements;
-    this.#lastScrollPosition = this.#container.scrollTop;
   }
 
   loadMoreItems() {
-    this.dispatchEvent(new Event("load-more-items"));
+    console.log("MORE");
+    // this.dispatchEvent(new Event("load-more-items"));
   }
 
   onSlotChange({ target }) {
@@ -111,25 +49,42 @@ export class VirtualScroll extends HTMLElement {
   }
 
   renderList() {
-    this.#listeners.forEach(removeListeners.bind(this));
-
     this.carriedPrependList();
-    this.#container.scrollTop = this.#containerHeight;
 
-    this.#listeners.forEach(addListeners.bind(this));
+    this.#observeElement = this.shadowRoot.querySelectorAll(".messages-by-user")[2];
+    this.#container.scrollTop = this.#list.getBoundingClientRect().height;
+  }
+
+  observeIntersection() {
+    const observer = new IntersectionObserver(handleIntersection, {
+      root: this.#container,
+      threshold: 0
+    });
+
+    observer.observe(this.#observeElement);
+  }
+
+  handleIntersection(entries) {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting && entry.target === this.#observeElement) {
+        this.loadMoreItems();
+      }
+    });
   }
 
   carriedPrependList() {
+    let appendedNodes = 0;
+
     for (let i = this.#initialNodeList.length - 1; i >= 0; i--) {
       this.#nodeList.unshift(this.#initialNodeList[i].cloneNode(true));
 
-      if (this.#currentListHeight >= this.#containerHeight) {
+      if (appendedNodes > this.#buffer) {
         this.#currentListEndIndex = i;
         this.#initialNodeList[i].remove();
       } else {
         this.#list.prepend(this.#initialNodeList[i]);
-        this.#currentListHeight = this.#list.getBoundingClientRect().height;
-        this.#lastScrollPosition = this.#container.scrollTop;
+
+        appendedNodes++;
       }
     }
 
@@ -148,9 +103,5 @@ export class VirtualScroll extends HTMLElement {
 
     this.#list = this.shadowRoot.querySelector(".sub-container");
     this.#container = this.shadowRoot.querySelector(".container");
-
-    this.#containerHeight = this.shadowRoot.host.parentElement
-      .querySelector("virtual-scroll")
-      .getBoundingClientRect().height;
   }
 }

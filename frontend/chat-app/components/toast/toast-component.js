@@ -44,7 +44,7 @@ export class ToastComponent extends HTMLElement {
         const allAttributesSet = this.#message && this.#type;
 
         if (allAttributesSet) {
-          this.render();
+          this.#render();
         }
       }
     }

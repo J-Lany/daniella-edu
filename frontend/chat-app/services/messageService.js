@@ -2,7 +2,7 @@ import { diContainer } from "../di/di.js";
 import { SERVICES } from "../di/api.js";
 import { authGuard } from "../guards/auth-guard";
 
-const LIMIT = 10;
+const LIMIT = 20;
 
 export class MessageService {
   #httpService = authGuard(diContainer.resolve(SERVICES.http));
@@ -94,6 +94,10 @@ export class MessageService {
     };
 
     const result = await this.fetchMessages(params);
+
+    if(!result) {
+      return
+    }
 
     if (result.messages) {
       this.updateMessages(chatId, result);
