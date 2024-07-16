@@ -1,7 +1,5 @@
 import { createVSComponentTemplate } from "./virtual-scroll.template.js";
 import { addListeners, removeListeners, select } from "../../utils/utils.js";
-import { diContainer } from "../../di/di";
-import { SERVICES } from "../../di/api";
 
 export class VirtualScroll extends HTMLElement {
   #list;
@@ -87,6 +85,8 @@ export class VirtualScroll extends HTMLElement {
 
       if (isIndexOutOfRange) {
         this.#lastScrollPosition = this.#container.scrollTop;
+
+        this.loadMoreItems()
         return;
       }
 
@@ -96,6 +96,10 @@ export class VirtualScroll extends HTMLElement {
     this.#currentListEndIndex += scrolledElements;
     this.#currentListStartIndex += scrolledElements;
     this.#lastScrollPosition = this.#container.scrollTop;
+  }
+
+  loadMoreItems(){
+    this.dispatchEvent(new Event("load-more-items"))
   }
 
   onSlotChange({ target }) {
