@@ -100,7 +100,6 @@ export class VirtualScroll extends HTMLElement {
 
   loadMoreItems() {
     this.dispatchEvent(new Event("load-more-items"));
-    console.log("MORE")
   }
 
   onSlotChange({ target }) {
