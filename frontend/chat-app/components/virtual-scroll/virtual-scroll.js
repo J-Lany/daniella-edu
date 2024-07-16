@@ -91,7 +91,7 @@ export class VirtualScroll extends HTMLElement {
       this.#list.appendChild(this.#nodeList[this.#currentListEndIndex + i].cloneNode(true));
       this.#list.removeChild(this.#list.firstElementChild);
     }
-    
+
     this.#lastScrollPosition = this.#list.scrollTop;
   }
 
@@ -104,7 +104,13 @@ export class VirtualScroll extends HTMLElement {
   }
 
   renderList() {
+    this.#listeners.forEach(removeListeners.bind(this));
+
+
     this.carriedPrependList();
+    this.shadowRoot.querySelector('.container').scrollTop = this.#containerHeight;
+
+    this.#listeners.forEach(addListeners.bind(this));
   }
 
   carriedPrependList() {
