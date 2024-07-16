@@ -23,15 +23,20 @@ export class MessagesBlock extends HTMLElement {
     this.unSubscribeFromMessages();
   }
 
-  loadMoreMessages(scrollTop, lastScrollPosition) {
-    console.log("MORE!");
+  async loadMoreMessages() {
+    const chatId = this.#messagesService.getCurrentChatId();
+    const startIndex = this.#messagesService.getStartIndex();
+
+    const historyMessagrs = await this.#messagesService.loadMoreMessages(chatId, startIndex);
+
+    this.prependHistory(historyMessagrs);
   }
 
   prependHistory(messages) {
     const virtualScroll = this.shadowRoot.querySelector(".virtual-scroll");
     const newMessagesSlots = createSlots(messages);
 
-    virtualScroll.prepend(newMessagesSlots);
+    virtualScroll.innerHTML = newMessagesSlots + virtualScroll.innerHTML;
   }
 
   render(messages) {

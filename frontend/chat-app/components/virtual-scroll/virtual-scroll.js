@@ -11,6 +11,7 @@ export class VirtualScroll extends HTMLElement {
   #currentListStartIndex;
   #currentListHeight;
   #lastScrollPosition;
+  #isFirstRender = true;
 
   #listeners = [
     [select.bind(this, ".container"), "scroll", this.handleScroll.bind(this)],
@@ -57,17 +58,18 @@ export class VirtualScroll extends HTMLElement {
     const scrolledPX = newScrollPosition - lastScrollPosition;
     const currentNumberOfElements = this.#list.childElementCount;
 
-    const scrolledElements = Math.ceil( Math.abs(scrolledPX) / (this.#currentListHeight / currentNumberOfElements));
+    const scrolledElements = Math.ceil(Math.abs(scrolledPX) / (this.#currentListHeight / currentNumberOfElements));
 
     return scrolledElements;
   }
 
   scrollUp(scrolledElements) {
     for (let i = 1; i <= scrolledElements; i++) {
-      const isIndexOutOfRange = this.#currentListEndIndex - i < 0
+      const isIndexOutOfRange = this.#currentListEndIndex - i < 0;
 
       if (isIndexOutOfRange) {
         this.#lastScrollPosition = this.#container.scrollTop;
+        this.loadMoreItems();
         return;
       }
 
@@ -81,12 +83,10 @@ export class VirtualScroll extends HTMLElement {
 
   scrollDown(scrolledElements) {
     for (let i = 1; i <= scrolledElements; i++) {
-      const isIndexOutOfRange = this.#currentListStartIndex + i > this.#nodeList.length - 1
+      const isIndexOutOfRange = this.#currentListStartIndex + i > this.#nodeList.length - 1;
 
       if (isIndexOutOfRange) {
         this.#lastScrollPosition = this.#container.scrollTop;
-
-        this.loadMoreItems()
         return;
       }
 
@@ -98,8 +98,9 @@ export class VirtualScroll extends HTMLElement {
     this.#lastScrollPosition = this.#container.scrollTop;
   }
 
-  loadMoreItems(){
-    this.dispatchEvent(new Event("load-more-items"))
+  loadMoreItems() {
+    this.dispatchEvent(new Event("load-more-items"));
+    console.log("MORE")
   }
 
   onSlotChange({ target }) {
@@ -113,7 +114,6 @@ export class VirtualScroll extends HTMLElement {
   renderList() {
     this.#listeners.forEach(removeListeners.bind(this));
 
-
     this.carriedPrependList();
     this.#container.scrollTop = this.#containerHeight;
 
@@ -122,7 +122,7 @@ export class VirtualScroll extends HTMLElement {
 
   carriedPrependList() {
     for (let i = this.#initialNodeList.length - 1; i >= 0; i--) {
-      this.#nodeList[i] = this.#initialNodeList[i].cloneNode(true);
+      this.#nodeList.unshift(this.#initialNodeList[i].cloneNode(true));
 
       if (this.#currentListHeight >= this.#containerHeight) {
         this.#currentListEndIndex = i;
@@ -148,7 +148,7 @@ export class VirtualScroll extends HTMLElement {
     this.#listeners.forEach(addListeners.bind(this));
 
     this.#list = this.shadowRoot.querySelector(".sub-container");
-    this.#container =  this.shadowRoot.querySelector('.container')
+    this.#container = this.shadowRoot.querySelector(".container");
 
     this.#containerHeight = this.shadowRoot.host.parentElement
       .querySelector("virtual-scroll")
