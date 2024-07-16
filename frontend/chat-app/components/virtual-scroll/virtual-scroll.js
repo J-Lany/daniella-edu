@@ -5,6 +5,7 @@ import { SERVICES } from "../../di/api";
 
 export class VirtualScroll extends HTMLElement {
   #list;
+  #container;
   #initialNodeList;
   #nodeList = [];
   #containerHeight;
@@ -58,7 +59,7 @@ export class VirtualScroll extends HTMLElement {
     const scrolledPX = newScrollPosition - lastScrollPosition;
     const currentNumberOfElements = this.#list.childElementCount;
 
-    const scrolledElements = Math.ceil(scrolledPX / (this.#currentListHeight / currentNumberOfElements));
+    const scrolledElements = Math.ceil( Math.abs(scrolledPX) / (this.#currentListHeight / currentNumberOfElements));
 
     return scrolledElements;
   }
@@ -68,15 +69,16 @@ export class VirtualScroll extends HTMLElement {
       const isIndexOutOfRange = this.#currentListEndIndex - i < 0
 
       if (isIndexOutOfRange) {
-        this.#lastScrollPosition = this.#list.scrollTop;
+        this.#lastScrollPosition = this.#container.scrollTop;
         return;
       }
 
       this.#list.prepend(this.#nodeList[this.#currentListEndIndex - i].cloneNode(true));
       this.#list.removeChild(this.#list.lastElementChild);
     }
-
-    this.#lastScrollPosition = this.#list.scrollTop;
+    this.#currentListEndIndex -= scrolledElements;
+    this.#currentListStartIndex -= scrolledElements;
+    this.#lastScrollPosition = this.#container.scrollTop;
   }
 
   scrollDown(scrolledElements) {
@@ -84,15 +86,16 @@ export class VirtualScroll extends HTMLElement {
       const isIndexOutOfRange = this.#currentListStartIndex + i > this.#nodeList.length - 1
 
       if (isIndexOutOfRange) {
-        this.#lastScrollPosition = this.#list.scrollTop;
+        this.#lastScrollPosition = this.#container.scrollTop;
         return;
       }
 
-      this.#list.appendChild(this.#nodeList[this.#currentListEndIndex + i].cloneNode(true));
+      this.#list.appendChild(this.#nodeList[this.#currentListStartIndex + i].cloneNode(true));
       this.#list.removeChild(this.#list.firstElementChild);
     }
-
-    this.#lastScrollPosition = this.#list.scrollTop;
+    this.#currentListEndIndex += scrolledElements;
+    this.#currentListStartIndex += scrolledElements;
+    this.#lastScrollPosition = this.#container.scrollTop;
   }
 
   onSlotChange({ target }) {
@@ -108,7 +111,7 @@ export class VirtualScroll extends HTMLElement {
 
 
     this.carriedPrependList();
-    this.shadowRoot.querySelector('.container').scrollTop = this.#containerHeight;
+    this.#container.scrollTop = this.#containerHeight;
 
     this.#listeners.forEach(addListeners.bind(this));
   }
@@ -123,7 +126,7 @@ export class VirtualScroll extends HTMLElement {
       } else {
         this.#list.prepend(this.#initialNodeList[i]);
         this.#currentListHeight = this.#list.getBoundingClientRect().height;
-        this.#lastScrollPosition = this.#list.scrollTop;
+        this.#lastScrollPosition = this.#container.scrollTop;
       }
     }
 
@@ -141,6 +144,7 @@ export class VirtualScroll extends HTMLElement {
     this.#listeners.forEach(addListeners.bind(this));
 
     this.#list = this.shadowRoot.querySelector(".sub-container");
+    this.#container =  this.shadowRoot.querySelector('.container')
 
     this.#containerHeight = this.shadowRoot.host.parentElement
       .querySelector("virtual-scroll")
