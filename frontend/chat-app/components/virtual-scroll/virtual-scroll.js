@@ -87,6 +87,7 @@ export class VirtualScroll extends HTMLElement {
   }
 
   handleIntersection(entries) {
+    console.log("MORE")
     entries.forEach((entry) => {
       if (entry.isIntersecting && entry.target === this.#observeElement) {
         this.loadMoreItems();
@@ -95,7 +96,10 @@ export class VirtualScroll extends HTMLElement {
   }
 
   loadMoreItems() {
-    if (this.#observedEndIndex > this.#buffer) {
+    const childCount  = this.#list.childElementCount;
+    const isRemainingElements = this.#nodeList.length - childCount - this.#observedEndIndex > this.#buffer;
+
+    if (isRemainingElements) {
       for (let i = this.#observedEndIndex; i > this.#observedEndIndex - this.#buffer && i >= 0; i--) {
         this.#list.prepend(this.#nodeList[i].cloneNode(true));
       }
