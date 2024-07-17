@@ -11,9 +11,7 @@ export class VirtualScroll extends HTMLElement {
   #observedEndIndex;
   #observeElement;
 
-  #listeners = [
-    [select.bind(this, "slot"), "slotchange", this.onSlotChange.bind(this)]
-  ];
+  #listeners = [[select.bind(this, "slot"), "slotchange", this.onSlotChange.bind(this)]];
 
   static get name() {
     return "virtual-scroll";
@@ -30,7 +28,6 @@ export class VirtualScroll extends HTMLElement {
 
   disconnectedCallback() {}
 
-
   onSlotChange({ target }) {
     const nodeFilter = (node) => node.nodeType === Node.ELEMENT_NODE;
     const assignedNodes = target.assignedNodes().filter(nodeFilter);
@@ -44,7 +41,9 @@ export class VirtualScroll extends HTMLElement {
 
     this.#container.scrollTop = this.#list.getBoundingClientRect().height;
 
-    this.observeIntersection();
+ if(this.#nodeList > this.#buffer) {
+  this.observeIntersection();
+ }
   }
 
   carriedPrependList() {
@@ -61,9 +60,6 @@ export class VirtualScroll extends HTMLElement {
         appendedNodes++;
       }
     }
-
-    this.#observedEndIndex = Math.ceil((this.#nodeList.length - this.#list.childElementCount + ELEMENTS_GAP) / 10);
-    this.#observeElement = this.shadowRoot.querySelectorAll("messages-by-user")[this.#observedEndIndex];
   }
 
   observeIntersection() {
@@ -72,11 +68,16 @@ export class VirtualScroll extends HTMLElement {
       threshold: 0
     });
 
+    this.#observedEndIndex = Math.max(
+      Math.ceil((this.#nodeList.length - this.#list.childElementCount + ELEMENTS_GAP) / 10),
+      0
+    );
+    this.#observeElement = this.shadowRoot.querySelectorAll("messages-by-user")[this.#observedEndIndex];
+
     observer.observe(this.#observeElement);
   }
 
   handleIntersection(entries) {
-    console.log("MORE");
     entries.forEach((entry) => {
       if (entry.isIntersecting && entry.target === this.#observeElement) {
         this.loadMoreItems();

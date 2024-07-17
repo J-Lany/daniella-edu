@@ -2,8 +2,6 @@ import { getMessagesBlockStyle } from "./messages-block.styles";
 import emptyChatImg from "./../../accets/empty-chat.png";
 
 export function createMessagesBlockTemplate(messages) {
-
-
   return `
   ${getMessagesBlockStyle()}
   <div class="messages">

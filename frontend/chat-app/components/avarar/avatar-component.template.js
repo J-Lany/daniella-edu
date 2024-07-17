@@ -1,10 +1,15 @@
 import { getAvatarStyles } from "./avatar-component.styles";
 
 export function createAvatarTemplate(user, displayMode) {
+
+  if(!user) {
+    return
+  }
+
   const abbreviation =
-    user?.firstName && user?.lastName
+    user.firstName && user.lastName
       ? `${user.firstName[0]}${user.lastName[0]}`
-      : `${user?.login[0]}${user?.login[user?.login.length - 1]}`;
+      : `${user.login[0]}${user.login[user.login.length - 1]}`;
 
   return `
   ${getAvatarStyles(displayMode)}
