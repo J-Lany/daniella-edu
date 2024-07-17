@@ -41,9 +41,9 @@ export class VirtualScroll extends HTMLElement {
 
     this.#container.scrollTop = this.#list.getBoundingClientRect().height;
 
- if(this.#nodeList > this.#buffer) {
-  this.observeIntersection();
- }
+    if (this.#nodeList.length > this.#buffer) {
+      this.observeIntersection();
+    }
   }
 
   carriedPrependList() {
