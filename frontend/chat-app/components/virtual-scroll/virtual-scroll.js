@@ -1,12 +1,15 @@
 import { createVSComponentTemplate } from "./virtual-scroll.template.js";
 import { addListeners, removeListeners, select } from "../../utils/utils.js";
 
+const ELEMENTS_GAP = 3;
 export class VirtualScroll extends HTMLElement {
   #list;
   #container;
   #initialNodeList;
   #nodeList = [];
   #buffer = 10;
+  #observedEndIndex;
+  #observedStartIndex;
   #observeElement;
   #currentListEndIndex;
   #currentListStartIndex;
@@ -35,11 +38,6 @@ export class VirtualScroll extends HTMLElement {
     const { scrollTop } = event.target;
   }
 
-  loadMoreItems() {
-    console.log("MORE");
-    // this.dispatchEvent(new Event("load-more-items"));
-  }
-
   onSlotChange({ target }) {
     const nodeFilter = (node) => node.nodeType === Node.ELEMENT_NODE;
     const assignedNodes = target.assignedNodes().filter(nodeFilter);
@@ -51,25 +49,9 @@ export class VirtualScroll extends HTMLElement {
   renderList() {
     this.carriedPrependList();
 
-    this.#observeElement = this.shadowRoot.querySelectorAll(".messages-by-user")[2];
     this.#container.scrollTop = this.#list.getBoundingClientRect().height;
-  }
 
-  observeIntersection() {
-    const observer = new IntersectionObserver(handleIntersection, {
-      root: this.#container,
-      threshold: 0
-    });
-
-    observer.observe(this.#observeElement);
-  }
-
-  handleIntersection(entries) {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting && entry.target === this.#observeElement) {
-        this.loadMoreItems();
-      }
-    });
+    this.observeIntersection();
   }
 
   carriedPrependList() {
@@ -88,8 +70,39 @@ export class VirtualScroll extends HTMLElement {
       }
     }
 
-    this.#currentListEndIndex = this.#nodeList.length - this.#list.childElementCount - 1;
-    this.#currentListStartIndex = this.#nodeList.length - 1;
+
+
+    this.#observedEndIndex = Math.ceil((this.#nodeList.length - this.#list.childElementCount + ELEMENTS_GAP) / 10);
+    this.#observeElement = this.shadowRoot.querySelectorAll("messages-by-user")[this.#observedEndIndex ];
+    this.#observedStartIndex = this.#list.length - ELEMENTS_GAP;
+  }
+
+  observeIntersection() {
+    const observer = new IntersectionObserver(this.handleIntersection.bind(this), {
+      root: this.#container,
+      threshold: 0
+    });
+
+    observer.observe(this.#observeElement);
+  }
+
+  handleIntersection(entries) {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting && entry.target === this.#observeElement) {
+        this.loadMoreItems();
+      }
+    });
+  }
+
+  loadMoreItems() {
+    if (this.#observedEndIndex > this.#buffer) {
+      for (let i = this.#observedEndIndex; i > this.#observedEndIndex - this.#buffer && i >= 0; i--) {
+        this.#list.prepend(this.#nodeList[i].cloneNode(true));
+      }
+      this.#observedEndIndex = Math.max(this.#observedEndIndex - this.#buffer, 0);
+    } else {
+      this.dispatchEvent(new Event("load-more-items"));
+    }
   }
 
   render() {
