@@ -9,13 +9,9 @@ export class VirtualScroll extends HTMLElement {
   #nodeList = [];
   #buffer = 10;
   #observedEndIndex;
-  #observedStartIndex;
   #observeElement;
-  #currentListEndIndex;
-  #currentListStartIndex;
 
   #listeners = [
-    [select.bind(this, ".container"), "scroll", this.handleScroll.bind(this)],
     [select.bind(this, "slot"), "slotchange", this.onSlotChange.bind(this)]
   ];
 
@@ -34,9 +30,6 @@ export class VirtualScroll extends HTMLElement {
 
   disconnectedCallback() {}
 
-  handleScroll(event) {
-    const { scrollTop } = event.target;
-  }
 
   onSlotChange({ target }) {
     const nodeFilter = (node) => node.nodeType === Node.ELEMENT_NODE;
@@ -61,7 +54,6 @@ export class VirtualScroll extends HTMLElement {
       this.#nodeList.unshift(this.#initialNodeList[i].cloneNode(true));
 
       if (appendedNodes > this.#buffer) {
-        this.#currentListEndIndex = i;
         this.#initialNodeList[i].remove();
       } else {
         this.#list.prepend(this.#initialNodeList[i]);
@@ -70,11 +62,8 @@ export class VirtualScroll extends HTMLElement {
       }
     }
 
-
-
     this.#observedEndIndex = Math.ceil((this.#nodeList.length - this.#list.childElementCount + ELEMENTS_GAP) / 10);
-    this.#observeElement = this.shadowRoot.querySelectorAll("messages-by-user")[this.#observedEndIndex ];
-    this.#observedStartIndex = this.#list.length - ELEMENTS_GAP;
+    this.#observeElement = this.shadowRoot.querySelectorAll("messages-by-user")[this.#observedEndIndex];
   }
 
   observeIntersection() {
@@ -87,7 +76,7 @@ export class VirtualScroll extends HTMLElement {
   }
 
   handleIntersection(entries) {
-    console.log("MORE")
+    console.log("MORE");
     entries.forEach((entry) => {
       if (entry.isIntersecting && entry.target === this.#observeElement) {
         this.loadMoreItems();
@@ -96,7 +85,7 @@ export class VirtualScroll extends HTMLElement {
   }
 
   loadMoreItems() {
-    const childCount  = this.#list.childElementCount;
+    const childCount = this.#list.childElementCount;
     const isRemainingElements = this.#nodeList.length - childCount - this.#observedEndIndex > this.#buffer;
 
     if (isRemainingElements) {
