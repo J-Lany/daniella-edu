@@ -5,11 +5,11 @@ const ELEMENTS_GAP = 3;
 export class VirtualScroll extends HTMLElement {
   #list;
   #container;
-  #initialNodeList;
   #nodeList = [];
   #buffer = 10;
   #observedEndIndex;
   #observeElement;
+  #isDoubleChange = false
 
   #listeners = [[select.bind(this, "slot"), "slotchange", this.onSlotChange.bind(this)]];
 
@@ -29,15 +29,24 @@ export class VirtualScroll extends HTMLElement {
   disconnectedCallback() {}
 
   onSlotChange({ target }) {
+    if(this.#isDoubleChange) {
+      this.#isDoubleChange = false;
+      return
+    }
+
     const nodeFilter = (node) => node.nodeType === Node.ELEMENT_NODE;
     const assignedNodes = target.assignedNodes().filter(nodeFilter);
-    this.#initialNodeList = assignedNodes;
+
+    this.#nodeList = assignedNodes;
+    this.#isDoubleChange = true;
+
+    this.clearSlots()
 
     this.renderList();
   }
 
   renderList() {
-    this.carriedPrependList();
+    this.insertElementsIntoDOM();
 
     this.#container.scrollTop = this.#list.getBoundingClientRect().height;
 
@@ -46,19 +55,15 @@ export class VirtualScroll extends HTMLElement {
     }
   }
 
-  carriedPrependList() {
+  insertElementsIntoDOM() {
     let appendedNodes = 0;
 
-    for (let i = this.#initialNodeList.length - 1; i >= 0; i--) {
-      this.#nodeList.unshift(this.#initialNodeList[i].cloneNode(true));
+    for (let i = this.#nodeList.length - 1; i >= 0; i--) {
 
-      if (appendedNodes > this.#buffer) {
-        this.#initialNodeList[i].remove();
-      } else {
-        this.#list.prepend(this.#initialNodeList[i]);
-
+      if (appendedNodes <= this.#buffer) {
+        this.#list.prepend(this.#nodeList[i].cloneNode(true));
         appendedNodes++;
-      }
+      } 
     }
   }
 
@@ -99,6 +104,14 @@ export class VirtualScroll extends HTMLElement {
     }
   }
 
+  clearSlots(){
+   const slotsElement = this.querySelectorAll("messages-by-user") 
+   for(let i = 0; i < slotsElement.length; i++){
+    this.removeChild(slotsElement[i])
+   }
+  
+  }
+
   render() {
     this.#listeners.forEach(removeListeners.bind(this));
 
@@ -110,5 +123,6 @@ export class VirtualScroll extends HTMLElement {
 
     this.#list = this.shadowRoot.querySelector(".sub-container");
     this.#container = this.shadowRoot.querySelector(".container");
+
   }
 }
