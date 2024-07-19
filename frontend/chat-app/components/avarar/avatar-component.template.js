@@ -1,9 +1,8 @@
 import { getAvatarStyles } from "./avatar-component.styles";
 
 export function createAvatarTemplate(user, displayMode) {
-
-  if(!user) {
-    return
+  if (!user) {
+    return;
   }
 
   const abbreviation =

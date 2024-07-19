@@ -6,14 +6,15 @@ const getVSComponentStyle = () => {
 
   return `
   <style>
-  .container {
+  :host {
+    display: block;
     overflow-y: auto;
+    position: relative;
     height: 100%;
-}
-
-  .sub-container {
-
   }
+  .placeholder {
+    height: 1px;
+    visibility: hidden;
 
    </style>
   `;

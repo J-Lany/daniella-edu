@@ -1,17 +1,13 @@
 import { createVSComponentTemplate } from "./virtual-scroll.template.js";
 import { addListeners, removeListeners, select } from "../../utils/utils.js";
 
-const ELEMENTS_GAP = 3;
 export class VirtualScroll extends HTMLElement {
-  #list;
-  #container;
-  #nodeList = [];
-  #buffer = 10;
-  #observedEndIndex;
-  #observeElement;
-  #isDoubleChange = false
+  itemsMap = new Map();
+  visibleItems = new Set();
+  itemHeight = 110;
+  bufferSize = 5;
 
-  #listeners = [[select.bind(this, "slot"), "slotchange", this.onSlotChange.bind(this)]];
+  #listeners = [[select.bind(this, ".content"), "scroll", this.updateVisibleItems.bind(this)]];
 
   static get name() {
     return "virtual-scroll";
@@ -24,92 +20,69 @@ export class VirtualScroll extends HTMLElement {
 
   connectedCallback() {
     this.render();
+
+    const content = this.shadowRoot.querySelector(".content");
+    content.style.position = "relative";
+
+    this.indexItems();
+    this.updateVisibleItems();
+    this.attachScrollListener();
   }
 
-  disconnectedCallback() {}
-
-  onSlotChange({ target }) {
-    if(this.#isDoubleChange) {
-      this.#isDoubleChange = false;
-      return
-    }
-
-    const nodeFilter = (node) => node.nodeType === Node.ELEMENT_NODE;
-    const assignedNodes = target.assignedNodes().filter(nodeFilter);
-
-    this.#nodeList = assignedNodes;
-    this.#isDoubleChange = true;
-
-    this.clearSlots()
-
-    this.renderList();
-  }
-
-  renderList() {
-    this.insertElementsIntoDOM();
-
-    this.#container.scrollTop = this.#list.getBoundingClientRect().height;
-
-    if (this.#nodeList.length > this.#buffer) {
-      this.observeIntersection();
-    }
-  }
-
-  insertElementsIntoDOM() {
-    let appendedNodes = 0;
-
-    for (let i = this.#nodeList.length - 1; i >= 0; i--) {
-
-      if (appendedNodes <= this.#buffer) {
-        this.#list.prepend(this.#nodeList[i].cloneNode(true));
-        appendedNodes++;
-      } 
-    }
-  }
-
-  observeIntersection() {
-    const observer = new IntersectionObserver(this.handleIntersection.bind(this), {
-      root: this.#container,
-      threshold: 0
+  indexItems() {
+    const children = Array.from(this.children);
+    children.forEach((child, index) => {
+      this.itemsMap.set(index, child.cloneNode(true));
     });
 
-    this.#observedEndIndex = Math.max(
-      Math.ceil((this.#nodeList.length - this.#list.childElementCount + ELEMENTS_GAP) / 10),
-      0
-    );
-    this.#observeElement = this.shadowRoot.querySelectorAll("messages-by-user")[this.#observedEndIndex];
-
-    observer.observe(this.#observeElement);
+    this.innerHTML = "";
+    const placeholderHeight = this.itemsMap.size * this.itemHeight;
+    this.shadowRoot.querySelector(".bottom-placeholder").style.top = `${placeholderHeight}px`;
+    this.updateVisibleItems();
   }
 
-  handleIntersection(entries) {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting && entry.target === this.#observeElement) {
-        this.loadMoreItems();
+  updateVisibleItems() {
+    const scrollTop = this.scrollTop;
+    const visibleItemCount = Math.ceil(this.clientHeight / this.itemHeight);
+    const startIndex = Math.max(0, Math.floor(scrollTop / this.itemHeight) - this.bufferSize);
+    const endIndex = Math.min(this.itemsMap.size, startIndex + visibleItemCount + 2 * this.bufferSize);
+
+    for (let i of Array.from(this.visibleItems)) {
+      if (i < startIndex || i >= endIndex) {
+        this.visibleItems.delete(i);
+        const item = this.shadowRoot.querySelector(`[data-index="${i}"]`);
+        if (item) {
+          this.shadowRoot.querySelector(".content").removeChild(item);
+        }
       }
-    });
+    }
+
+    for (let i = startIndex; i < endIndex; i++) {
+      if (!this.visibleItems.has(i)) {
+        this.visibleItems.add(i);
+        const item = this.itemsMap.get(i).cloneNode(true);
+        item.style.position = "absolute";
+        item.style.top = `${i * this.itemHeight}px`;
+        item.style.width = "100%";
+        item.setAttribute("data-index", i);
+        this.shadowRoot.querySelector(".content").appendChild(item);
+      }
+    }
   }
+
+  attachScrollListener() {
+    this.addEventListener('scroll', () => {
+        this.updateVisibleItems();
+    });
+}
 
   loadMoreItems() {
-    const childCount = this.#list.childElementCount;
-    const isRemainingElements = this.#nodeList.length - childCount - this.#observedEndIndex > this.#buffer;
-
-    if (isRemainingElements) {
-      for (let i = this.#observedEndIndex; i > this.#observedEndIndex - this.#buffer && i >= 0; i--) {
-        this.#list.prepend(this.#nodeList[i].cloneNode(true));
-      }
-      this.#observedEndIndex = Math.max(this.#observedEndIndex - this.#buffer, 0);
-    } else {
-      this.dispatchEvent(new Event("load-more-items"));
-    }
+    this.dispatchEvent(new Event("load-more-items"));
   }
 
-  clearSlots(){
-   const slotsElement = this.querySelectorAll("messages-by-user") 
-   for(let i = 0; i < slotsElement.length; i++){
-    this.removeChild(slotsElement[i])
-   }
-  
+  disconnectedCallback() 
+  {  this.#listeners.forEach(removeListeners.bind(this));
+
   }
 
   render() {
@@ -120,9 +93,5 @@ export class VirtualScroll extends HTMLElement {
 
     this.shadowRoot.appendChild(templateElm.content.cloneNode(true));
     this.#listeners.forEach(addListeners.bind(this));
-
-    this.#list = this.shadowRoot.querySelector(".sub-container");
-    this.#container = this.shadowRoot.querySelector(".container");
-
   }
 }
