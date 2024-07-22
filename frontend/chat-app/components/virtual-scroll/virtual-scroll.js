@@ -25,7 +25,6 @@ export class VirtualScroll extends HTMLElement {
     content.style.position = "relative";
 
     this.indexItems();
-    this.updateVisibleItems();
     this.attachScrollListener();
   }
 
@@ -38,7 +37,16 @@ export class VirtualScroll extends HTMLElement {
     this.innerHTML = "";
     const placeholderHeight = this.itemsMap.size * this.itemHeight;
     this.shadowRoot.querySelector(".bottom-placeholder").style.top = `${placeholderHeight}px`;
-    this.updateVisibleItems();
+    this.renderByBottom();
+  }
+
+  renderByBottom() {
+    const visibleItemCount = Math.ceil(this.clientHeight / this.itemHeight);
+    const endIndex = this.itemsMap.size;
+    const startIndex = Math.max(0, endIndex - visibleItemCount - this.bufferSize);
+
+    this.removeUnnecessaryItems(startIndex, endIndex);
+    this.renderVisibleItems(startIndex, endIndex);
   }
 
   updateVisibleItems() {
@@ -47,6 +55,11 @@ export class VirtualScroll extends HTMLElement {
     const startIndex = Math.max(0, Math.floor(scrollTop / this.itemHeight) - this.bufferSize);
     const endIndex = Math.min(this.itemsMap.size, startIndex + visibleItemCount + 2 * this.bufferSize);
 
+    this.removeUnnecessaryItems(startIndex, endIndex);
+    this.renderVisibleItems(startIndex, endIndex);
+  }
+
+  removeUnnecessaryItems(startIndex, endIndex) {
     for (let i of Array.from(this.visibleItems)) {
       if (i < startIndex || i >= endIndex) {
         this.visibleItems.delete(i);
@@ -56,7 +69,9 @@ export class VirtualScroll extends HTMLElement {
         }
       }
     }
+  }
 
+  renderVisibleItems(startIndex, endIndex) {
     for (let i = startIndex; i < endIndex; i++) {
       if (!this.visibleItems.has(i)) {
         this.visibleItems.add(i);
@@ -71,18 +86,18 @@ export class VirtualScroll extends HTMLElement {
   }
 
   attachScrollListener() {
-    this.addEventListener('scroll', () => {
-        this.updateVisibleItems();
+    this.scrollTop = this.scrollHeight;
+    this.addEventListener("scroll", () => {
+      this.updateVisibleItems();
     });
-}
+  }
 
   loadMoreItems() {
     this.dispatchEvent(new Event("load-more-items"));
   }
 
-  disconnectedCallback() 
-  {  this.#listeners.forEach(removeListeners.bind(this));
-
+  disconnectedCallback() {
+    this.#listeners.forEach(removeListeners.bind(this));
   }
 
   render() {
