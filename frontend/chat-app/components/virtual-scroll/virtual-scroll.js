@@ -7,6 +7,7 @@ export class VirtualScroll extends HTMLElement {
   itemHeight = 110;
   bufferSize = 5;
 
+
   #listeners = [[select.bind(this, ".content"), "scroll", this.updateVisibleItems.bind(this)]];
 
   static get name() {
@@ -26,6 +27,7 @@ export class VirtualScroll extends HTMLElement {
 
     this.indexItems();
     this.attachScrollListener();
+
   }
 
   indexItems() {
@@ -37,6 +39,7 @@ export class VirtualScroll extends HTMLElement {
     this.innerHTML = "";
     const placeholderHeight = this.itemsMap.size * this.itemHeight;
     this.shadowRoot.querySelector(".bottom-placeholder").style.top = `${placeholderHeight}px`;
+
     this.renderByBottom();
   }
 
