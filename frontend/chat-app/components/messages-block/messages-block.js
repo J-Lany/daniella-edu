@@ -29,14 +29,21 @@ export class MessagesBlock extends HTMLElement {
 
     const historyMessagrs = await this.#messagesService.loadMoreMessages(chatId, startIndex);
 
-    this.prependHistory(historyMessagrs);
-  }
+    if (!historyMessagrs || historyMessagrs.length === 0) {
+      return;
+    }
 
-  prependHistory(messages) {
+    const newMessagesElements = [];
+
+    historyMessagrs.forEach((messageBlock) => {
+      const messageByUserElement = document.createElement("messages-by-user");
+      messageByUserElement.setAttribute("messages", JSON.stringify(messageBlock));
+      newMessagesElements.push(messageByUserElement);
+    });
+
     const virtualScroll = this.shadowRoot.querySelector(".virtual-scroll");
-    const newMessagesSlots = createSlots(messages);
 
-    virtualScroll.innerHTML = newMessagesSlots + virtualScroll.innerHTML;
+    virtualScroll.loadMoreItems(newMessagesElements);
   }
 
   render(messages) {

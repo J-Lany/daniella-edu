@@ -129,7 +129,7 @@ export class MessageService {
 
     this.#startIndex = result.startIndex;
 
-    return this.#historyMessages.get(this.#currentChatId);
+    return result.messages;
   }
 
   updateMessages(chatId, result) {
