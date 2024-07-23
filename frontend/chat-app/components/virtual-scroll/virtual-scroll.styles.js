@@ -9,6 +9,7 @@ const getVSComponentStyle = () => {
   :host {
     display: block;
     overflow-y: auto;
+    scrollbar-width: none;
     position: relative;
     height: 100%;
   }

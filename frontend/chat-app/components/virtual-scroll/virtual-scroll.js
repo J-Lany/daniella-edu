@@ -112,6 +112,7 @@ export class VirtualScroll extends HTMLElement {
 
     this.removeUnnecessaryItems(startIndex, endIndex);
     this.renderVisibleItems(startIndex, endIndex);
+    this.scrollTop = this.scrollHeight / 2;
   }
 
   render() {
