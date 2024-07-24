@@ -4,6 +4,6 @@ export function createVSComponentTemplate() {
   return `
     ${getVSComponentStyle()}
     <div class="content"></div>
-    <div class="bottom-placeholder placeholder"></div>
+   <div class="bottom-placeholder placeholder"></div>
   `;
 }

@@ -1,10 +1,10 @@
 import { createVSComponentTemplate } from "./virtual-scroll.template.js";
 
 export class VirtualScroll extends HTMLElement {
-  itemsMap = new Map();
+  itemsMap = [];
   visibleItems = new Set();
-  itemHeight = 110;
-  bufferSize = 5;
+  itemHeights = [];
+  bufferSize = 10;
 
   static get name() {
     return "virtual-scroll";
@@ -17,50 +17,64 @@ export class VirtualScroll extends HTMLElement {
 
   connectedCallback() {
     this.render();
-
-    const content = this.shadowRoot.querySelector(".content");
-    content.style.position = "relative";
-
     this.indexItems();
-    this.renderByBottom();
+    this.updateVisibleItems();
+
     this.attachScrollListener();
   }
 
   indexItems() {
     const children = Array.from(this.children);
-    children.forEach((child, index) => {
-      this.itemsMap.set(index, child.cloneNode(true));
-    });
+    this.itemsMap = children.map((child) => child.cloneNode(true));
 
     this.innerHTML = "";
-    const placeholderHeight = this.itemsMap.size * this.itemHeight;
-    this.shadowRoot.querySelector(".bottom-placeholder").style.top = `${placeholderHeight}px`;
+    this.itemHeights = new Array(children.length).fill(0);
+    this.itemHeights.forEach((_, index) => (this.itemHeights[index] = this.getItemHeight(index)));
+
+    this.updatePlaceholderHeight();
   }
 
-  renderByBottom() {
-    const visibleItemCount = Math.ceil(this.clientHeight / this.itemHeight);
-    const endIndex = this.itemsMap.size;
-    const startIndex = Math.max(0, endIndex - visibleItemCount - this.bufferSize);
-
-    this.removeUnnecessaryItems(startIndex, endIndex);
-    this.renderVisibleItems(startIndex, endIndex);
+  updatePlaceholderHeight() {
+    const totalHeight = this.itemHeights.reduce((sum, height) => sum + height, 0);
+    this.shadowRoot.querySelector(".bottom-placeholder").style.height = `${totalHeight}px`;
   }
 
   updateVisibleItems() {
     const scrollTop = this.scrollTop;
-    const visibleItemCount = Math.ceil(this.clientHeight / this.itemHeight);
-    const startIndex = Math.max(0, Math.floor(scrollTop / this.itemHeight) - this.bufferSize);
-    const endIndex = Math.min(this.itemsMap.size, startIndex + visibleItemCount + 2 * this.bufferSize);
+    console.log(scrollTop);
+    const clientHeight = this.clientHeight;
+    const startIndex = this.getStartIndex(scrollTop);
+    const endIndex = this.getEndIndex(scrollTop + clientHeight);
 
-    if (startIndex === 0) {
-      this.dispatchEvent(new Event("load-more-items"));
-    }
-
-    this.removeUnnecessaryItems(startIndex, endIndex);
+    this.removeInvisibleItems(startIndex, endIndex);
     this.renderVisibleItems(startIndex, endIndex);
   }
 
-  removeUnnecessaryItems(startIndex, endIndex) {
+  getStartIndex(scrollTop) {
+    let totalHeight = 0;
+    for (let i = 0; i < this.itemHeights.length; i++) {
+      totalHeight += this.getItemHeight(i);
+      if (totalHeight > scrollTop) {
+        return Math.max(0, i - this.bufferSize);
+      }
+    }
+    return this.itemHeights.length - 1;
+  }
+
+  getEndIndex(scrollTop) {
+    let totalHeight = 0;
+    for (let i = 0; i < this.itemHeights.length; i++) {
+      totalHeight += this.getItemHeight(i);
+      if (totalHeight > scrollTop) {
+        const finalScore =
+          i + Math.ceil(this.clientHeight / Math.min(...this.itemHeights.filter((h) => h > 0))) + this.bufferSize;
+        return finalScore < this.itemHeights.length - 1 ? finalScore : this.itemHeights.length - 1;
+      }
+    }
+    return this.itemHeights.length - 1;
+  }
+
+  removeInvisibleItems(startIndex, endIndex) {
     for (let i of Array.from(this.visibleItems)) {
       if (i < startIndex || i >= endIndex) {
         this.visibleItems.delete(i);
@@ -73,17 +87,52 @@ export class VirtualScroll extends HTMLElement {
   }
 
   renderVisibleItems(startIndex, endIndex) {
-    for (let i = endIndex - 1; i > startIndex; i--) {
+    const content = this.shadowRoot.querySelector(".content");
+    const fragment = document.createDocumentFragment();
+    for (let i = startIndex; i < endIndex; i++) {
       if (!this.visibleItems.has(i)) {
         this.visibleItems.add(i);
-        const item = this.itemsMap.get(i).cloneNode(true);
+        const item = this.itemsMap[i].cloneNode(true);
+        const height = this.getAccumulatedHeight(startIndex, endIndex, i);
+
         item.style.position = "absolute";
-        item.style.top = `${i * this.itemHeight}px`;
-        item.style.width = "100%";
+        item.style.top = `${height}px`;
+        item.style.width = "80%";
         item.setAttribute("data-index", i);
-        this.shadowRoot.querySelector(".content").prepend(item);
+
+        fragment.appendChild(item);
       }
     }
+    content.appendChild(fragment);
+  }
+
+  getAccumulatedHeight(startIndex, endIndex, index) {
+    const currentItemHeights = this.itemHeights.slice(startIndex, endIndex);
+    let accumulatedHeight = 0;
+    for (let i = 0; i < index; i++) {
+      accumulatedHeight += currentItemHeights[i];
+    }
+    return accumulatedHeight;
+  }
+
+  getItemHeight(index) {
+    if (this.itemHeights[index] === 0) {
+      const content = this.shadowRoot.querySelector(".content");
+      const tempElement = this.itemsMap[index].cloneNode(true);
+
+      tempElement.style.position = "absolute";
+      tempElement.style.visibility = "hidden";
+
+      content.appendChild(tempElement);
+
+      const height = tempElement.offsetHeight;
+      this.itemHeights[index] = height;
+
+      content.removeChild(tempElement);
+
+      return height;
+    }
+    return this.itemHeights[index];
   }
 
   attachScrollListener() {
@@ -91,28 +140,6 @@ export class VirtualScroll extends HTMLElement {
     this.addEventListener("scroll", () => {
       this.updateVisibleItems();
     });
-  }
-
-  loadMoreItems(items) {
-    if (!items || items.length === 0) {
-      return;
-    }
-
-    const itemsArray = [...this.itemsMap.values()];
-    const unioItems = [...items, ...itemsArray];
-    const visibleItemCount = Math.ceil(this.clientHeight / this.itemHeight);
-    this.itemsMap = new Map();
-
-    unioItems.forEach((item, index) => {
-      this.itemsMap.set(index, item.cloneNode(true));
-    });
-
-    const startIndex = itemsArray.length - 1;
-    const endIndex = Math.min(this.itemsMap.size, startIndex + visibleItemCount + 2 * this.bufferSize);
-
-    this.removeUnnecessaryItems(startIndex, endIndex);
-    this.renderVisibleItems(startIndex, endIndex);
-    this.scrollTop = this.scrollHeight / 2;
   }
 
   render() {

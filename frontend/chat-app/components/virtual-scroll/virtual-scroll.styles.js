@@ -13,10 +13,15 @@ const getVSComponentStyle = () => {
     position: relative;
     height: 100%;
   }
+
+   .content {
+     position: relative;
+   }
+
   .placeholder {
     height: 1px;
     visibility: hidden;
-
+  }
    </style>
   `;
 };
