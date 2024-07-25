@@ -41,7 +41,6 @@ export class VirtualScroll extends HTMLElement {
 
   updateVisibleItems() {
     const scrollTop = this.scrollTop;
-    console.log(scrollTop);
     const clientHeight = this.clientHeight;
     const startIndex = this.getStartIndex(scrollTop);
     const endIndex = this.getEndIndex(scrollTop + clientHeight);
@@ -76,7 +75,7 @@ export class VirtualScroll extends HTMLElement {
 
   removeInvisibleItems(startIndex, endIndex) {
     for (let i of Array.from(this.visibleItems)) {
-      if (i < startIndex || i >= endIndex) {
+      if (i < startIndex || i > endIndex) {
         this.visibleItems.delete(i);
         const item = this.shadowRoot.querySelector(`[data-index="${i}"]`);
         if (item) {
@@ -89,30 +88,28 @@ export class VirtualScroll extends HTMLElement {
   renderVisibleItems(startIndex, endIndex) {
     const content = this.shadowRoot.querySelector(".content");
     const fragment = document.createDocumentFragment();
-    for (let i = startIndex; i < endIndex; i++) {
+    for (let i = startIndex; i <= endIndex; i++) {
       if (!this.visibleItems.has(i)) {
         this.visibleItems.add(i);
         const item = this.itemsMap[i].cloneNode(true);
-        const height = this.getAccumulatedHeight(startIndex, endIndex, i);
+        const height = this.getAccumulatedHeight(startIndex, i);
 
         item.style.position = "absolute";
         item.style.top = `${height}px`;
         item.style.width = "80%";
         item.setAttribute("data-index", i);
-
         fragment.appendChild(item);
       }
     }
+
     content.appendChild(fragment);
   }
 
-  getAccumulatedHeight(startIndex, endIndex, index) {
-    const currentItemHeights = this.itemHeights.slice(startIndex, endIndex);
-    let accumulatedHeight = 0;
-    for (let i = 0; i < index; i++) {
-      accumulatedHeight += currentItemHeights[i];
-    }
-    return accumulatedHeight;
+  getAccumulatedHeight(startIndex, index) {
+    return this.itemHeights.slice(startIndex, index).reduce((sum, height) => {
+      console.log(`index: ${index}, sum: ${sum}, height: ${height}, total: ${sum + height}`);
+      return sum + height;
+    }, 0);
   }
 
   getItemHeight(index) {
