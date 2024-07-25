@@ -106,10 +106,7 @@ export class VirtualScroll extends HTMLElement {
   }
 
   getAccumulatedHeight(startIndex, index) {
-    return this.itemHeights.slice(startIndex, index).reduce((sum, height) => {
-      console.log(`index: ${index}, sum: ${sum}, height: ${height}, total: ${sum + height}`);
-      return sum + height;
-    }, 0);
+    return this.itemHeights.slice(startIndex, index).reduce((sum, height) => sum + height, 0);
   }
 
   getItemHeight(index) {
