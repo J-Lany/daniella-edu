@@ -17,8 +17,8 @@ export class VirtualScroll extends HTMLElement {
 
   connectedCallback() {
     this.render();
-    this.applyCustomStyles()
-    
+    this.applyCustomStyles();
+
     this.indexItems();
     this.updateVisibleItems();
 
@@ -26,9 +26,9 @@ export class VirtualScroll extends HTMLElement {
   }
 
   applyCustomStyles() {
-    if (this.hasAttribute('custom-css')) {
-      const customCSS = this.getAttribute('custom-css');
-      const style = document.createElement('style');
+    if (this.hasAttribute("custom-css")) {
+      const customCSS = this.getAttribute("custom-css");
+      const style = document.createElement("style");
       style.textContent = customCSS;
       this.shadowRoot.appendChild(style);
     }
