@@ -18,7 +18,6 @@ export function createMessagesBlockTemplate(messages) {
 }
 
 export const createSlots = (messages) => {
-  //Вытащить кол-во элементов и умножить на логичное число, передавать далее 
   return messages
     .map((messageBlock) => {
       const messageBlockStr = JSON.stringify(messageBlock);

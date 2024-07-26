@@ -33,17 +33,16 @@ export class MessagesBlock extends HTMLElement {
       return;
     }
 
-    const newMessagesElements = [];
-
-    historyMessagrs.forEach((messageBlock) => {
+    const historyMessagesElements = historyMessagrs.reduce((acc, messageBlock) => {
       const messageByUserElement = document.createElement("messages-by-user");
       messageByUserElement.setAttribute("messages", JSON.stringify(messageBlock));
-      newMessagesElements.push(messageByUserElement);
-    });
+      acc.push(messageByUserElement);
+      return acc;
+    }, []);
 
     const virtualScroll = this.shadowRoot.querySelector(".virtual-scroll");
 
-    virtualScroll.loadMoreItems(newMessagesElements);
+    virtualScroll.loadMoreItems(historyMessagesElements);
   }
 
   render(messages) {

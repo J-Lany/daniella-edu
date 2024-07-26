@@ -48,45 +48,60 @@ export class VirtualScroll extends HTMLElement {
   }
 
   getStartIndex(scrollTop) {
-    let totalHeight = 0;
-    for (let i = 0; i < this.itemHeights.length; i++) {
-      totalHeight += this.itemHeights[i];
-      if (totalHeight > scrollTop) {
-        return i;
-      }
+    const totalHeight = this.itemHeights.reduce(
+      (acc, height, index) => {
+        if (acc.total >= scrollTop) {
+          return acc;
+        }
+        return { total: acc.total + height, index };
+      },
+      { total: 0, index: -1 }
+    );
+
+    if (totalHeight.index < 1) {
+      this.dispatchEvent(new CustomEvent("load-more-items"));
     }
-    return this.itemHeights.length - 1;
+
+    return Math.max(totalHeight.index, 0);
   }
 
   getEndIndex(scrollTop) {
-    let totalHeight = 0;
-    for (let i = 0; i < this.itemHeights.length; i++) {
-      totalHeight += this.itemHeights[i]; 
-      if (totalHeight >= scrollTop + this.clientHeight) {
-        return Math.min(i + this.bufferSize, this.itemHeights.length - 1);
-      }
-    }
-    return this.itemHeights.length - 1;
+    const totalHeight = this.itemHeights.reduce(
+      (acc, height, index) => {
+        if (acc.total >= scrollTop + this.clientHeight) {
+          return acc;
+        }
+        return { total: acc.total + height, index };
+      },
+      { total: 0, index: -1 }
+    );
+
+    return Math.min(totalHeight.index + this.bufferSize, this.itemHeights.length - 1);
   }
 
+
+  
   removeInvisibleItems(startIndex, endIndex) {
-    for (let i of Array.from(this.visibleItems)) {
-      if (i < startIndex || i >= endIndex) {
-        this.visibleItems.delete(i);
-        const item = this.shadowRoot.querySelector(`[data-index="${i}"]`);
-        if (item) {
-          this.shadowRoot.querySelector(".content").removeChild(item);
-        }
-      }
+    Array.from(this.visibleItems)
+      .filter(i => i < startIndex || i >= endIndex)
+      .forEach(this.removeItem, this);
+  }
+
+  removeItem(i) {
+    this.visibleItems.delete(i);
+    const item = this.shadowRoot.querySelector(`[data-index="${i}"]`);
+    if (item) {
+      this.shadowRoot.querySelector(".content").removeChild(item);
     }
   }
+
 
   renderVisibleItems(startIndex, endIndex) {
     const content = this.shadowRoot.querySelector(".content");
-    const fragment = document.createDocumentFragment();
 
-    for (let i = startIndex; i <= endIndex; i++) {
-      if (!this.visibleItems.has(i)) {
+    const fragment = Array.from({ length: endIndex - startIndex + 1 }, (_, index) => startIndex + index)
+      .filter((i) => !this.visibleItems.has(i))
+      .reduce((acc, i) => {
         this.visibleItems.add(i);
         const item = this.itemsMap[i].cloneNode(true);
 
@@ -95,9 +110,9 @@ export class VirtualScroll extends HTMLElement {
         item.style.width = "100%";
         item.setAttribute("data-index", i);
 
-        fragment.appendChild(item);
-      }
-    }
+        acc.appendChild(item);
+        return acc;
+      }, document.createDocumentFragment());
 
     content.appendChild(fragment);
   }
@@ -121,9 +136,22 @@ export class VirtualScroll extends HTMLElement {
 
   attachScrollListener() {
     this.scrollTop = this.scrollHeight;
-    this.addEventListener("scroll", () => {
-      this.updateVisibleItems();
-    });
+    this.addEventListener("scroll", this.updateVisibleItems.bind(this));
+  }
+
+  loadMoreItems(newItems) {
+    if (newItems.length === 0) {
+      return;
+    }
+
+    const indexednewItems = newItems.map((child) => child.cloneNode(true));
+
+    this.itemsMap = [...indexednewItems, ...this.itemsMap];
+    this.itemHeights = this.itemsMap.map((item) => this.getItemHeight(item));
+
+    this.updateVisibleItems();
+
+    this.scrollTop = this.scrollHeight;
   }
 
   render() {
