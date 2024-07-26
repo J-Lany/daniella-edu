@@ -5,7 +5,7 @@ import { SERVICES } from "../../di/api";
 
 export class MessagesBlock extends HTMLElement {
   #messagesService = diContainer.resolve(SERVICES.messages);
-  #listeners = [[select.bind(this, "virtual-scroll"), "load-more-items", this.loadMoreMessages.bind(this)]];
+  #listeners = [[select.bind(this, "virtual-scroll"), "reached-top", this.loadMoreMessages.bind(this)]];
 
   static get name() {
     return "messages-block";

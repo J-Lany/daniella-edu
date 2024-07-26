@@ -17,10 +17,21 @@ export class VirtualScroll extends HTMLElement {
 
   connectedCallback() {
     this.render();
+    this.applyCustomStyles()
+    
     this.indexItems();
     this.updateVisibleItems();
 
     this.attachScrollListener();
+  }
+
+  applyCustomStyles() {
+    if (this.hasAttribute('custom-css')) {
+      const customCSS = this.getAttribute('custom-css');
+      const style = document.createElement('style');
+      style.textContent = customCSS;
+      this.shadowRoot.appendChild(style);
+    }
   }
 
   indexItems() {
@@ -48,42 +59,43 @@ export class VirtualScroll extends HTMLElement {
   }
 
   getStartIndex(scrollTop) {
-    const totalHeight = this.itemHeights.reduce(
-      (acc, height, index) => {
-        if (acc.total >= scrollTop) {
-          return acc;
-        }
-        return { total: acc.total + height, index };
-      },
-      { total: 0, index: -1 }
-    );
+    const totalHeight = this.calculateTotalHeight(this.itemHeights, (acc) => acc.total >= scrollTop);
 
-    if (totalHeight.index < 1) {
-      this.dispatchEvent(new CustomEvent("load-more-items"));
+    if (totalHeight.index === 0) {
+      this.dispatchEvent(new CustomEvent("top-reached"));
     }
 
     return Math.max(totalHeight.index, 0);
   }
 
   getEndIndex(scrollTop) {
-    const totalHeight = this.itemHeights.reduce(
+    const totalHeight = this.calculateTotalHeight(
+      this.itemHeights,
+      (acc) => acc.total >= scrollTop + this.clientHeight
+    );
+
+    if (totalHeight.index + this.bufferSize >= this.itemHeights.length) {
+      this.dispatchEvent(new CustomEvent("bottom-reached"));
+    }
+
+    return Math.min(totalHeight.index + this.bufferSize, this.itemHeights.length - 1);
+  }
+
+  calculateTotalHeight(itemHeights, predicate) {
+    return itemHeights.reduce(
       (acc, height, index) => {
-        if (acc.total >= scrollTop + this.clientHeight) {
+        if (predicate(acc)) {
           return acc;
         }
         return { total: acc.total + height, index };
       },
       { total: 0, index: -1 }
     );
-
-    return Math.min(totalHeight.index + this.bufferSize, this.itemHeights.length - 1);
   }
 
-
-  
   removeInvisibleItems(startIndex, endIndex) {
     Array.from(this.visibleItems)
-      .filter(i => i < startIndex || i >= endIndex)
+      .filter((i) => i < startIndex || i >= endIndex)
       .forEach(this.removeItem, this);
   }
 
@@ -94,7 +106,6 @@ export class VirtualScroll extends HTMLElement {
       this.shadowRoot.querySelector(".content").removeChild(item);
     }
   }
-
 
   renderVisibleItems(startIndex, endIndex) {
     const content = this.shadowRoot.querySelector(".content");
