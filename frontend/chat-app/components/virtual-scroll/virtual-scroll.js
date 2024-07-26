@@ -119,9 +119,10 @@ export class VirtualScroll extends HTMLElement {
       .reduce((acc, i) => {
         this.visibleItems.add(i);
         const item = this.itemsMap[i].cloneNode(true);
+        const accumulatedHeight = accumulateHeight(this.itemHeights);
 
         item.style.position = "absolute";
-        item.style.top = `${this.#getAccumulatedHeight(i)}px`;
+        item.style.top = `${accumulatedHeight(i)}px`;
         item.style.width = "100%";
         item.setAttribute("data-index", i);
 
@@ -132,9 +133,6 @@ export class VirtualScroll extends HTMLElement {
     content.appendChild(fragment);
   }
 
-  #getAccumulatedHeight(index) {
-    return this.itemHeights.slice(0, index).reduce((sum, height) => sum + height, 0);
-  }
 
   #getItemHeight(item) {
     const tempElement = item.cloneNode(true);
@@ -206,4 +204,10 @@ function calculateTotalHeight(itemHeights, predicate) {
     },
     { total: 0, index: -1 }
   );
+}
+
+function accumulateHeight(itemHeights) {
+  return function(index) {
+    return itemHeights.slice(0, index).reduce((sum, height) => sum + height, 0);
+  };
 }
