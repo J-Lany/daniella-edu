@@ -28,8 +28,7 @@ export class VirtualScroll extends HTMLElement {
     this.itemsMap = children.map((child) => child.cloneNode(true));
 
     this.innerHTML = "";
-    this.itemHeights = new Array(children.length).fill(0);
-    this.itemHeights.forEach((_, index) => (this.itemHeights[index] = this.getItemHeight(index)));
+    this.itemHeights = this.itemsMap.map((item) => this.getItemHeight(item));
 
     this.updatePlaceholderHeight();
   }
@@ -41,9 +40,8 @@ export class VirtualScroll extends HTMLElement {
 
   updateVisibleItems() {
     const scrollTop = this.scrollTop;
-    const clientHeight = this.clientHeight;
     const startIndex = this.getStartIndex(scrollTop);
-    const endIndex = this.getEndIndex(scrollTop + clientHeight);
+    const endIndex = this.getEndIndex(scrollTop);
 
     this.removeInvisibleItems(startIndex, endIndex);
     this.renderVisibleItems(startIndex, endIndex);
@@ -52,9 +50,9 @@ export class VirtualScroll extends HTMLElement {
   getStartIndex(scrollTop) {
     let totalHeight = 0;
     for (let i = 0; i < this.itemHeights.length; i++) {
-      totalHeight += this.getItemHeight(i);
+      totalHeight += this.itemHeights[i];
       if (totalHeight > scrollTop) {
-        return Math.max(0, i - this.bufferSize);
+        return i;
       }
     }
     return this.itemHeights.length - 1;
@@ -63,11 +61,9 @@ export class VirtualScroll extends HTMLElement {
   getEndIndex(scrollTop) {
     let totalHeight = 0;
     for (let i = 0; i < this.itemHeights.length; i++) {
-      totalHeight += this.getItemHeight(i);
-      if (totalHeight > scrollTop) {
-        const finalScore =
-          i + Math.ceil(this.clientHeight / Math.min(...this.itemHeights.filter((h) => h > 0))) + this.bufferSize;
-        return finalScore < this.itemHeights.length - 1 ? finalScore : this.itemHeights.length - 1;
+      totalHeight += this.itemHeights[i]; 
+      if (totalHeight >= scrollTop + this.clientHeight) {
+        return Math.min(i + this.bufferSize, this.itemHeights.length - 1);
       }
     }
     return this.itemHeights.length - 1;
@@ -75,7 +71,7 @@ export class VirtualScroll extends HTMLElement {
 
   removeInvisibleItems(startIndex, endIndex) {
     for (let i of Array.from(this.visibleItems)) {
-      if (i < startIndex || i > endIndex) {
+      if (i < startIndex || i >= endIndex) {
         this.visibleItems.delete(i);
         const item = this.shadowRoot.querySelector(`[data-index="${i}"]`);
         if (item) {
@@ -88,16 +84,17 @@ export class VirtualScroll extends HTMLElement {
   renderVisibleItems(startIndex, endIndex) {
     const content = this.shadowRoot.querySelector(".content");
     const fragment = document.createDocumentFragment();
+
     for (let i = startIndex; i <= endIndex; i++) {
       if (!this.visibleItems.has(i)) {
         this.visibleItems.add(i);
         const item = this.itemsMap[i].cloneNode(true);
-        const height = this.getAccumulatedHeight(startIndex, i);
 
         item.style.position = "absolute";
-        item.style.top = `${height}px`;
-        item.style.width = "80%";
+        item.style.top = `${this.getAccumulatedHeight(i)}px`;
+        item.style.width = "100%";
         item.setAttribute("data-index", i);
+
         fragment.appendChild(item);
       }
     }
@@ -105,28 +102,21 @@ export class VirtualScroll extends HTMLElement {
     content.appendChild(fragment);
   }
 
-  getAccumulatedHeight(startIndex, index) {
-    return this.itemHeights.slice(startIndex, index).reduce((sum, height) => sum + height, 0);
+  getAccumulatedHeight(index) {
+    return this.itemHeights.slice(0, index).reduce((sum, height) => sum + height, 0);
   }
 
-  getItemHeight(index) {
-    if (this.itemHeights[index] === 0) {
-      const content = this.shadowRoot.querySelector(".content");
-      const tempElement = this.itemsMap[index].cloneNode(true);
+  getItemHeight(item) {
+    const tempElement = item.cloneNode(true);
 
-      tempElement.style.position = "absolute";
-      tempElement.style.visibility = "hidden";
+    tempElement.style.position = "absolute";
+    tempElement.style.visibility = "hidden";
 
-      content.appendChild(tempElement);
+    document.body.appendChild(tempElement);
+    const height = tempElement.offsetHeight;
+    document.body.removeChild(tempElement);
 
-      const height = tempElement.offsetHeight;
-      this.itemHeights[index] = height;
-
-      content.removeChild(tempElement);
-
-      return height;
-    }
-    return this.itemHeights[index];
+    return height;
   }
 
   attachScrollListener() {
