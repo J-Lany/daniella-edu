@@ -49,8 +49,17 @@ export class VirtualScroll extends HTMLElement {
   }
 
   #setBufferSize(bufferSize) {
-    this.bufferSize = Number(bufferSize);
-    this.#updateInterface();
+    const bufferSizeNumber = Number(bufferSize); 
+
+    try {
+      if (isNaN(bufferSizeNumber)) {
+        throw new Error("Недопустимое значение для bufferSize");
+      }
+
+      this.bufferSize = bufferSizeNumber;
+    } catch (error) {
+      console.warn("Внимание:", error.message);
+    }
   }
 
   connectedCallback() {
