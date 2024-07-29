@@ -11,8 +11,8 @@ export class VirtualScroll extends HTMLElement {
   itemHeights = [];
   bufferSize;
   customComponent;
-  basiсCSS;
-  customCSS;
+  basiсCSS = "";
+  customCSS = "";
 
   #ATTRIBUTE_MAPPING = new Map([
     [virtualScrollAttribute.CUSTOM_CSS, this.#setCustomCSS.bind(this)],
@@ -63,7 +63,7 @@ export class VirtualScroll extends HTMLElement {
   }
 
   connectedCallback() {
-    this.#render();
+    this.#updateInterface()
   }
 
   #updateInterface() {
