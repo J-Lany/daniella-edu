@@ -12,7 +12,7 @@ export function createMessagesBlockTemplate(messages) {
          <img class="empty-chat__img" src=${emptyChatImg} alt"emptyChat" />
          <p class="empty-chat__text">Начните разговор и отправьте первое сообщение, чтобы запустить интересный диалог!</p>
           </div>`
-        : `<virtual-scroll class="virtual-scroll">${createSlots(messages)}</virtual-scroll>`
+        : `<virtual-scroll buffer-size="10" class="virtual-scroll">${createSlots(messages)}</virtual-scroll>`
     }
   </div>`;
 }

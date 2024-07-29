@@ -1,16 +1,20 @@
 import { createVSComponentTemplate } from "./virtual-scroll.template.js";
 
 const virtualScrollAttribute = {
-  CUSTOM_CSS: "custom-css"
+  CUSTOM_CSS: "custom-css",
+  BUFFER_SIZE: "buffer-size"
 };
 
 export class VirtualScroll extends HTMLElement {
   itemsMap = [];
   visibleItems = new Set();
   itemHeights = [];
-  bufferSize = 10;
+  bufferSize;
 
-  #ATTRIBUTE_MAPPING = new Map([[virtualScrollAttribute.CUSTOM_CSS, this.#setCustomCSS.bind(this)]]);
+  #ATTRIBUTE_MAPPING = new Map([
+    [virtualScrollAttribute.CUSTOM_CSS, this.#setCustomCSS.bind(this)],
+    [virtualScrollAttribute.BUFFER_SIZE, this.#setBufferSize.bind(this)]
+  ]);
 
   static get observedAttributes() {
     return Object.values(virtualScrollAttribute);
@@ -44,9 +48,17 @@ export class VirtualScroll extends HTMLElement {
     styleElement.textContent += customCSS;
   }
 
+  #setBufferSize(bufferSize) {
+    this.bufferSize = Number(bufferSize);
+    this.#updateInterface();
+  }
+
   connectedCallback() {
     this.#render();
+  }
 
+  #updateInterface() {
+    this.#render();
     this.indexItems();
     this.updateVisibleItems();
 
@@ -133,7 +145,6 @@ export class VirtualScroll extends HTMLElement {
     content.appendChild(fragment);
   }
 
-
   #getItemHeight(item) {
     const tempElement = item.cloneNode(true);
 
@@ -207,7 +218,7 @@ function calculateTotalHeight(itemHeights, predicate) {
 }
 
 function accumulateHeight(itemHeights) {
-  return function(index) {
+  return function (index) {
     return itemHeights.slice(0, index).reduce((sum, height) => sum + height, 0);
   };
 }
