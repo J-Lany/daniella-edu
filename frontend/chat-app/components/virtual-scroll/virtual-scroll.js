@@ -49,7 +49,7 @@ export class VirtualScroll extends HTMLElement {
   }
 
   #setBufferSize(bufferSize) {
-    const bufferSizeNumber = Number(bufferSize); 
+    const bufferSizeNumber = Number(bufferSize);
 
     try {
       if (isNaN(bufferSizeNumber)) {
@@ -220,7 +220,7 @@ export class VirtualScroll extends HTMLElement {
 
     const styleElement = document.querySelector("style");
     this.basiсCSS = styleElement.innerHTML;
-    styleElement.innerHTML = `${this.basicStyle} ${customCSS}`;
+    styleElement.innerHTML = `${this.basicStyle} ${this.customCSS}`;
   }
 }
 
