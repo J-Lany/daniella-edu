@@ -40,17 +40,14 @@ export class VirtualScroll extends HTMLElement {
   }
 
   #setCustomCSS(customCSS) {
-    let existingCustomStyle = this.shadowRoot.querySelector(".custom-style");
+    const styleElement = document.querySelector("style");
 
-    if (existingCustomStyle) {
-      existingCustomStyle.innerHTML = customCSS;
-    } else {
-      let customStyle = document.createElement("style");
-      customStyle.classList.add("custom-style");
-      customStyle.innerHTML = customCSS;
+    const basicStyle = styleElement.innerHTML
 
-      this.shadowRoot.appendChild(customStyle);
-    }
+    styleElement.innerHTML =  `${basicStyle} ${customCSS}` 
+
+
+    
   }
 
   #setBufferSize(bufferSize) {
