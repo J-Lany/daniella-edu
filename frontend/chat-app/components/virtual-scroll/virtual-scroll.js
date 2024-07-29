@@ -2,7 +2,8 @@ import { createVSComponentTemplate } from "./virtual-scroll.template.js";
 
 const virtualScrollAttribute = {
   CUSTOM_CSS: "custom-css",
-  BUFFER_SIZE: "buffer-size"
+  BUFFER_SIZE: "buffer-size",
+  CUSTOM_COMPONENT: "custom-component"
 };
 
 export class VirtualScroll extends HTMLElement {
@@ -13,7 +14,8 @@ export class VirtualScroll extends HTMLElement {
 
   #ATTRIBUTE_MAPPING = new Map([
     [virtualScrollAttribute.CUSTOM_CSS, this.#setCustomCSS.bind(this)],
-    [virtualScrollAttribute.BUFFER_SIZE, this.#setBufferSize.bind(this)]
+    [virtualScrollAttribute.BUFFER_SIZE, this.#setBufferSize.bind(this)],
+    [virtualScrollAttribute.CUSTOM_COMPONENT, this.#setCustomComponent.bind(this)]
   ]);
 
   static get observedAttributes() {
@@ -51,6 +53,24 @@ export class VirtualScroll extends HTMLElement {
   #setBufferSize(bufferSize) {
     this.bufferSize = Number(bufferSize);
     this.#updateInterface();
+  }
+
+  #setCustomComponent(newValue) {
+    const customComponent = document.createElement("div");
+    customComponent.innerHTML = newValue;
+    const component = customComponent.firstElementChild;
+
+    if (component) {
+      const scrollTop = this.scrollTop;
+      const startIndex = this.#getStartIndex(scrollTop);
+      const endIndex = this.#getEndIndex(scrollTop);
+      const totalItems = this.itemsMap.length;
+
+      component.setAttribute("total-items", totalItems);
+      component.setAttribute("start-index", startIndex);
+      component.setAttribute("end-index", endIndex);
+      this.shadowRoot.appendChild(component);
+    }
   }
 
   connectedCallback() {
@@ -197,7 +217,7 @@ export class VirtualScroll extends HTMLElement {
     this.itemsMap = [];
     this.visibleItems.clear();
     this.innerHTML = "";
-}
+  }
 
   #render() {
     this.#detachScrollListener();
