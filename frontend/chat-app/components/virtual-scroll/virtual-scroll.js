@@ -11,6 +11,7 @@ export class VirtualScroll extends HTMLElement {
   visibleItems = new Set();
   itemHeights = [];
   bufferSize;
+  customComponent;
 
   #ATTRIBUTE_MAPPING = new Map([
     [virtualScrollAttribute.CUSTOM_CSS, this.#setCustomCSS.bind(this)],
@@ -56,20 +57,32 @@ export class VirtualScroll extends HTMLElement {
   }
 
   #setCustomComponent(newValue) {
-    const customComponent = document.createElement("div");
-    customComponent.innerHTML = newValue;
-    const component = customComponent.firstElementChild;
+    try {
+      const customComponent = document.createElement("div");
+      customComponent.innerHTML = newValue;
+      const component = customComponent.firstElementChild;
 
-    if (component) {
-      const scrollTop = this.scrollTop;
-      const startIndex = this.#getStartIndex(scrollTop);
-      const endIndex = this.#getEndIndex(scrollTop);
-      const totalItems = this.itemsMap.length;
+      if (component) {
+        const scrollTop = this.scrollTop;
+        const startIndex = this.#getStartIndex(scrollTop);
+        const endIndex = this.#getEndIndex(scrollTop);
+        const totalItems = this.itemsMap.length;
 
-      component.setAttribute("total-items", totalItems);
-      component.setAttribute("start-index", startIndex);
-      component.setAttribute("end-index", endIndex);
-      this.shadowRoot.appendChild(component);
+        component.setAttribute("total-items", totalItems);
+        component.setAttribute("start-index", startIndex);
+        component.setAttribute("end-index", endIndex);
+        component.classList.add("custom-component");
+
+        this.customComponent = component;
+
+        if (this.shadowRoot.querySelector(".custom-component")) {
+          this.shadowRoot.replaceChild(component, this.shadowRoot.querySelector(".custom-component"));
+        } else {
+          this.shadowRoot.appendChild(component);
+        }
+      }
+    } catch (error) {
+      console.error(`Error while creating custom component: ${error.message}`);
     }
   }
 
