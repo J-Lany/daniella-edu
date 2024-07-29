@@ -11,6 +11,8 @@ export class VirtualScroll extends HTMLElement {
   itemHeights = [];
   bufferSize;
   customComponent;
+  basiсCSS;
+  customCSS;
 
   #ATTRIBUTE_MAPPING = new Map([
     [virtualScrollAttribute.CUSTOM_CSS, this.#setCustomCSS.bind(this)],
@@ -40,14 +42,10 @@ export class VirtualScroll extends HTMLElement {
   }
 
   #setCustomCSS(customCSS) {
+    this.customCSS = customCSS;
+
     const styleElement = document.querySelector("style");
-
-    const basicStyle = styleElement.innerHTML
-
-    styleElement.innerHTML =  `${basicStyle} ${customCSS}` 
-
-
-    
+    styleElement.innerHTML = `${this.basicStyle} ${customCSS}`;
   }
 
   #setBufferSize(bufferSize) {
@@ -210,6 +208,10 @@ export class VirtualScroll extends HTMLElement {
     this.shadowRoot.appendChild(templateElm.content.cloneNode(true));
 
     this.#attachScrollListener();
+
+    const styleElement = document.querySelector("style");
+    this.basiсCSS = styleElement.innerHTML;
+    styleElement.innerHTML = `${this.basicStyle} ${customCSS}`;
   }
 }
 
