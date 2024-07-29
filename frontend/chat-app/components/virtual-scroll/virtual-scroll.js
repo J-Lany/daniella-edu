@@ -40,13 +40,17 @@ export class VirtualScroll extends HTMLElement {
   }
 
   #setCustomCSS(customCSS) {
-    let styleElement = this.shadowRoot.querySelector("style");
-    if (!styleElement) {
-      styleElement = document.createElement("style");
-      this.shadowRoot.appendChild(styleElement);
-    }
+    let existingCustomStyle = this.shadowRoot.querySelector(".custom-style");
 
-    styleElement.textContent += customCSS;
+    if (existingCustomStyle) {
+      existingCustomStyle.innerHTML = customCSS;
+    } else {
+      let customStyle = document.createElement("style");
+      customStyle.classList.add("custom-style");
+      customStyle.innerHTML = customCSS;
+
+      this.shadowRoot.appendChild(customStyle);
+    }
   }
 
   #setBufferSize(bufferSize) {
