@@ -72,10 +72,10 @@ export class VirtualScroll extends HTMLElement {
     this.innerHTML = "";
     this.itemHeights = this.itemsMap.map((item) => this.#getItemHeight(item));
 
-    this.#updatePlaceholderHeight();
+    this.updatePlaceholderHeight();
   }
 
-  #updatePlaceholderHeight() {
+  updatePlaceholderHeight() {
     const totalHeight = this.itemHeights.reduce((sum, height) => sum + height, 0);
     this.shadowRoot.querySelector(".bottom-placeholder").style.height = `${totalHeight}px`;
   }
@@ -192,6 +192,12 @@ export class VirtualScroll extends HTMLElement {
 
     this.scrollTop = this.scrollHeight;
   }
+
+  clean() {
+    this.itemsMap = [];
+    this.visibleItems.clear();
+    this.innerHTML = "";
+}
 
   #render() {
     this.#detachScrollListener();
