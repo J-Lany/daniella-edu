@@ -99,9 +99,10 @@ export class VirtualScroll extends HTMLElement {
   }
 
   #getStartIndex(scrollTop) {
+    const isStartOfScroll = this.visibleItems.has(0);
     const totalHeight = calculateTotalHeight(this.itemHeights, (acc) => acc.total >= scrollTop);
 
-    if (totalHeight.index === 0 || scrollTop === 0) {
+    if (isStartOfScroll && scrollTop === 0) {
       this.dispatchEvent(new CustomEvent("top-reached"));
     }
 
