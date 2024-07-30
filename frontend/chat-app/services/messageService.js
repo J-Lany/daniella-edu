@@ -176,7 +176,7 @@ export class MessageService {
       if (this.#currentChatId) {
         this.getMessagesByChatId(this.#currentChatId);
       }
-    }, 200);
+    }, 300);
   }
 
   stopPooling() {
