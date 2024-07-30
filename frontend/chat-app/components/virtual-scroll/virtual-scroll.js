@@ -63,7 +63,7 @@ export class VirtualScroll extends HTMLElement {
   }
 
   connectedCallback() {
-    this.#updateInterface()
+    this.#updateInterface();
   }
 
   #updateInterface() {
@@ -101,7 +101,7 @@ export class VirtualScroll extends HTMLElement {
   #getStartIndex(scrollTop) {
     const totalHeight = calculateTotalHeight(this.itemHeights, (acc) => acc.total >= scrollTop);
 
-    if (totalHeight.index === 0) {
+    if (totalHeight.index === 0 || scrollTop === 0) {
       this.dispatchEvent(new CustomEvent("top-reached"));
     }
 
