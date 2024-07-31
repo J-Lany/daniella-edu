@@ -25,9 +25,8 @@ export class MessagesBlock extends HTMLElement {
 
   async loadMoreMessages() {
     const chatId = this.#messagesService.getCurrentChatId();
-    const startIndex = this.#messagesService.getStartIndex();
 
-    const historyMessagrs = await this.#messagesService.loadMoreMessages(chatId, startIndex);
+    const historyMessagrs = await this.#messagesService.loadMoreMessages(chatId);
 
     if (!historyMessagrs || historyMessagrs.length === 0) {
       return;

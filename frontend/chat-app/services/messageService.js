@@ -11,6 +11,7 @@ export class MessageService {
   #currentChatIdSubscribers = new Set();
   #messages = new Map();
   #historyMessages = new Map();
+  #startIndexes = new Map();
   #currentChatId;
   #startIndex = 0;
   poolingInterval;
@@ -19,8 +20,8 @@ export class MessageService {
     return this.#currentChatId;
   }
 
-  getStartIndex() {
-    return this.#startIndex;
+  getStartIndex(chatId) {
+    return this.#startIndexes.get(chatId);
   }
 
   subscribeCurrentChatId(subscribtion) {
@@ -42,8 +43,8 @@ export class MessageService {
 
   async notifyMessagesSubscribers() {
     if (!this.#messages.has(this.#currentChatId)) {
-      const startIndex = await this.getMessagesByChatId(this.#currentChatId);
-      this.#startIndex = startIndex;
+      await this.getMessagesByChatId(this.#currentChatId);
+
       return;
     }
 
@@ -53,6 +54,8 @@ export class MessageService {
   }
 
   unSubscribeFromMessage(subscribtion) {
+    this.#messages.delete(this.#currentChatId);
+    this.#startIndexes.delete(this.#currentChatId);
     this.#messagesSubscribers.delete(subscribtion);
     this.stopPooling();
   }
@@ -95,24 +98,23 @@ export class MessageService {
 
     const result = await this.fetchMessages(params);
 
-    if(!result) {
-      return
+    if (!result) {
+      return;
     }
 
     if (result.messages) {
       this.updateMessages(chatId, result);
+    } 
+    
+    if(!this.#startIndexes.has(chatId)) {
+      this.#startIndexes.set(chatId, result.startIndex);
     }
-
-    return result.startIndex;
   }
 
-  async loadMoreMessages(chatId, startIndex) {
-    if (!startIndex) {
-      return;
-    }
+  async loadMoreMessages(chatId) {
     const params = {
       chatId,
-      startIndex,
+      startIndex: this.#startIndexes.get(chatId),
       limit: LIMIT
     };
 
@@ -127,8 +129,7 @@ export class MessageService {
       ...result.messages
     ]);
 
-    this.#startIndex = result.startIndex;
-
+    this.#startIndexes.set(chatId, result.startIndex);
     return result.messages;
   }
 
@@ -152,7 +153,7 @@ export class MessageService {
     if (areMessagesUnchanged) {
       return;
     }
-    this.#startIndex = startIndex;
+    this.#startIndexes.set(chatId, startIndex);
     this.setAndNotifyMessages(chatId, newMessages);
   }
 
@@ -176,7 +177,7 @@ export class MessageService {
       if (this.#currentChatId) {
         this.getMessagesByChatId(this.#currentChatId);
       }
-    }, 300);
+    }, 500);
   }
 
   stopPooling() {

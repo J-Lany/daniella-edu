@@ -89,22 +89,27 @@ export class VirtualScroll extends HTMLElement {
     this.shadowRoot.querySelector(".bottom-placeholder").style.height = `${totalHeight}px`;
   }
 
-  updateVisibleItems() {
+  updateVisibleItems(event) {
     const scrollTop = this.scrollTop;
     const startIndex = this.#getStartIndex(scrollTop);
     const endIndex = this.#getEndIndex(scrollTop);
 
     this.#removeInvisibleItems(startIndex, endIndex);
     this.#renderVisibleItems(startIndex, endIndex);
+
+    const isStartOfScroll = this.visibleItems.has(0);
+
+    if (isStartOfScroll && event?.target?.scrollTop === 0) {
+      this.dispatchEvent(new CustomEvent("top-reached"));
+    }
+
+    if (endIndex >= this.itemHeights.length - 1) {
+      this.dispatchEvent(new CustomEvent("bottom-reached"));
+    }
   }
 
   #getStartIndex(scrollTop) {
-    const isStartOfScroll = this.visibleItems.has(0);
     const totalHeight = calculateTotalHeight(this.itemHeights, (acc) => acc.total >= scrollTop);
-
-    if (isStartOfScroll && scrollTop === 0) {
-      this.dispatchEvent(new CustomEvent("top-reached"));
-    }
 
     return Math.max(totalHeight.index, 0);
   }
@@ -112,16 +117,12 @@ export class VirtualScroll extends HTMLElement {
   #getEndIndex(scrollTop) {
     const totalHeight = calculateTotalHeight(this.itemHeights, (acc) => acc.total >= scrollTop + this.clientHeight);
 
-    if (totalHeight.index + this.bufferSize >= this.itemHeights.length) {
-      this.dispatchEvent(new CustomEvent("bottom-reached"));
-    }
-
     return Math.min(totalHeight.index + this.bufferSize, this.itemHeights.length - 1);
   }
 
   #removeInvisibleItems(startIndex, endIndex) {
     Array.from(this.visibleItems)
-      .filter((i) => i < startIndex || i >= endIndex)
+      .filter((i) => i < startIndex || i > endIndex)
       .forEach(this.#removeItem, this);
   }
 
