@@ -1,6 +1,15 @@
 # Node.js
 node_modules/
 
+# Data-store
+chats-by-user.json
+sessions.json
+user-friends.json
+emails.json
+messages.json
+chats.json
+users.json
+
 # Vite
 dist/
 .build/
