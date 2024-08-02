@@ -4,7 +4,7 @@ import { SERVICES } from "../../di/api";
 
 const avatarAttribute = {
   USER_ID: "user-id",
-  DISPLAY_MODE: "display-mode",
+  DISPLAY_MODE: "display-mode"
 };
 
 export class AvatarComponent extends HTMLElement {
@@ -14,7 +14,7 @@ export class AvatarComponent extends HTMLElement {
 
   #ATTRIBUTE_MAPPING = new Map([
     [avatarAttribute.USER_ID, this.setUserId.bind(this)],
-    [avatarAttribute.DISPLAY_MODE, this.setDisplayMode.bind(this)],
+    [avatarAttribute.DISPLAY_MODE, this.setDisplayMode.bind(this)]
   ]);
 
   static get name() {
@@ -31,10 +31,7 @@ export class AvatarComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    this.unsubscribeFromUser = this.#userService.subscribeUserById(
-      this.#userId,
-      this.render.bind(this)
-    );
+    this.unsubscribeFromUser = this.#userService.subscribeUserById(this.#userId, this.render.bind(this));
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -42,7 +39,11 @@ export class AvatarComponent extends HTMLElement {
       const callback = this.#ATTRIBUTE_MAPPING.get(name);
       if (callback) {
         callback(newValue);
-        this.render();
+        const allAttributesSet = this.#userId && this.#displayMode;
+
+        if (allAttributesSet) {
+          this.render();
+        }
       }
     }
   }

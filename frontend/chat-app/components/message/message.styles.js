@@ -13,6 +13,10 @@ export function getMessageStyle() {
       font-size: 1rem;
     }
 
+   avatar-component {
+      align-self: flex-start;
+    }
+
     .new-block {
       margin-top: 1.5rem;
     }

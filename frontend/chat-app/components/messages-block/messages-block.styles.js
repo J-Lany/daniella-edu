@@ -9,7 +9,13 @@ export const getMessagesBlockStyle = () => {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    min-height: 100%;
+    height: 100%;
+  }
+
+  .virtual-scroll {
+    height: 100%;
+    flex-grow: 1;
+    overflow-y: auto;
   }
 
   .empty-chat {

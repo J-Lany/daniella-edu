@@ -1,8 +1,11 @@
 import { getMessagesByUserStyle } from "./messages-by-user.styles";
 
 export function createMessagesByUserTemplate(messages, currentUser) {
-  const position =
-    messages[0]?.authorId === currentUser?.userId ? "right" : "left";
+  if (!messages || !currentUser) {
+    return "";
+  }
+
+  const position = messages[0]?.authorId === currentUser?.userId ? "right" : "left";
 
   return `
   ${getMessagesByUserStyle()}

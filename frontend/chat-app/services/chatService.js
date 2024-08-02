@@ -79,7 +79,7 @@ export class ChatService {
   startPooling() {
     this.poolingInterval = setInterval(() => {
         this.getChatsByCurrnetUser();
-    }, 200);
+    }, 500);
   }
 
   stopPooling() {

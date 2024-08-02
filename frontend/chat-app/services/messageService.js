@@ -2,7 +2,7 @@ import { diContainer } from "../di/di.js";
 import { SERVICES } from "../di/api.js";
 import { authGuard } from "../guards/auth-guard";
 
-const LIMIT = 10;
+const LIMIT = 20;
 
 export class MessageService {
   #httpService = authGuard(diContainer.resolve(SERVICES.http));
@@ -11,6 +11,7 @@ export class MessageService {
   #currentChatIdSubscribers = new Set();
   #messages = new Map();
   #historyMessages = new Map();
+  #startIndexes = new Map();
   #currentChatId;
   #startIndex = 0;
   poolingInterval;
@@ -19,19 +20,19 @@ export class MessageService {
     return this.#currentChatId;
   }
 
-  getStartIndex() {
-    return this.#startIndex;
+  getStartIndex(chatId) {
+    return this.#startIndexes.get(chatId);
   }
 
   subscribeCurrentChatId(subscribtion) {
     this.#currentChatIdSubscribers.add(subscribtion);
-    return () => this.unSubscribeFromCurrentChatId();
+    return () => this.unSubscribeFromCurrentChatId(subscribtion);
   }
 
   subscribeMessagesByCurrentChat(subscribtion) {
     this.#messagesSubscribers.add(subscribtion);
     this.startPooling();
-    return () => this.unSubscribeFromMessage();
+    return () => this.unSubscribeFromMessage(subscribtion);
   }
 
   notifyCurrentChatIdSubscribers() {
@@ -42,8 +43,9 @@ export class MessageService {
 
   async notifyMessagesSubscribers() {
     if (!this.#messages.has(this.#currentChatId)) {
-      const startIndex = await this.getMessagesByChatId(this.#currentChatId);
-      this.#startIndex = startIndex;
+      await this.getMessagesByChatId(this.#currentChatId);
+
+      return;
     }
 
     this.#messagesSubscribers.forEach((subscription) => {
@@ -51,13 +53,15 @@ export class MessageService {
     });
   }
 
-  unSubscribeFromMessage(subs) {
-    this.#messagesSubscribers.delete(subs);
+  unSubscribeFromMessage(subscribtion) {
+    this.#messages.delete(this.#currentChatId);
+    this.#startIndexes.delete(this.#currentChatId);
+    this.#messagesSubscribers.delete(subscribtion);
     this.stopPooling();
   }
 
-  unSubscribeFromCurrentChatId(subs) {
-    this.#currentChatIdSubscribers.delete(subs);
+  unSubscribeFromCurrentChatId(subscribtion) {
+    this.#currentChatIdSubscribers.delete(subscribtion);
   }
 
   setCurrentChatId(id) {
@@ -94,20 +98,23 @@ export class MessageService {
 
     const result = await this.fetchMessages(params);
 
-    if (result.messages) {
-      this.updateMessages(chatId, result);
-    }
-
-    return result.startIndex;
-  }
-
-  async loadMoreMessages(chatId, startIndex) {
-    if (!startIndex) {
+    if (!result) {
       return;
     }
+
+    if (result.messages) {
+      this.updateMessages(chatId, result);
+    } 
+    
+    if(!this.#startIndexes.has(chatId)) {
+      this.#startIndexes.set(chatId, result.startIndex);
+    }
+  }
+
+  async loadMoreMessages(chatId) {
     const params = {
       chatId,
-      startIndex,
+      startIndex: this.#startIndexes.get(chatId),
       limit: LIMIT
     };
 
@@ -122,9 +129,8 @@ export class MessageService {
       ...result.messages
     ]);
 
-    this.#startIndex = result.startIndex;
-
-    return this.#historyMessages.get(this.#currentChatId);
+    this.#startIndexes.set(chatId, result.startIndex);
+    return result.messages;
   }
 
   updateMessages(chatId, result) {
@@ -142,13 +148,12 @@ export class MessageService {
     const lastBlockNew = newMessages[newMessages.length - 1];
     const lastMessageNew = lastBlockNew[lastBlockNew.length - 1];
 
-    const areMessagesUnchanged =
-      existingMessages && lastMessageOld.messageId === lastMessageNew.messageId;
+    const areMessagesUnchanged = existingMessages && lastMessageOld.messageId === lastMessageNew.messageId;
 
     if (areMessagesUnchanged) {
       return;
     }
-    this.#startIndex = startIndex;
+    this.#startIndexes.set(chatId, startIndex);
     this.setAndNotifyMessages(chatId, newMessages);
   }
 
@@ -172,7 +177,7 @@ export class MessageService {
       if (this.#currentChatId) {
         this.getMessagesByChatId(this.#currentChatId);
       }
-    }, 200);
+    }, 500);
   }
 
   stopPooling() {

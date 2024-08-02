@@ -6,7 +6,7 @@ import { debounce } from "../../utils/debounce.js";
 
 export const LIST_TYPE = {
   users: "users",
-  chats: "chats",
+  chats: "chats"
 };
 
 const DELAY = 500;
@@ -15,15 +15,8 @@ export class Sidebar extends HTMLElement {
   #userService = diContainer.resolve(SERVICES.user);
   #debauncedSearch = debounce(this.#onSearch.bind(this), DELAY);
   #listeners = [
-    [
-      select.bind(this, "search-input"),
-      "search",
-      this.#debauncedSearch.bind(this),
-    ],   [
-      select.bind(this, "user-list"),
-      "create-chat",
-      this.#cleanInput.bind(this),
-    ],
+    [select.bind(this, "search-input"), "search", this.#debauncedSearch.bind(this)],
+    [select.bind(this, "user-list"), "create-chat", this.#cleanInput.bind(this)]
   ];
 
   static get name() {
@@ -49,7 +42,7 @@ export class Sidebar extends HTMLElement {
 
     if (inputValue === "") {
       userList.handleCustomEvent({
-        detail: null,
+        detail: null
       });
       return;
     }
@@ -58,13 +51,13 @@ export class Sidebar extends HTMLElement {
     const res = await this.#userService.searchUser(inputValue, userId);
 
     userList.handleCustomEvent({
-      detail: res,
+      detail: res
     });
   }
 
-  #cleanInput(){
+  #cleanInput() {
     const searchInput = this.shadowRoot.querySelector("search-input");
-    searchInput.cleanInput()
+    searchInput.cleanInput();
   }
 
   render() {

@@ -12,9 +12,7 @@ export class MessagesByUser extends HTMLElement {
   #currentUser;
   #messages;
 
-  #ATTRIBUTE_MAPPING = new Map([
-    [messagesAttribute.MESSAGES, this.setMessages.bind(this)]
-  ]);
+  #ATTRIBUTE_MAPPING = new Map([[messagesAttribute.MESSAGES, this.setMessages.bind(this)]]);
 
   static get name() {
     return "messages-by-user";
@@ -30,9 +28,7 @@ export class MessagesByUser extends HTMLElement {
   }
 
   connectedCallback() {
-    this.unsubscribeFromCurrentUser = this.#authService.subscribeCurrentUser(
-      this.setCurrentUser.bind(this)
-    );
+    this.unsubscribeFromCurrentUser = this.#authService.subscribeCurrentUser(this.setCurrentUser.bind(this));
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -40,18 +36,27 @@ export class MessagesByUser extends HTMLElement {
       const callback = this.#ATTRIBUTE_MAPPING.get(name);
       if (callback) {
         callback(newValue);
-        this.render();
+        const allAttributesSet = this.#currentUser && this.#messages;
+
+        if (allAttributesSet) {
+          this.render();
+        }
       }
     }
   }
 
-  setMessages(messages) {
-    this.#messages = JSON.parse(messages);
+  setMessages(newMessages) {
+    const messages = JSON.parse(newMessages);
+    this.#messages = messages;
   }
 
   setCurrentUser(user) {
     this.#currentUser = user;
-    this.render();
+    const allAttributesSet = this.#currentUser && this.#messages;
+
+    if (allAttributesSet) {
+      this.render();
+    }
   }
 
   disconnectedCallback() {
@@ -59,10 +64,7 @@ export class MessagesByUser extends HTMLElement {
   }
   render() {
     const templateElem = document.createElement("template");
-    templateElem.innerHTML = createMessagesByUserTemplate(
-      this.#messages,
-      this.#currentUser
-    );
+    templateElem.innerHTML = createMessagesByUserTemplate(this.#messages, this.#currentUser);
 
     this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(templateElem.content.cloneNode(true));
