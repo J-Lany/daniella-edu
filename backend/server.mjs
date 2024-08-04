@@ -1,4 +1,6 @@
 import express from "express";
+import { createServer } from "http";
+import { WebSocketServer } from "ws";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import { diContainer } from "./di/di.mjs";
@@ -70,7 +72,26 @@ createAuthController(app);
 createUserController(app);
 createMessageController(app);
 
+const server = createServer(app);
+
+const wss = new WebSocketServer({ server });
+
+wss.on("connection", function connection(ws) {
+  console.log("Клиент подключился");
+
+  ws.on("message", function incoming(message) {
+    console.log("Получено сообщение: %s", message);
+    ws.send(`Сервер получил ваше сообщение: ${message}`);
+  });
+
+  ws.on("close", () => {
+    console.log("Клиент отключился");
+  });
+
+  ws.send("Добро пожаловать на сервер WebSocket!");
+});
+
 const PORT = 3000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
