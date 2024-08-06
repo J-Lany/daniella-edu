@@ -2,23 +2,14 @@ import React from "react";
 import styles from "./styles.module.css";
 
 interface InputProps {
-  placeholder: string;
-  type: string;
-  value: string;
-  onChange: (value: string) => void;
-  onBlur: (value: string) => void;
+  label: string;
+  name: string;
+  register: any;
+  type?: string;
 }
 
-const Input: React.FC<InputProps> = ({ placeholder,type, value, onChange, onBlur }) => {
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(event.target.value);
-  };
-
-  const handleBlur = () => {
-    onBlur(value);
-  };
-
-  return <input className={styles.input} type={type} placeholder={placeholder} value={value} onChange={handleChange} onBlur={handleBlur} />;
-};
+const Input: React.FC<InputProps> = ({ label, name, register, type }) => (
+  <input placeholder={label} className={styles.input} type={type} {...register(name, { required: "This field is required" })} />
+);
 
 export default Input;

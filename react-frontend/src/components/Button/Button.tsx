@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./styles.module.css";
 
-export enum ButtonType {
+export enum ButtonStyle {
   Primary = "primary",
   Default = "default",
   Light = "light"
@@ -9,12 +9,13 @@ export enum ButtonType {
 
 interface ButtonProps {
   text?: string;
-  type?: ButtonType;
+  style?: ButtonStyle;
+  type?: "submit" | "button" | "reset" | undefined;
   onClick?: () => void;
 }
 
-const Button: React.FC<ButtonProps> = ({ text, type, onClick }) => {
-  const buttonClass = type ? `${styles[type]} ${styles.button}` : `${styles["default"]} ${styles.button}`;
+const Button: React.FC<ButtonProps> = ({ text, style, type, onClick }) => {
+  const buttonClass = style ? `${styles[style]} ${styles.button}` : `${styles["default"]} ${styles.button}`;
 
   const handleClick = () => {
     if (onClick) {
@@ -23,7 +24,7 @@ const Button: React.FC<ButtonProps> = ({ text, type, onClick }) => {
   };
 
   return (
-    <button className={buttonClass} onClick={handleClick}>
+    <button type={type} className={buttonClass} onClick={handleClick}>
       {text}
     </button>
   );
