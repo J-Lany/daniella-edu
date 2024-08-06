@@ -3,10 +3,10 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import LoginPage from "./pages/login/login-page";
-import RegistrationPage from "./pages/registration/registration-page";
-import ChatPage from "./pages/chat/chat-page";
-import ErrorPage from "./pages/error/error-page";
+import LoginPage from "./pages/Login/Login-page";
+import RegistrationPage from "./pages/Registration/Registration-page";
+import ChatPage from "./pages/Chat/Chat-page";
+import ErrorPage from "./pages/Error/Error-page";
 
 const router = createBrowserRouter([
   {
