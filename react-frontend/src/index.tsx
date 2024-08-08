@@ -1,37 +1,39 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import LoginPage from "./pages/login/login-page";
-import RegistrationPage from "./pages/registration/registration-page";
-import ChatPage from "./pages/chat/chat-page";
-import ErrorPage from "./pages/error/error-page";
+import LoginPage from "./pages/Login/Login-page";
+import RegistrationPage from "./pages/Registration/Registration-page";
+import App from "./App";
+import ErrorPage from "./pages/Error/Error-page";
 
 const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
-    errorElement: <ErrorPage />,
+    errorElement: <ErrorPage />
   },
   {
     path: "/registration",
     element: <RegistrationPage />,
-    errorElement: <ErrorPage />,
+    errorElement: <ErrorPage />
   },
   {
     path: "/",
-    element: <ChatPage />,
-    errorElement: <ErrorPage />,
-  },
+    element: <App />,
+    errorElement: <ErrorPage />
+  }
 ]);
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
 
