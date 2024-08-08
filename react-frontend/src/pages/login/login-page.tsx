@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useCallback } from "react";
 import { clearError } from "../../redux/slices/authSlice";
 import { loginAsync } from "../../redux/thunks/authThunks";
 import { AuthData } from "../../types/AuthData";
@@ -23,19 +24,19 @@ function LoginPage() {
     if (isAuthenticated) {
       navigate("/");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate]);
 
   const onSubmit: SubmitHandler<AuthData> = async (data: AuthData) => {
     await dispatch(loginAsync(data) as any);
   };
 
-  const handleSignup = () => {
+  const handleSignup = useCallback(() => {
     navigate("/registration");
-  };
+  }, [navigate]);
 
-  const closeErrorToast = () => {
+  const closeErrorToast = useCallback(() => {
     dispatch(clearError());
-  };
+  }, [dispatch]);
 
   return (
     <div className={styles.loginPage}>
