@@ -9,7 +9,7 @@ type AuthApi = {
 
 export const authApi: AuthApi = {
   login: async (authData) => {
-    return await axios.post( `${packageJson.baseUrl}/login`, authData);
+    return await axios.post(`${packageJson.baseUrl}/login`, authData);
   },
   logout: async () => {
     return await axios.post("http://example.com/logout");

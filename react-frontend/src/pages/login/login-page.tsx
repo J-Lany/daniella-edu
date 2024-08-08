@@ -43,10 +43,10 @@ function LoginPage() {
       <form className={styles.loginForm} onSubmit={handleSubmit(onSubmit)}>
         <Input label="Email" name="email" type="email" register={register} />
         <Input label="Password" name="password" type="password" register={register} />
-        <Button text="Log in" type="submit" style={ButtonStyle.Primary} />
+        <Button text="Log in" type="submit" className={ButtonStyle.Primary} />
         <div>
           Don't have an account?{" "}
-          <Button text="Sign up" type="button" style={ButtonStyle.Light} onClick={handleSignup} />
+          <Button text="Sign up" type="button" className={ButtonStyle.Light} onClick={handleSignup} />
         </div>
         {error && <Toast message={error} type={ToastType.Error} handleClose={closeErrorToast} />}
       </form>

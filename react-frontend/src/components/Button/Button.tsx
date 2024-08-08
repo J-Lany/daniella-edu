@@ -9,13 +9,13 @@ export enum ButtonStyle {
 
 interface ButtonProps {
   text?: string;
-  style?: ButtonStyle;
+  className?: ButtonStyle;
   type?: "submit" | "button" | "reset" | undefined;
   onClick?: () => void;
 }
 
-const Button: React.FC<ButtonProps> = ({ text, style, type, onClick }) => {
-  const buttonClass = style ? `${styles[style]} ${styles.button}` : `${styles["default"]} ${styles.button}`;
+const Button: React.FC<ButtonProps> = ({ text, className, type, onClick }) => {
+  const buttonClass = className ? `${styles[className]} ${styles.button}` : `${styles["default"]} ${styles.button}`;
 
   const handleClick = () => {
     if (onClick) {
