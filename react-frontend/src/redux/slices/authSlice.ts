@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginAsync, logoutAsync } from "../thunks/authThunks";
 
 const authSlice = createSlice({
   name: "auth",
@@ -14,29 +13,17 @@ const authSlice = createSlice({
     },
     clearError: (state) => {
       state.error = "";
+    },
+    setAuthData: (state, action) => {
+      state.isAuthenticated = true;
+      state.user = action.payload.user;
     }
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(loginAsync.fulfilled, (state, action) => {
-        state.isAuthenticated = true;
-        state.user = action.payload;
-        state.error = "";
-      })
-      .addCase(loginAsync.rejected, (state) => {
-        state.isAuthenticated = false;
-        state.user = null;
-        state.error = "Неверный логин или пароль";
-      })
-      .addCase(logoutAsync.fulfilled, (state) => {
-        state.isAuthenticated = false;
-        state.user = null;
-      });
+
   }
 });
 
 export const {
   reducer: authReducer,
-  actions: { setError, clearError }
+  actions: { setError, clearError, setAuthData }
 } = authSlice;
 export default authSlice;

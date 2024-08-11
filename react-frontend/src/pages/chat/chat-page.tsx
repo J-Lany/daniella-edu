@@ -1,6 +1,6 @@
 function ChatPage() {
   return (
-    <div className="login-page">
+    <div className="chat-page">
       <h1>chat</h1>
     </div>
   );

@@ -9,6 +9,8 @@ import LoginPage from "./pages/Login/Login-page";
 import RegistrationPage from "./pages/Registration/Registration-page";
 import App from "./App";
 import ErrorPage from "./pages/Error/Error-page";
+import ProtectedRoute from "./utils/ProtectedRoute";
+
 
 const router = createBrowserRouter([
   {
@@ -23,7 +25,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <App />,
+    element: (
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>
+    ),
     errorElement: <ErrorPage />
   }
 ]);
