@@ -14,17 +14,15 @@ interface ButtonProps {
   onClick?: () => void;
 }
 
-const Button: React.FC<ButtonProps> = ({ text, className, type, onClick }) => {
+const EMPTY_CALLBACK = () => {}
+
+const Button: React.FC<ButtonProps> = ({ text, className, type, onClick = EMPTY_CALLBACK }) => {
+
   const buttonClass = className ? `${styles[className]} ${styles.button}` : `${styles["default"]} ${styles.button}`;
 
-  const handleClick = () => {
-    if (onClick) {
-      onClick();
-    }
-  };
 
   return (
-    <button type={type} className={buttonClass} onClick={handleClick}>
+    <button type={type} className={buttonClass} onClick={onClick}>
       {text}
     </button>
   );

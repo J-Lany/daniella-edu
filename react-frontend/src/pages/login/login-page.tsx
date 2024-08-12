@@ -10,21 +10,16 @@ import Button, { ButtonStyle } from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import Toast from "../../components/Toast/Toast";
 import { ToastType } from "../../components/Toast/Toast";
-import { useEffect } from "react";
+import { RootState } from "../../types/RootState";
 
 function LoginPage() {
   const { register, handleSubmit } = useForm<AuthData>({ mode: "onChange" });
   const navigate = useNavigate();
 
-  const error = useSelector((state: any) => state.auth.error);
-  const isAuthenticated = useSelector((state: any) => state.auth.isAuthenticated);
+  const error = useSelector((state: RootState) => state.auth.error);
+
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/");
-    }
-  }, [isAuthenticated, navigate]);
 
   const onSubmit: SubmitHandler<AuthData> = async (data: AuthData) => {
     await dispatch(loginAsync(data) as any);

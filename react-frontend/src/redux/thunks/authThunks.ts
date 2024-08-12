@@ -23,5 +23,5 @@ export const loginAsync = createAsyncThunk("auth/login", async (authData: AuthDa
 });
 
 export const logoutAsync = createAsyncThunk("auth/logout", async () => {
-console.log('JTBD')
+  console.log("JTBD");
 });
