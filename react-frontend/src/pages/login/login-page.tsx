@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useCallback } from "react";
 import { clearError } from "../../redux/slices/authSlice";
 import { loginAsync } from "../../redux/thunks/authThunks";
@@ -10,6 +10,7 @@ import Button, { ButtonStyle } from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import Toast from "../../components/Toast/Toast";
 import { ToastType } from "../../components/Toast/Toast";
+import { useAppDispatch } from "../../hook/hook";
 import { RootState } from "../../types/RootState";
 
 function LoginPage() {
@@ -18,11 +19,10 @@ function LoginPage() {
 
   const error = useSelector((state: RootState) => state.auth.error);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-
-  const onSubmit: SubmitHandler<AuthData> = async (data: AuthData) => {
-    await dispatch(loginAsync(data) as any);
+  const onSubmit: SubmitHandler<AuthData> = async (data) => {
+    dispatch(loginAsync(data));
   };
 
   const handleSignup = useCallback(() => {
@@ -40,7 +40,7 @@ function LoginPage() {
         <Input label="Password" name="password" type="password" register={register} />
         <Button text="Log in" type="submit" className={ButtonStyle.Primary} />
         <div>
-          Don't have an account?{" "}
+          Don't have an account?
           <Button text="Sign up" type="button" className={ButtonStyle.Light} onClick={handleSignup} />
         </div>
         {error && <Toast message={error} type={ToastType.Error} handleClose={closeErrorToast} />}
