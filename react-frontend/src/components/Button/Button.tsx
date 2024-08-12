@@ -14,12 +14,10 @@ interface ButtonProps {
   onClick?: () => void;
 }
 
-const EMPTY_CALLBACK = () => {}
+const EMPTY_CALLBACK = () => {};
 
 const Button: React.FC<ButtonProps> = ({ text, className, type, onClick = EMPTY_CALLBACK }) => {
-
   const buttonClass = className ? `${styles[className]} ${styles.button}` : `${styles["default"]} ${styles.button}`;
-
 
   return (
     <button type={type} className={buttonClass} onClick={onClick}>

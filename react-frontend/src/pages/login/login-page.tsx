@@ -36,8 +36,8 @@ function LoginPage() {
   return (
     <div className={styles.loginPage}>
       <form className={styles.loginForm} onSubmit={handleSubmit(onSubmit)}>
-        <Input label="Email" name="email" type="email" register={register} />
-        <Input label="Password" name="password" type="password" register={register} />
+        <Input name="email" type="email" register={register} />
+        <Input name="password" type="password" register={register} />
         <Button text="Log in" type="submit" className={ButtonStyle.Primary} />
         <div>
           Don't have an account?
