@@ -1,4 +1,5 @@
 import styles from "./styles.module.css";
+import classNames from "classnames";
 
 export enum ToastType {
   Success = "success",
@@ -12,7 +13,7 @@ export interface ToastProps {
 }
 
 const Toast = ({ message, type, handleClose }: ToastProps) => {
-  const toastClasses = `${styles.toast} ${styles[type]}`;
+  const toastClasses = classNames(styles.toast, styles[type]);
 
   return (
     <div className={toastClasses}>

@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./styles.module.css";
+import classNames from "classnames";
 
 export enum ButtonStyle {
   Primary = "primary",
@@ -17,8 +18,8 @@ interface ButtonProps {
 const EMPTY_CALLBACK = () => {};
 
 const Button: React.FC<ButtonProps> = ({ text, className, type, onClick = EMPTY_CALLBACK }) => {
-  const buttonClass = className ? `${styles[className]} ${styles.button}` : `${styles["default"]} ${styles.button}`;
-
+  const buttonClass = classNames(styles.button, className ? styles[className] : styles.default);
+  
   return (
     <button type={type} className={buttonClass} onClick={onClick}>
       {text}
