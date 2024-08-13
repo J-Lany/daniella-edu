@@ -36,11 +36,8 @@ export const logoutAsync = createAsyncThunk("auth/logout", async (_, { dispatch,
     body: JSON.stringify({ accessToken, refreshToken })
   });
 
-
   if (response.ok) {
     dispatch(deleteAuthData());
     return;
   }
-
-
 });
