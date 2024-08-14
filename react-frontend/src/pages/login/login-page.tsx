@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
+
 import { clearError } from "../../redux/slices/authSlice";
 import { loginAsync } from "../../redux/thunks/authThunks";
 import { AuthData } from "../../types/AuthData";
@@ -18,6 +19,13 @@ function LoginPage() {
   const navigate = useNavigate();
 
   const error = useSelector((state: RootState) => state.auth.error);
+  const isAuthenticated = useSelector((state: RootState) => state.auth.accessToken);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
 
   const dispatch = useAppDispatch();
 
