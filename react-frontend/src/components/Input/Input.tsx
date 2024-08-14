@@ -1,9 +1,11 @@
 import React, { useMemo } from "react";
 import styles from "./styles.module.css";
+import { UseFormRegister } from "react-hook-form";
+import { AuthData } from "../../types/AuthData";
 
 interface InputProps {
-  name: string;
-  register: any;
+  name: "email" | "password";
+  register: UseFormRegister<AuthData>;
   type?: string;
 }
 

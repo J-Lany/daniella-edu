@@ -15,5 +15,5 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps): React
     }
   }, [isAuthenticated, navigate]);
 
-  return isAuthenticated ? <>{children}</> : null;
+  return <>{children}</>;
 }

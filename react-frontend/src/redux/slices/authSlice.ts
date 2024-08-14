@@ -1,11 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { User } from "../../types/User";
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
     accessToken: "",
     refreshToken: "",
-    user: null,
+    user: null as User | null,
     error: ""
   },
   reducers: {
@@ -15,7 +16,7 @@ const authSlice = createSlice({
     clearError: (state) => {
       state.error = "";
     },
-    setAuthData: (state, action) => {
+    setAuthData: (state, action: PayloadAction<{ accessToken: string; refreshToken: string; user: User }>) => {
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       state.user = action.payload.user;
