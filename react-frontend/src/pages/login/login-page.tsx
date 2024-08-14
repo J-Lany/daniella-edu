@@ -21,9 +21,12 @@ function LoginPage() {
 
   const dispatch = useAppDispatch();
 
-  const onSubmit: SubmitHandler<AuthData> = async (data) => {
-    dispatch(loginAsync(data));
-  };
+  const onSubmit: SubmitHandler<AuthData> = useCallback(
+    (data) => {
+      dispatch(loginAsync(data));
+    },
+    [dispatch]
+  );
 
   const handleSignup = useCallback(() => {
     navigate("/registration");

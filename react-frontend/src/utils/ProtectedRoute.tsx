@@ -8,6 +8,6 @@ type ProtectedRouteProps = PropsWithChildren<{}>;
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps): ReactElement | null {
   const isAuthenticated = useSelector((state: RootState) => state.auth.accessToken);
-
-  return isAuthenticated ? <>{children}</> : <LoginPage />; 
+  console.log(isAuthenticated);
+  return isAuthenticated ? <>{children}</> : <Navigate to={"/login"} />; 
 }
