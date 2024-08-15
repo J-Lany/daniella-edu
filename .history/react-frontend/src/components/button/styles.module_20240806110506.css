@@ -1,0 +1,29 @@
+.button {
+  padding: 0.75rem;
+  min-width: 22rem;
+  font-size: 1rem;
+  border-radius: 2rem;
+  transition: background-color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.primary {
+  background-color: #7ba7f4; 
+  border: 1px solid #7ba7f4; 
+  color: white;
+}
+
+.default {
+  background-color: grey;
+  color: black;
+}
+
+.light {
+  background-color: lightgrey;
+  color: black;
+}
+
+.button:hover {
+  background-color: #2b6ee1;
+  cursor: pointer;
+}

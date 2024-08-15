@@ -1,0 +1,28 @@
+@import url("../../common.css");
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}   
+
+.toast {
+
+}
+
+.toastText {
+  font-size: 0.9rem;
+}
+
+.toastButton {
+  background: transparent;
+  border: none;
+  font-size: 1.6rem;
+  line-height: 0;
+  cursor:pointer;
+  text-align: right;
+}
