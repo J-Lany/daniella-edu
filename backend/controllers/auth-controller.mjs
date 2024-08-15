@@ -90,6 +90,76 @@ export function createAuthController(app) {
 
   /**
    * @swagger
+   * /v2/login:
+   *   post:
+   *     summary: v2. Авторизация в месседжере
+   *     requestBody:
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               email:
+   *                 type: string
+   *               password:
+   *                 type: string
+   *     responses:
+   *       200:
+   *         description: Успешная авторизация
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 token:
+   *                   type: string
+   *                   description: Авторизационный токен
+   *       401:
+   *         description: Неверный логин или пароль
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   *       403:
+   *         description: Такого пользователя не сущетсвует
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 errorMessage:
+   *                   type: string
+   *                   description: Сообщение об ошибке авторизации
+   *       500:
+   *         description: Ошибка авторизации
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 errorMessage:
+   *                   type: string
+   *                   description: Сообщение об ошибке авторизации
+   */
+
+  app.post("/v2/login", async (req, res) => {
+    const { email, password } = req.body;
+    try {
+      const result = await authService.loginV2(email, password);
+      return res.status(200).json(result);
+    } catch (err) {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.loginErrors[err.message] });
+    }
+  });
+
+  /**
+   * @swagger
    * /refresh-token:
    *   post:
    *     summary: Обновление токена
@@ -168,7 +238,7 @@ export function createAuthController(app) {
    *                 type: string
    *     responses:
    *       200:
-   *         description: Успешный выход из системы 
+   *         description: Успешный выход из системы
    *         content:
    *           application/json:
    *             schema:

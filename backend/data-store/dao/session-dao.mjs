@@ -13,13 +13,12 @@ export class SessionDao {
   #usersDao = diContainer.resolve(SERVICES.usersDao);
 
   async createToken(login, email, limitation) {
-    const hashData = `${login}${email}${this.#configService.secret}`;
-    const saltRounds = 7;
-    const expired = new Date();
-    expired.setDate(expired.getDate() + limitation);
-
     try {
-      const hash = await bcrypt.hash(hashData, saltRounds);
+      const { hash, expired } = await this.generateHashAndSalt(
+        login,
+        email,
+        limitation
+      );
       await this.setToken(hash, expired);
 
       return hash;
@@ -28,9 +27,53 @@ export class SessionDao {
     }
   }
 
+  async createTokenV2(userId, login, email, limitation) {
+    try {
+      const accessToken = await this.generateHashAndSalt(
+        login,
+        email,
+        limitation
+      );
+      const refreshToken = await this.generateHashAndSalt(
+        login,
+        email,
+        limitation
+      );
+
+      await this.setTokenV2(
+        accessToken.hash,
+        accessToken.expired,
+        refreshToken.expired,
+        userId
+      );
+
+      return accessToken.hash;
+    } catch (err) {
+      throw new Error("Ошибка в создании токена");
+    }
+  }
+
+  async generateHashAndSalt(login, email, limitation) {
+    const hashData = `${login}${email}${this.#configService.secret}`;
+    const saltRounds = 7;
+    const expired = new Date();
+    expired.setDate(expired.getDate() + limitation);
+
+    const hash = await bcrypt.hash(hashData, saltRounds);
+
+    return { hash, expired };
+  }
+
   async setToken(token, expired) {
     const tokens = await this.#storeServise.getData(this.#filePath);
     tokens[token] = expired;
+
+    await this.#storeServise.setData(this.#filePath, tokens);
+  }
+
+  async setTokenV2(accessToken, expired, refreshToken, userId) {
+    const tokens = await this.#storeServise.getData(this.#filePath);
+    tokens[accessToken] = { expired, userId, refreshToken };
 
     await this.#storeServise.setData(this.#filePath, tokens);
   }
