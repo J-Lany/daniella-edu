@@ -1,0 +1,15 @@
+.loginPage {
+    max-width: 30rem;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .loginForm {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
