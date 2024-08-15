@@ -47,7 +47,7 @@ export class SessionDao {
         userId
       );
 
-      return accessToken.hash;
+      return { accessToken: accessToken.hash, refreshToken: refreshToken.hash };
     } catch (err) {
       throw new Error("Ошибка в создании токена");
     }
