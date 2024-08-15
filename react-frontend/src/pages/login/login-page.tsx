@@ -13,13 +13,14 @@ import Toast from "../../components/Toast/Toast";
 import { ToastType } from "../../components/Toast/Toast";
 import { useAppDispatch } from "../../hook/hook";
 import { RootState } from "../../types/RootState";
+import { selectIsAuthenticated, selectAuthError } from "../../redux/selectors/authSelectors";
 
 function LoginPage() {
   const { register, handleSubmit } = useForm<AuthData>({ mode: "onChange" });
   const navigate = useNavigate();
 
-  const error = useSelector((state: RootState) => state.auth.error);
-  const isAuthenticated = useSelector((state: RootState) => state.auth.accessToken);
+  const error = useSelector(selectAuthError);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   useEffect(() => {
     if (isAuthenticated) {
