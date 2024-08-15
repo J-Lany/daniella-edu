@@ -4,11 +4,11 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import "./index.css";
-import RegistrationPage from "./pages/Registration/Registration-page";
+import RegistrationPage from "./pages/Registration/registration-page";
 import ErrorPage from "./pages/Error/Error-page";
 import ProtectedRoute from "./utils/ProtectedRoute";
-import LoginPage from "./pages/Login/Login-page";
-import ChatPage from "./pages/Chat/Chat-page";
+import LoginPage from "./pages/Login/login-page";
+import ChatPage from "./pages/Chat/chat-page";
 
 const router = createBrowserRouter([
   {
