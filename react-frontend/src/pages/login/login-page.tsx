@@ -12,7 +12,6 @@ import Input from "../../components/Input/Input";
 import Toast from "../../components/Toast/Toast";
 import { ToastType } from "../../components/Toast/Toast";
 import { useAppDispatch } from "../../hook/hook";
-import { RootState } from "../../types/RootState";
 import { selectIsAuthenticated, selectAuthError } from "../../redux/selectors/authSelectors";
 
 function LoginPage() {
