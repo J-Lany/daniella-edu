@@ -15,13 +15,13 @@ export class SessionDao {
   async createToken(userId, login, email, limitation) {
     try {
       const accessToken = await this.generateHashAndSalt(
-        email,
         login,
+        email,
         limitation
       );
       const refreshToken = await this.generateHashAndSalt(
-        accessToken,
         login,
+        email,
         limitation
       );
 
