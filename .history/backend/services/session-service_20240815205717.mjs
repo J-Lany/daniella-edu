@@ -23,8 +23,12 @@ export class SessionService {
     return !expired || expiredDate > new Date();
   }
 
-  async createToken(userId, login, email, limitation) {
-    return await this.#sessionDao.createToken(userId, login, email, limitation);
+  async createTokenV2(userId, login, email, limitation) {
+    return await this.#sessionDao.createTokenV2(login, email, limitation);
+  }
+
+  async createToken(login, email, limitation) {
+    return await this.#sessionDao.createToken(login, email, limitation);
   }
 
   async updateTokenPair(refreshToken, userId) {

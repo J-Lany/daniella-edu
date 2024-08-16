@@ -12,9 +12,22 @@ export class SessionDao {
   #configService = diContainer.resolve(SERVICES.config);
   #usersDao = diContainer.resolve(SERVICES.usersDao);
 
+  async createToken(login, email, limitation) {
+    try {
+      const { hash, expired } = await this.generateHashAndSalt(
+        login,
+        email,
+        limitation
+      );
+      await this.setToken(hash, expired);
 
+      return hash;
+    } catch (err) {
+      throw new Error("Ошибка в создании токена");
+    }
+  }
 
-  async createToken(userId, login, email, limitation) {
+  async createTokenV2(userId, login, email, limitation) {
     try {
       const accessToken = await this.generateHashAndSalt(
         login,
@@ -27,14 +40,14 @@ export class SessionDao {
         limitation
       );
 
-      await this.setToken(
+      await this.setTokenV2(
         accessToken.hash,
         accessToken.expired,
         refreshToken.expired,
         userId
       );
 
-      return { accessToken: accessToken.hash, refreshToken: refreshToken.hash };
+      return accessToken.hash;
     } catch (err) {
       throw new Error("Ошибка в создании токена");
     }
@@ -51,7 +64,14 @@ export class SessionDao {
     return { hash, expired };
   }
 
-  async setToken(accessToken, expired, refreshToken, userId) {
+  async setToken(token, expired) {
+    const tokens = await this.#storeServise.getData(this.#filePath);
+    tokens[token] = expired;
+
+    await this.#storeServise.setData(this.#filePath, tokens);
+  }
+
+  async setTokenV2(accessToken, expired, refreshToken, userId) {
     const tokens = await this.#storeServise.getData(this.#filePath);
     tokens[accessToken] = { expired, userId, refreshToken };
 

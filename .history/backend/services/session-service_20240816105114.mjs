@@ -24,7 +24,7 @@ export class SessionService {
   }
 
   async createToken(userId, login, email, limitation) {
-    return await this.#sessionDao.createToken(userId, login, email, limitation);
+    return await this.#sessionDao.createTokenV2(userId, login, email, limitation);
   }
 
   async updateTokenPair(refreshToken, userId) {

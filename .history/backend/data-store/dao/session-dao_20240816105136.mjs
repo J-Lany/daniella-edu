@@ -27,7 +27,7 @@ export class SessionDao {
         limitation
       );
 
-      await this.setToken(
+      await this.setTokenV2(
         accessToken.hash,
         accessToken.expired,
         refreshToken.expired,
@@ -51,7 +51,14 @@ export class SessionDao {
     return { hash, expired };
   }
 
-  async setToken(accessToken, expired, refreshToken, userId) {
+  async setToken(token, expired) {
+    const tokens = await this.#storeServise.getData(this.#filePath);
+    tokens[token] = expired;
+
+    await this.#storeServise.setData(this.#filePath, tokens);
+  }
+
+  async setTokenV2(accessToken, expired, refreshToken, userId) {
     const tokens = await this.#storeServise.getData(this.#filePath);
     tokens[accessToken] = { expired, userId, refreshToken };
 

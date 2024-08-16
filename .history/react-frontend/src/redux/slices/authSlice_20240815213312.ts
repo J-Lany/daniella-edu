@@ -5,7 +5,7 @@ const authSlice = createSlice({
   initialState: {
     accessToken: "",
     refreshToken: "",
-    error: "",
+    error: ""
   },
   reducers: {
     setError: (state, action) => {
@@ -14,22 +14,19 @@ const authSlice = createSlice({
     clearError: (state) => {
       state.error = "";
     },
-    setAuthData: (
-      state,
-      action: PayloadAction<{ accessToken: string; refreshToken: string }>
-    ) => {
+    setAuthData: (state, action: PayloadAction<{ accessToken: string; refreshToken: string;  }>) => {
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
     },
     deleteAuthData: (state) => {
       state.accessToken = "";
       state.refreshToken = "";
-    },
-  },
+    }
+  }
 });
 
 export const {
   reducer: authReducer,
-  actions: { setError, clearError, setAuthData, deleteAuthData },
+  actions: { setError, clearError, setAuthData, deleteAuthData }
 } = authSlice;
 export default authSlice;

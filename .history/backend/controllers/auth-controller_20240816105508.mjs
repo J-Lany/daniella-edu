@@ -5,7 +5,7 @@ import { ERRORS } from "../utils/chats-erorrs.mjs";
 export function createAuthController(app) {
   const authService = diContainer.resolve(SERVICES.auth);
   const sessionService = diContainer.resolve(SERVICES.session);
-  const userService = diContainer.resolve(SERVICES.users);
+  const userService = diContainer.resolve(SERVICES.users)
 
   /**
    * @swagger
@@ -84,8 +84,8 @@ export function createAuthController(app) {
         email,
         password
       );
-      const user = await userService.getUserByEmail(email);
-      const result = { accessToken, refreshToken, user };
+      const user = await userService.getUserByEmail(email)
+      const result = { accessToken, refreshToken, user }
       return res.status(200).json(result);
     } catch (err) {
       return res

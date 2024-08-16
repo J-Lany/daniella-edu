@@ -5,7 +5,6 @@ import { ERRORS } from "../utils/chats-erorrs.mjs";
 export function createAuthController(app) {
   const authService = diContainer.resolve(SERVICES.auth);
   const sessionService = diContainer.resolve(SERVICES.session);
-  const userService = diContainer.resolve(SERVICES.users);
 
   /**
    * @swagger
@@ -80,12 +79,7 @@ export function createAuthController(app) {
   app.post("/login", async (req, res) => {
     const { email, password } = req.body;
     try {
-      const { accessToken, refreshToken } = await authService.login(
-        email,
-        password
-      );
-      const user = await userService.getUserByEmail(email);
-      const result = { accessToken, refreshToken, user };
+      const result = await authService.login(email, password);
       return res.status(200).json(result);
     } catch (err) {
       return res
@@ -96,9 +90,9 @@ export function createAuthController(app) {
 
   /**
    * @swagger
-   * /v2/login:
+   * /login:
    *   post:
-   *     summary: v2. Авторизация в месседжере
+   *     summary: Авторизация в месседжере
    *     requestBody:
    *       content:
    *         application/json:
@@ -117,6 +111,18 @@ export function createAuthController(app) {
    *             schema:
    *               type: object
    *               properties:
+   *                 user:
+   *                   type: object
+   *                   properties:
+   *                     login:
+   *                       type: string
+   *                       description: Имя пользователя
+   *                     email:
+   *                       type: string
+   *                       description: Email пользователя
+   *                     password:
+   *                       type: string
+   *                       description: Хэш пароля пользователя
    *                 token:
    *                   type: string
    *                   description: Авторизационный токен
@@ -163,6 +169,7 @@ export function createAuthController(app) {
         .json({ message: ERRORS.loginErrors[err.message] });
     }
   });
+
 
   /**
    * @swagger
@@ -244,7 +251,7 @@ export function createAuthController(app) {
    *                 type: string
    *     responses:
    *       200:
-   *         description: Успешный выход из системы
+   *         description: Успешный выход из системы 
    *         content:
    *           application/json:
    *             schema:

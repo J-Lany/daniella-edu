@@ -8,6 +8,40 @@ export const ONE_DAY = 1;
 export class AuthService {
   #userServise = diContainer.resolve(SERVICES.users);
   #sessionService = diContainer.resolve(SERVICES.session);
+  async loginV2(email, password) {
+    try {
+      const user = await this.#userServise.getUserByEmail(email);
+      if (!user) {
+        throw new Error(403);
+      }
+
+      const isPasswordCorrect = bcrypt.compareSync(
+        password,
+        user.hashedPassword
+      );
+      if (!isPasswordCorrect) {
+        throw new Error(401);
+      }
+      const accessToken = await this.#sessionService.createToken(
+        email,
+        user.login,
+        ONE_DAY
+      );
+      const refreshToken = await this.#sessionService.createToken(
+        email,
+        user.login,
+        ONE_WEEK
+      );
+
+      return {
+        user,
+        accessToken,
+        refreshToken,
+      };
+    } catch (err) {
+      throw err;
+    }
+  }
 
   async login(email, password) {
     try {
@@ -23,15 +57,19 @@ export class AuthService {
       if (!isPasswordCorrect) {
         throw new Error(401);
       }
-      const { accessToken, refreshToken } =
-        await this.#sessionService.createToken(
-          user.userId,
-          email,
-          user.login,
-          ONE_DAY
-        );
+      const accessToken = await this.#sessionService.createToken(
+        email,
+        user.login,
+        ONE_DAY
+      );
+      const refreshToken = await this.#sessionService.createToken(
+        email,
+        user.login,
+        ONE_WEEK
+      );
 
       return {
+        user,
         accessToken,
         refreshToken,
       };

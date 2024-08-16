@@ -5,7 +5,6 @@ import { ERRORS } from "../utils/chats-erorrs.mjs";
 export function createAuthController(app) {
   const authService = diContainer.resolve(SERVICES.auth);
   const sessionService = diContainer.resolve(SERVICES.session);
-  const userService = diContainer.resolve(SERVICES.users);
 
   /**
    * @swagger
@@ -80,12 +79,10 @@ export function createAuthController(app) {
   app.post("/login", async (req, res) => {
     const { email, password } = req.body;
     try {
-      const { accessToken, refreshToken } = await authService.login(
-        email,
-        password
-      );
-      const user = await userService.getUserByEmail(email);
-      const result = { accessToken, refreshToken, user };
+      const {
+        accessToken,
+        refreshToken,
+      } = await authService.login(email, password);
       return res.status(200).json(result);
     } catch (err) {
       return res
