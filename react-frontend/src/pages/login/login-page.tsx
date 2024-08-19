@@ -8,7 +8,6 @@ import { AuthData } from "../../types/AuthData";
 import { useForm, SubmitHandler } from "react-hook-form";
 import styles from "./styles.module.css";
 import Button, { ButtonStyle } from "../../components/Button/Button";
-import Input from "../../components/Input/Input";
 import Toast from "../../components/Toast/Toast";
 import { ToastType } from "../../components/Toast/Toast";
 import { useAppDispatch } from "../../hook/hook";
@@ -47,8 +46,8 @@ function LoginPage() {
   return (
     <div className={styles.loginPage}>
       <form className={styles.loginForm} onSubmit={handleSubmit(onSubmit)}>
-        <Input name="email" type="email" register={register} />
-        <Input name="password" type="password" register={register} />
+        <input className={styles.formInput} placeholder="Email" type="email" {...register("email", { required: true })} />
+        <input className={styles.formInput} placeholder="Password" type="password" {...register("password", { required: true })} />
         <Button text="Log in" type="submit" className={ButtonStyle.Primary} />
         <div>
           Don't have an account?

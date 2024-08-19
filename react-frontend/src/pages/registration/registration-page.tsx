@@ -7,7 +7,6 @@ import { RegistrationData } from "../../types/RegistrationData";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAppDispatch } from "../../hook/hook";
 import Button, { ButtonStyle } from "../../components/Button/Button";
-import Input from "../../components/Input/Input";
 import Toast, { ToastType } from "../../components/Toast/Toast";
 import { selectIsRegistrationSucsess, selectRegistrationError } from "../../redux/selectors/registrationSelectors";
 import { registrationAsync } from "../../redux/thunks/registrationThunks";
@@ -51,12 +50,32 @@ function RegistrationPage() {
   }, [dispatch]);
 
   return (
-    <div className={styles.loginPage}>
-      <form className={styles.loginForm} onSubmit={handleSubmit(onSubmit)}>
-        <Input name="email" type="email" register={register} />
-        <Input name="login" type="text" register={register} />
-        <Input name="password" type="password" register={register} />
-        <Input name="repeatPassword" type="password" ref={register({ required: true, validate: validateRepeatedPassword })} />
+    <div className={styles.registrationPage}>
+      <form className={styles.registrationForm} onSubmit={handleSubmit(onSubmit)}>
+        <input
+          className={styles.formInput}
+          placeholder="Login"
+          type="text"
+          {...register("login", { required: true })}
+        />
+        <input
+          className={styles.formInput}
+          placeholder="Email"
+          type="email"
+          {...register("email", { required: true })}
+        />
+        <input
+          className={styles.formInput}
+          placeholder="Password"
+          type="password"
+          {...register("password", { required: true })}
+        />
+        <input
+          className={styles.formInput}
+          placeholder="Repeat password"
+          type="password"
+          {...register("repeatPassword", { required: true, validate: validateRepeatedPassword })}
+        />
         <Button text="Log in" type="submit" className={ButtonStyle.Primary} />
         <div>
           Already have an account?
