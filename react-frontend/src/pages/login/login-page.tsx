@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useCallback, useEffect } from "react";
 import { clearError } from "../../redux/slices/authSlice";
+import { clearRegSucsess } from "../../redux/slices/registrationSlice";
 import { loginAsync } from "../../redux/thunks/authThunks";
 import { AuthData } from "../../types/AuthData";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -40,8 +41,9 @@ function LoginPage() {
     navigate("/registration");
   }, [navigate]);
 
-  const closeErrorToast = useCallback(() => {
+  const closeToast = useCallback(() => {
     dispatch(clearError());
+    dispatch(clearRegSucsess())
   }, [dispatch]);
 
   return (
@@ -64,8 +66,8 @@ function LoginPage() {
           Don't have an account?
           <Button text="Sign up" type="button" className={ButtonStyle.Light} onClick={handleSignup} />
         </div>
-        {error && <Toast message={error} type={ToastType.Error} handleClose={closeErrorToast} />}
-        {isRegSucsess && <Toast message={"Registration successful!"} type={ToastType.Success} handleClose={closeErrorToast} />}
+        {error && <Toast message={error} type={ToastType.Error} handleClose={closeToast} />}
+        {isRegSucsess && <Toast message={"Registration successful!"} type={ToastType.Success} handleClose={closeToast} />}
       </form>
     </div>
   );
