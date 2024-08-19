@@ -1,6 +1,6 @@
 export type RegistrationData = {
   email: string;
   password: string;
-  repeatPassword: string;
+  repeatedPassword: string;
   login: string;
 };

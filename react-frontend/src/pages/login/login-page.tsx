@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useCallback, useEffect } from "react";
-
 import { clearError } from "../../redux/slices/authSlice";
 import { loginAsync } from "../../redux/thunks/authThunks";
 import { AuthData } from "../../types/AuthData";
@@ -46,8 +45,18 @@ function LoginPage() {
   return (
     <div className={styles.loginPage}>
       <form className={styles.loginForm} onSubmit={handleSubmit(onSubmit)}>
-        <input className={styles.formInput} placeholder="Email" type="email" {...register("email", { required: true })} />
-        <input className={styles.formInput} placeholder="Password" type="password" {...register("password", { required: true })} />
+        <input
+          className={styles.formInput}
+          placeholder="Email"
+          type="email"
+          {...register("email", { required: true })}
+        />
+        <input
+          className={styles.formInput}
+          placeholder="Password"
+          type="password"
+          {...register("password", { required: true })}
+        />
         <Button text="Log in" type="submit" className={ButtonStyle.Primary} />
         <div>
           Don't have an account?

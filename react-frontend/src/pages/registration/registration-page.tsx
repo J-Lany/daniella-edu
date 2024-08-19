@@ -2,7 +2,7 @@ import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useCallback, useEffect } from "react";
-import { clearError } from "../../redux/slices/authSlice";
+import { setError, clearError } from "../../redux/slices/registrationSlice";
 import { RegistrationData } from "../../types/RegistrationData";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAppDispatch } from "../../hook/hook";
@@ -12,7 +12,7 @@ import { selectIsRegistrationSucsess, selectRegistrationError } from "../../redu
 import { registrationAsync } from "../../redux/thunks/registrationThunks";
 
 function RegistrationPage() {
-  const { register, handleSubmit, watch, setError, clearErrors } = useForm<RegistrationData>({ mode: "onChange" });
+  const { register, handleSubmit, watch } = useForm<RegistrationData>({ mode: "onChange" });
   const password = watch("password");
   const navigate = useNavigate();
 
@@ -29,7 +29,9 @@ function RegistrationPage() {
 
   const validateRepeatedPassword = (value: string) => {
     if (value !== password) {
-      return "Passwords do not match";
+      console.log("not match")
+     dispatch(setError("Passwords do not match"))
+      return false
     }
     return true;
   };
@@ -74,7 +76,7 @@ function RegistrationPage() {
           className={styles.formInput}
           placeholder="Repeat password"
           type="password"
-          {...register("repeatPassword", { required: true, validate: validateRepeatedPassword })}
+          {...register("repeatedPassword", { required: true, validate: validateRepeatedPassword })}
         />
         <Button text="Log in" type="submit" className={ButtonStyle.Primary} />
         <div>
