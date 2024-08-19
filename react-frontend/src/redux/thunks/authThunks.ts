@@ -5,7 +5,7 @@ import packageJson from "../../../package.json";
 import { RootState } from "../../types/RootState";
 
 export const loginAsync = createAsyncThunk("auth/login", async (authData: AuthData, { dispatch }) => {
-  const response = await fetch(`${packageJson.baseUrl}/login`, {
+  const response = await fetch(`${packageJson.baseUrl}/v2/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

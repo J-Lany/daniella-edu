@@ -23,19 +23,15 @@ export class AuthService {
       if (!isPasswordCorrect) {
         throw new Error(401);
       }
-      const accessToken = await this.#sessionService.createToken(
-        email,
-        user.login,
-        ONE_DAY
-      );
-      const refreshToken = await this.#sessionService.createToken(
-        email,
-        user.login,
-        ONE_WEEK
-      );
+      const { accessToken, refreshToken } =
+        await this.#sessionService.createToken(
+          user.userId,
+          email,
+          user.login,
+          ONE_DAY
+        );
 
       return {
-        user,
         accessToken,
         refreshToken,
       };

@@ -5,6 +5,7 @@ import { ERRORS } from "../utils/chats-erorrs.mjs";
 export function createAuthController(app) {
   const authService = diContainer.resolve(SERVICES.auth);
   const sessionService = diContainer.resolve(SERVICES.session);
+  const userService = diContainer.resolve(SERVICES.users);
 
   /**
    * @swagger
@@ -77,6 +78,81 @@ export function createAuthController(app) {
    */
 
   app.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+    try {
+      const { accessToken, refreshToken } = await authService.login(
+        email,
+        password
+      );
+      const user = await userService.getUserByEmail(email);
+      const result = { accessToken, refreshToken, user };
+      return res.status(200).json(result);
+    } catch (err) {
+      return res
+        .status(parseInt(err.message))
+        .json({ message: ERRORS.loginErrors[err.message] });
+    }
+  });
+
+  /**
+   * @swagger
+   * /v2/login:
+   *   post:
+   *     summary: v2. Авторизация в месседжере
+   *     requestBody:
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               email:
+   *                 type: string
+   *               password:
+   *                 type: string
+   *     responses:
+   *       200:
+   *         description: Успешная авторизация
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 token:
+   *                   type: string
+   *                   description: Авторизационный токен
+   *       401:
+   *         description: Неверный логин или пароль
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   description: Сообщение об ошибке
+   *       403:
+   *         description: Такого пользователя не сущетсвует
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 errorMessage:
+   *                   type: string
+   *                   description: Сообщение об ошибке авторизации
+   *       500:
+   *         description: Ошибка авторизации
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 errorMessage:
+   *                   type: string
+   *                   description: Сообщение об ошибке авторизации
+   */
+
+  app.post("/v2/login", async (req, res) => {
     const { email, password } = req.body;
     try {
       const result = await authService.login(email, password);
@@ -168,7 +244,7 @@ export function createAuthController(app) {
    *                 type: string
    *     responses:
    *       200:
-   *         description: Успешный выход из системы 
+   *         description: Успешный выход из системы
    *         content:
    *           application/json:
    *             schema:
