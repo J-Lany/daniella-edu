@@ -29,10 +29,10 @@ function RegistrationPage() {
 
   const validateRepeatedPassword = (value: string) => {
     if (value !== password) {
-      console.log("not match")
-     dispatch(setError("Passwords do not match"))
-      return false
+      dispatch(setError("Passwords do not match"));
+      return false;
     }
+    dispatch(clearError());
     return true;
   };
 
@@ -81,7 +81,7 @@ function RegistrationPage() {
         <Button text="Log in" type="submit" className={ButtonStyle.Primary} />
         <div>
           Already have an account?
-          <Button text="Sign up" type="button" className={ButtonStyle.Light} onClick={handleSignin} />
+          <Button text="Sign in" type="button" className={ButtonStyle.Light} onClick={handleSignin} />
         </div>
         {error && <Toast message={error} type={ToastType.Error} handleClose={closeErrorToast} />}
       </form>
