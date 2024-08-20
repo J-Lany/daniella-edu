@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 const registrationSlice = createSlice({
   name: "registration",
   initialState: {
-    isRegSucsess: false,
+    isRegistrationSucsess: false,
     error: ""
   },
   reducers: {
@@ -17,11 +17,11 @@ const registrationSlice = createSlice({
       state,
       action: PayloadAction<{isRegistrationSucsess:boolean }>
     ) => {
-      state.isRegSucsess = action.payload.isRegistrationSucsess;
+      state.isRegistrationSucsess = action.payload.isRegistrationSucsess;
     },
 
     clearRegSucsess: (state) => {
-      state.isRegSucsess = false;
+      state.isRegistrationSucsess = false;
     },
   }
 });

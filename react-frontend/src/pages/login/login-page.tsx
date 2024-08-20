@@ -12,7 +12,7 @@ import Toast from "../../components/Toast/Toast";
 import { ToastType } from "../../components/Toast/Toast";
 import { useAppDispatch } from "../../hook/hook";
 import { selectIsAuthenticated, selectAuthError } from "../../redux/selectors/authSelectors";
-import { selectIsRegistrationSucsess  } from "../../redux/selectors/registrationSelectors";
+import { selectIsRegistrationSucsess } from "../../redux/selectors/registrationSelectors";
 
 function LoginPage() {
   const { register, handleSubmit } = useForm<AuthData>({ mode: "onChange" });
@@ -20,7 +20,7 @@ function LoginPage() {
 
   const error = useSelector(selectAuthError);
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  const isRegSucsess = useSelector(selectIsRegistrationSucsess);
+  const isRegistrationSucsess = useSelector(selectIsRegistrationSucsess);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -43,7 +43,7 @@ function LoginPage() {
 
   const closeToast = useCallback(() => {
     dispatch(clearError());
-    dispatch(clearRegSucsess())
+    dispatch(clearRegSucsess());
   }, [dispatch]);
 
   return (
@@ -67,7 +67,9 @@ function LoginPage() {
           <Button text="Sign up" type="button" className={ButtonStyle.Light} onClick={handleSignup} />
         </div>
         {error && <Toast message={error} type={ToastType.Error} handleClose={closeToast} />}
-        {isRegSucsess && <Toast message={"Registration successful!"} type={ToastType.Success} handleClose={closeToast} />}
+        {isRegistrationSucsess && (
+          <Toast message={"Registration successful!"} type={ToastType.Success} handleClose={closeToast} />
+        )}
       </form>
     </div>
   );

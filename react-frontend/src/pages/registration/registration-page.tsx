@@ -17,13 +17,13 @@ function RegistrationPage() {
   const navigate = useNavigate();
 
   const error = useSelector(selectRegistrationError);
-  const isRegSucsess = useSelector(selectIsRegistrationSucsess);
+  const isRegistrationSucsess = useSelector(selectIsRegistrationSucsess);
 
   useEffect(() => {
-    if (isRegSucsess) {
+    if (isRegistrationSucsess) {
       navigate("/login");
     }
-  }, [isRegSucsess, navigate]);
+  }, [isRegistrationSucsess, navigate]);
 
   const dispatch = useAppDispatch();
 
