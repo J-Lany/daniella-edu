@@ -41,8 +41,11 @@ function LoginPage() {
     navigate("/registration");
   }, [navigate]);
 
-  const closeToast = useCallback(() => {
+  const closeErrorToast = useCallback(() => {
     dispatch(clearError());
+  }, [dispatch]);
+
+  const closeSucsessToast = useCallback(() => {
     dispatch(clearRegSucsess());
   }, [dispatch]);
 
@@ -66,9 +69,9 @@ function LoginPage() {
           Don't have an account?
           <Button text="Sign up" type="button" className={ButtonStyle.Light} onClick={handleSignup} />
         </div>
-        {error && <Toast message={error} type={ToastType.Error} handleClose={closeToast} />}
+        {error && <Toast message={error} type={ToastType.Error} handleClose={closeErrorToast} />}
         {isRegistrationSucsess && (
-          <Toast message={"Registration successful!"} type={ToastType.Success} handleClose={closeToast} />
+          <Toast message={"Registration successful!"} type={ToastType.Success} handleClose={closeSucsessToast} />
         )}
       </form>
     </div>

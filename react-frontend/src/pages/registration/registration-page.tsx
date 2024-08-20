@@ -27,14 +27,17 @@ function RegistrationPage() {
 
   const dispatch = useAppDispatch();
 
-  const validateRepeatedPassword = (value: string) => {
-    if (value !== password) {
-      dispatch(setError("Passwords do not match"));
-      return false;
-    }
-    dispatch(clearError());
-    return true;
-  };
+  const validateRepeatedPassword = useCallback(
+    (value: string) => {
+      if (value !== password) {
+        dispatch(setError("Passwords do not match"));
+        return false;
+      }
+      dispatch(clearError());
+      return true;
+    },
+    [dispatch, password]
+  );
 
   const onSubmit: SubmitHandler<RegistrationData> = useCallback(
     (data) => {
