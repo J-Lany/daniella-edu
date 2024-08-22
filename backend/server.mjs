@@ -91,7 +91,7 @@ wss.on("connection", function connection(ws) {
   ws.send("Добро пожаловать на сервер WebSocket!");
 });
 
-const PORT = 3000;
-server.listen(PORT, () => {
+const PORT = 8000;
+app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

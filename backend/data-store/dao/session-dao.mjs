@@ -12,25 +12,46 @@ export class SessionDao {
   #configService = diContainer.resolve(SERVICES.config);
   #usersDao = diContainer.resolve(SERVICES.usersDao);
 
-  async createToken(login, email, limitation) {
-    const hashData = `${login}${email}${this.#configService.secret}`;
-    const saltRounds = 7;
-    const expired = new Date();
-    expired.setDate(expired.getDate() + limitation);
-
+  async createToken(userId, login, email, limitation) {
     try {
-      const hash = await bcrypt.hash(hashData, saltRounds);
-      await this.setToken(hash, expired);
+      const accessToken = await this.generateHashAndSalt(
+        email,
+        login,
+        limitation
+      );
+      const refreshToken = await this.generateHashAndSalt(
+        accessToken,
+        login,
+        limitation
+      );
 
-      return hash;
+      await this.setToken(
+        accessToken.hash,
+        accessToken.expired,
+        refreshToken.expired,
+        userId
+      );
+
+      return { accessToken: accessToken.hash, refreshToken: refreshToken.hash };
     } catch (err) {
       throw new Error("Ошибка в создании токена");
     }
   }
 
-  async setToken(token, expired) {
+  async generateHashAndSalt(unuqueInfo, login, limitation) {
+    const hashData = `${login}${email}${this.#configService.secret}`;
+    const saltRounds = 7;
+    const expired = new Date();
+    expired.setDate(expired.getDate() + limitation);
+
+    const hash = await bcrypt.hash(hashData, saltRounds);
+
+    return { hash, expired };
+  }
+
+  async setToken(accessToken, expired, refreshToken, userId) {
     const tokens = await this.#storeServise.getData(this.#filePath);
-    tokens[token] = expired;
+    tokens[accessToken] = { expired, userId, refreshToken };
 
     await this.#storeServise.setData(this.#filePath, tokens);
   }
