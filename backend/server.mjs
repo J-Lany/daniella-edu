@@ -1,6 +1,6 @@
 import express from "express";
 import path, { dirname } from "path";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 import { WebSocketServer } from "ws";
 import cors from "cors";
 import { createServer } from "http";
@@ -84,6 +84,11 @@ const server = createServer(app);
 const wss = new WebSocketServer({ noServer: true });
 const connections = new Map();
 
+export const webSocketStrategies = {
+  message: wsMessageController,
+  chat: wsChatController
+};
+
 server.on("upgrade", function (request, socket, head) {
   handleWebSocketUpgrade(request, socket, head, wss);
 });
@@ -94,19 +99,16 @@ wss.on("connection", function (ws, request) {
 
   ws.on("error", console.error);
 
-  ws.on("message", async function (messageJSON) {
-    const message = JSON.parse(messageJSON);
+  ws.on("message", async function (dataJSON) {
+    const data = JSON.parse(dataJSON);
+    const strategy = webSocketStrategies[data.type];
 
-    switch (message.type) {
-      case "new_message":
-        await wsMessageController(message, ws, connections);
-        break;
-      case "new_chat":
-        await wsChatController(message, ws, connections);
-        break;
-      default:
-        console.error("Unknown message type: " + message.type);
+    if (!strategy) {
+      console.error("Unknown message type: " + data.type);
+      return
     }
+
+    await strategy(data.content, ws, connections);
   });
 
   ws.on("close", function () {

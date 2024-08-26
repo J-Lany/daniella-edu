@@ -3,7 +3,7 @@ import { SERVICES } from "./di/api.mjs";
 import { TOKEN_PREFIX } from "./utils/authorization.mjs";
 import { TOKEN_PREFIX_LENGTH } from "./utils/authorization.mjs";
 
-export function handleWebSocketUpgrade(request, socket, head, wss) {
+export async function handleWebSocketUpgrade(request, socket, head, wss) {
   const authorizationHeader = request.headers.authorization;
 
   if (!authorizationHeader || !authorizationHeader.startsWith(TOKEN_PREFIX)) {
@@ -13,18 +13,17 @@ export function handleWebSocketUpgrade(request, socket, head, wss) {
   }
 
   const token = authorizationHeader.substring(TOKEN_PREFIX_LENGTH);
+  const isAuth = await checkToken(token);
 
-  checkToken(token).then((isAuth) => {
-    if (!isAuth) {
-      socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
-      socket.destroy();
-      return;
-    }
+  if (!isAuth) {
+    socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
+    socket.destroy();
+    return;
+  }
 
-    socket.userId = token;
-    wss.handleUpgrade(request, socket, head, function (ws) {
-      wss.emit("connection", ws, request);
-    });
+  socket.userId = token;
+  wss.handleUpgrade(request, socket, head, function (ws) {
+    wss.emit("connection", ws, request);
   });
 }
 

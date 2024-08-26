@@ -6,14 +6,15 @@ export async function wsMessageController(message, ws, clients) {
   const chatService = diContainer.resolve(SERVICES.chat);
 
   try {
-    const messageId = await messageService.addMessage(message.authorId, message.chatId, message.messageBody);
+    const { authorId, chatId, messageBody } = message;
+    const messageId = await messageService.addMessage(authorId, chatId, messageBody);
 
     if (!messageId) {
       console.log(`Message was not saved, it can't be sent to chat users.`);
       return;
     }
 
-    const chatUsers = await chatService.getParticipants(message.chatId);
+    const chatUsers = await chatService.getParticipants(chatId);
 
     for (let userId of chatUsers) {
       const client = clients.get(userId);

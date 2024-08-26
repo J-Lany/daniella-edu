@@ -39,7 +39,7 @@ export class SessionDao {
   }
 
   async generateHashAndSalt(unuqueInfo, login, limitation) {
-    const hashData = `${login}${email}${this.#configService.secret}`;
+    const hashData = `${login}${unuqueInfo}${this.#configService.secret}`;
     const saltRounds = 7;
     const expired = new Date();
     expired.setDate(expired.getDate() + limitation);
