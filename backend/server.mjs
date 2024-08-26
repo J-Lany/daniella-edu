@@ -20,6 +20,8 @@ import { createAuthController } from "./controllers/auth-controller.mjs";
 import { createUserController } from "./controllers/user-controller.mjs";
 import { createMessageController } from "./controllers/message-controller.mjs";
 import { createChatsController } from "./controllers/chats-controller.mjs";
+import { wsMessageController } from "./controllers/ws-message-controller.mjs";
+import { wsChatController } from "./controllers/ws-chat-controller.mjs";
 import { handleWebSocketUpgrade } from "./websocket.mjs";
 import { ChatsDao } from "./data-store/dao/chats-dao.mjs";
 import { UsersDao } from "./data-store/dao/users-dao.mjs";
@@ -76,27 +78,35 @@ createMessageController(app);
 const server = createServer(app);
 
 const wss = new WebSocketServer({ noServer: true });
+const connections = new Map();
 
 server.on("upgrade", function (request, socket, head) {
   handleWebSocketUpgrade(request, socket, head, wss);
 });
 
 wss.on("connection", function (ws, request) {
-  const userId = request.session.userId;
-
-  map.set(userId, ws);
+  const userId = request.userId;
+  connections.set(userId, ws);
 
   ws.on("error", console.error);
 
-  ws.on("message", function (message) {
-    //
-    // Here we can now use session parameters.
-    //
-    console.log(`Received message ${message} from user ${userId}`);
+  ws.on("message", async function (messageJSON) {
+    const message = JSON.parse(messageJSON);
+
+    switch (message.type) {
+      case "new_message":
+        await wsMessageController(message, ws, connections);
+        break;
+      case "new_chat":
+        await wsChatController(message, ws, connections);
+        break;
+      default:
+        console.error("Unknown message type: " + message.type);
+    }
   });
 
   ws.on("close", function () {
-    map.delete(userId);
+    connections.delete(userId);
   });
 });
 
