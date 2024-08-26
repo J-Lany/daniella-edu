@@ -1,4 +1,6 @@
 import express from "express";
+import path, { dirname } from "path";
+import { fileURLToPath } from 'url';
 import { WebSocketServer } from "ws";
 import cors from "cors";
 import { createServer } from "http";
@@ -50,8 +52,10 @@ const restApiOptions = {
 };
 
 const restApiSpec = swaggerJSDoc(restApiOptions);
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.use("/rest-docs", swaggerUi.serve, swaggerUi.setup(restApiSpec));
+app.use("/websocket-docs", express.static(path.join(__dirname, "public")));
 
 diContainer.register(SERVICES.config, configService());
 diContainer.register(SERVICES.store, new StoreService());

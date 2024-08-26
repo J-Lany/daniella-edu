@@ -1,8 +1,8 @@
 import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
 
-const TOKEN_PREFIX = "Bearer ";
-const TOKEN_PREFIX_LENGTH = 7;
+export const TOKEN_PREFIX = "Bearer ";
+export const TOKEN_PREFIX_LENGTH = 7;
 
 export async function authorization(req, res, next) {
   const authService = diContainer.resolve(SERVICES.auth);
