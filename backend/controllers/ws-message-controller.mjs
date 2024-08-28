@@ -1,7 +1,7 @@
 import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
 
-export async function wsMessageController(message, ws, clients) {
+export async function messageWsSendingStrategy(message, ws, clients) {
   const messageService = diContainer.resolve(SERVICES.messages);
   const chatService = diContainer.resolve(SERVICES.chat);
 
@@ -18,7 +18,6 @@ export async function wsMessageController(message, ws, clients) {
 
     for (let userId of chatUsers) {
       const client = clients.get(userId);
-      console.log(message)
       if (client && client.readyState === WebSocket.OPEN) {
         client.send(message);
       }
@@ -27,5 +26,3 @@ export async function wsMessageController(message, ws, clients) {
     console.log(`Error handling message: ${err}`);
   }
 }
-
-

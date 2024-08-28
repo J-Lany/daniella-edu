@@ -22,14 +22,14 @@ import { createAuthController } from "./controllers/auth-controller.mjs";
 import { createUserController } from "./controllers/user-controller.mjs";
 import { createMessageController } from "./controllers/message-controller.mjs";
 import { createChatsController } from "./controllers/chats-controller.mjs";
-import { wsMessageController } from "./controllers/ws-message-controller.mjs";
-import { wsChatController } from "./controllers/ws-chat-controller.mjs";
-import { handleWebSocketUpgrade } from "./websocket.mjs";
+import { messageWsSendingStrategy } from "./controllers/ws-message-controller.mjs";
+import { chatWsSendingStrategy } from "./controllers/ws-chat-controller.mjs";
 import { ChatsDao } from "./data-store/dao/chats-dao.mjs";
 import { UsersDao } from "./data-store/dao/users-dao.mjs";
 import { MessagessDao } from "./data-store/dao/messages-dao.mjs";
 import { EmailsDao } from "./data-store/dao/emails-dao.mjs";
 import { SessionDao } from "./data-store/dao/session-dao.mjs";
+import { websocketAuthGuard } from "./utils/websocket-auth-guard.mjs";
 
 const app = express();
 
@@ -85,8 +85,8 @@ const wss = new WebSocketServer({ noServer: true });
 const connections = new Map();
 
 export const webSocketStrategies = {
-  message: wsMessageController,
-  chat: wsChatController
+  message: messageWsSendingStrategy,
+  chat: chatWsSendingStrategy
 };
 
 server.on("upgrade", function (request, socket, head) {
@@ -105,7 +105,7 @@ wss.on("connection", function (ws, request) {
 
     if (!strategy) {
       console.error("Unknown message type: " + data.type);
-      return
+      return;
     }
 
     await strategy(data.content, ws, connections);

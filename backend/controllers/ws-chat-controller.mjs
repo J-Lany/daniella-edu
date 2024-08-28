@@ -1,7 +1,7 @@
 import { diContainer } from "../di/di.mjs";
 import { SERVICES } from "../di/api.mjs";
 
-export async function wsChatController(chat, ws, clients) {
+export async function chatWsSendingStrategy(chat, ws, clients) {
   const chatService = diContainer.resolve(SERVICES.chat);
 
   try {

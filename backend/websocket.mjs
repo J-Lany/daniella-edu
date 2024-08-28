@@ -1,33 +1,17 @@
-import { diContainer } from "./di/di.mjs";
-import { SERVICES } from "./di/api.mjs";
-import { TOKEN_PREFIX } from "./utils/authorization.mjs";
-import { TOKEN_PREFIX_LENGTH } from "./utils/authorization.mjs";
+import WebSocketServer from "ws";
+import { websocketAuthGuard } from "./utils/websocket-auth-guard.mjs";
+import { messageWsSendingStrategy } from "./controllers/ws-message-controller.mjs";
+import { chatWsSendingStrategy } from "./controllers/ws-chat-controller.mjs";
 
-export async function handleWebSocketUpgrade(request, socket, head, wss) {
-  const authorizationHeader = request.headers.authorization;
+export const webSocketStrategies = {
+  message: messageWsSendingStrategy,
+  chat: chatWsSendingStrategy
+};
 
-  if (!authorizationHeader || !authorizationHeader.startsWith(TOKEN_PREFIX)) {
-    socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
-    socket.destroy();
-    return;
-  }
+export function initWebsocketServer(server) {
+  
 
-  const token = authorizationHeader.substring(TOKEN_PREFIX_LENGTH);
-  const isAuth = await checkToken(token);
-
-  if (!isAuth) {
-    socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
-    socket.destroy();
-    return;
-  }
-
-  socket.userId = token;
-  wss.handleUpgrade(request, socket, head, function (ws) {
-    wss.emit("connection", ws, request);
-  });
+  return wss;
 }
 
-async function checkToken(token) {
-  const authService = diContainer.resolve(SERVICES.auth);
-  return await authService.isAuth(token);
-}
+
