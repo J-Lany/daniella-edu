@@ -22,14 +22,12 @@ import { createAuthController } from "./controllers/auth-controller.mjs";
 import { createUserController } from "./controllers/user-controller.mjs";
 import { createMessageController } from "./controllers/message-controller.mjs";
 import { createChatsController } from "./controllers/chats-controller.mjs";
-import { messageWsSendingStrategy } from "./controllers/ws-message-controller.mjs";
-import { chatWsSendingStrategy } from "./controllers/ws-chat-controller.mjs";
 import { ChatsDao } from "./data-store/dao/chats-dao.mjs";
 import { UsersDao } from "./data-store/dao/users-dao.mjs";
 import { MessagessDao } from "./data-store/dao/messages-dao.mjs";
 import { EmailsDao } from "./data-store/dao/emails-dao.mjs";
 import { SessionDao } from "./data-store/dao/session-dao.mjs";
-import { websocketAuthGuard } from "./utils/websocket-auth-guard.mjs";
+import { initWebsocketServer } from "./websocket.mjs";
 
 const app = express();
 
@@ -84,37 +82,7 @@ const server = createServer(app);
 const wss = new WebSocketServer({ noServer: true });
 const connections = new Map();
 
-export const webSocketStrategies = {
-  message: messageWsSendingStrategy,
-  chat: chatWsSendingStrategy
-};
-
-server.on("upgrade", function (request, socket, head) {
-  websocketAuthGuard(request, socket, head, wss);
-});
-
-wss.on("connection", function (ws, request) {
-  const userId = request.userId;
-  connections.set(userId, ws);
-
-  ws.on("error", console.error);
-
-  ws.on("message", async function (dataJSON) {
-    const data = JSON.parse(dataJSON);
-    const strategy = webSocketStrategies[data.type];
-
-    if (!strategy) {
-      console.error("Unknown message type: " + data.type);
-      return;
-    }
-
-    await strategy(data.content, ws, connections);
-  });
-
-  ws.on("close", function () {
-    connections.delete(userId);
-  });
-});
+initWebsocketServer(wss, connections, server);
 
 const PORT = 8000;
 server.listen(PORT, () => {
