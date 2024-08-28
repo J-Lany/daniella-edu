@@ -8,9 +8,8 @@ export const webSocketStrategies = {
 };
 
 export function initWebsocketServer(wss, connections, server) {
-  server.on("upgrade", function (request, socket, head) {
-    websocketAuthGuard(request, socket, head, wss);
-  });
+  const carriedUpgrade = curriedWebsocketUpgrade(wss);
+  server.on("upgrade", carriedUpgrade);
 
   wss.on("connection", function (ws, request) {
     const userId = request.userId;
@@ -18,21 +17,33 @@ export function initWebsocketServer(wss, connections, server) {
 
     ws.on("error", console.error);
 
-    ws.on("message", async function (dataJSON) {
-      const data = JSON.parse(dataJSON);
-      const strategy = webSocketStrategies[data.type];
+    ws.on("message", curriedWebsocketMessage(ws, connections));
 
-      if (!strategy) {
-        console.error("Unknown message type: " + data.type);
-        return;
-      }
-
-      await strategy(data.content, ws, connections);
-    });
-
-    ws.on("close", function () {
-      connections.delete(userId);
-    });
+    ws.on("close", curriedWebsocketClose(userId));
   });
   return wss;
+}
+
+function curriedWebsocketUpgrade(wss) {
+  return (request, socket, head) => websocketAuthGuard(request, socket, head, wss);
+}
+
+function curriedWebsocketMessage(ws, connections) {
+  return async function (dataJSON) {
+    const data = JSON.parse(dataJSON);
+    const strategy = webSocketStrategies[data.type];
+
+    if (!strategy) {
+      console.error("Unknown message type: " + data.type);
+      return;
+    }
+
+    await strategy(data.content, ws, connections);
+  };
+}
+
+function curriedWebsocketClose(userId) {
+  return function () {
+    connections.delete(userId);
+  };
 }
