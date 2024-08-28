@@ -90,7 +90,7 @@ export const webSocketStrategies = {
 };
 
 server.on("upgrade", function (request, socket, head) {
-  handleWebSocketUpgrade(request, socket, head, wss);
+  websocketAuthGuard(request, socket, head, wss);
 });
 
 wss.on("connection", function (ws, request) {
