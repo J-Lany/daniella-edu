@@ -17,10 +17,15 @@ export class SessionService {
   }
 
   async isTokenValid(token) {
-    const { expired } = await this.#sessionDao.getExpired(token);
-    const expiredDate = new Date(expired);
+    const tokenData = await this.#sessionDao.getExpired(token);
 
-    return !expired || expiredDate > new Date();
+    if (!tokenData) {
+      throw new Error(401);
+    }
+
+    const expiredDate = new Date(tokenData.expired);
+
+    return expiredDate > new Date();
   }
 
   async createToken(userId, login, email, limitation) {

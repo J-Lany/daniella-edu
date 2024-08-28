@@ -18,6 +18,7 @@ export async function wsMessageController(message, ws, clients) {
 
     for (let userId of chatUsers) {
       const client = clients.get(userId);
+      console.log(message)
       if (client && client.readyState === WebSocket.OPEN) {
         client.send(message);
       }
