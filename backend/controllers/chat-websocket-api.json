@@ -1,0 +1,39 @@
+{
+  "info": {
+    "title": "Websocket API",
+    "version": "1.0.0",
+    "description": "API description"
+  },
+  "servers": [
+    {
+      "url": "ws://localhost:8000",
+      "description": "Local WebSocket server"
+    }
+  ],
+  "channels": {
+    "chatMessages": {
+      "subscribe": {
+        "summary": "Subscribe to chat messages",
+        "message": {
+          "type": "object",
+          "properties": {
+            "user": { "type": "string" },
+            "message": { "type": "string" },
+            "timestamp": { "type": "integer" }
+          }
+        }
+      },
+      "publish": {
+        "summary": "Publish chat messages",
+        "message": {
+          "type": "object",
+          "properties": {
+            "user": { "type": "string" },
+            "message": { "type": "string" },
+            "timestamp": { "type": "integer" }
+          }
+        }
+      }
+    }
+  }
+}

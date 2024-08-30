@@ -13,16 +13,13 @@ const registrationSlice = createSlice({
     clearError: (state) => {
       state.error = "";
     },
-    setRegSucsess: (
-      state,
-      action: PayloadAction<{isRegistrationSucsess:boolean }>
-    ) => {
+    setRegSucsess: (state, action: PayloadAction<{ isRegistrationSucsess: boolean }>) => {
       state.isRegistrationSucsess = action.payload.isRegistrationSucsess;
     },
 
     clearRegSucsess: (state) => {
       state.isRegistrationSucsess = false;
-    },
+    }
   }
 });
 
